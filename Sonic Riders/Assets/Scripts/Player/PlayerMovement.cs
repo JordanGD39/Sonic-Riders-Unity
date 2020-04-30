@@ -28,6 +28,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float slowdownAngle = 0.4f;
     [SerializeField] private float raycastLength = 0.8f;
 
+    private Vector3 localLandingVelocity = Vector3.zero;
+
+    private float upsideDownTimer = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -60,7 +64,7 @@ public class PlayerMovement : MonoBehaviour
 
         Acceleration();
 
-        if (charStats.Air > 0 && Movement.z != 0 && speed > 0)
+        if (charStats.Air > 0 && Movement.z != 0 && speed > 0 && grounded)
         {
             charStats.Air -= stats.AirDepletion;
         }
@@ -95,7 +99,7 @@ public class PlayerMovement : MonoBehaviour
 
                     if (tempSpeed < 5)
                     {
-                        tempSpeed = Mathf.Abs(rb.velocity.x) + Mathf.Abs(rb.velocity.z);
+                        tempSpeed = localLandingVelocity.z;
                     }
 
                     Debug.Log(tempSpeed + " up calc: " + normalCalc);
@@ -106,14 +110,17 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {           
-            //Debug.Log(transform.rotation.x);
-            if (transform.rotation.x > 0.98f)
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, new Quaternion(0, 0, 0, transform.rotation.w), 10);
+
+            if (transform.rotation.x == 1)
             {
-                transform.rotation = new Quaternion(0.8f, 0, transform.rotation.z, transform.rotation.w);
-            }
-            else
-            {
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, new Quaternion(0, 0, 0, transform.rotation.w), 10);
+                upsideDownTimer += Time.deltaTime;
+
+                if (upsideDownTimer > 0.5f)
+                {
+                    transform.rotation = new Quaternion(0, 0, transform.rotation.z, transform.rotation.w);
+                    upsideDownTimer = 0;
+                }
             }
         }
 
@@ -206,7 +213,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     if (!ridingOnWall && !playerBoost.Boosting || playerBoost.Boosting && speed > stats.Boost[charStats.Level]&& !ridingOnWall)
                     {
-                        speed -= 10 * Time.deltaTime;
+                        speed -= 7 * Time.deltaTime;
                     }     
                     else
                     {
@@ -223,6 +230,10 @@ public class PlayerMovement : MonoBehaviour
                 {                    
                     speed -= stats.Dash * (1 + Movement.z) * Time.deltaTime;
                 }
+                else if (speed < -1)
+                {
+                    speed += 7 * Time.deltaTime;
+                }
                 else
                 {
                     speed = 0;
@@ -238,12 +249,11 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            if (rb.velocity.y < 0)
-            {
-                speed = rb.velocity.magnitude;
-            }
+            localLandingVelocity = transform.GetChild(0).InverseTransformDirection(rb.velocity);
 
-            hud.UpdateSpeedText(rb.velocity.magnitude);
+            speed = localLandingVelocity.magnitude;
+
+            hud.UpdateSpeedText(localLandingVelocity.magnitude);
         }               
     }
 }

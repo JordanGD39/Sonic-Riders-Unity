@@ -4709,7 +4709,7 @@ MonoBehaviour:
   startingJumpheight: 5
   jumpheight: 1
   maxJumpheight: 10
-  jumpGain: 0.05
+  jumpGain: 5
 --- !u!114 &1519842929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8675,7 +8675,7 @@ MonoBehaviour:
   - 57.5
   - 62.5
   airDepletion: 0.017
-  boostDepletion: 20
+  boostDepletion: 15
   boostTime: 5
 --- !u!1 &3500244170744316720
 GameObject:

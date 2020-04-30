@@ -53,7 +53,7 @@ public class PlayerJump : MonoBehaviour
 
             if (jumpheight < maxJumpheight)
             {
-                jumpheight += jumpGain;
+                jumpheight += jumpGain * Time.deltaTime;
             }
         }        
     }

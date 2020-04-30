@@ -10,7 +10,7 @@ public class PlayerDrift : MonoBehaviour
     public bool DriftPressed { get; set; } = false;
     public float DriftDir { get; set; } = 0;
 
-    private bool driftActivated = false;
+    private float driftTimer = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -27,7 +27,7 @@ public class PlayerDrift : MonoBehaviour
         {
             if (DriftPressed)
             {
-                if (movement.TurnAmount != 0 || driftActivated)
+                if (movement.TurnAmount != 0 || driftTimer > 0)
                 {
                     Drift();
                 }
@@ -48,8 +48,21 @@ public class PlayerDrift : MonoBehaviour
             }
         }
 
+        if (!DriftPressed && driftTimer > 1)
+        {
+            driftTimer = 0;
+            if (movement.Speed < stats.Boost[charStats.Level])
+            {
+                movement.Speed = stats.Boost[charStats.Level];
+            }
+            else
+            {
+                movement.Speed += 5;
+            }
+        }
+
         movement.Drifting = false;
-        driftActivated = false;
+        driftTimer = 0;
         DriftDir = 0;
     }
 
@@ -70,13 +83,13 @@ public class PlayerDrift : MonoBehaviour
         if (movement.Speed <= 0)
         {
             movement.Drifting = false;
-            driftActivated = false;
+            driftTimer = 0;
             return;
         }
 
-        driftActivated = true;
+        driftTimer += Time.deltaTime;
         movement.Drifting = true;
         movement.Speed -= 4 * Time.deltaTime;
-        charStats.Air -= stats.AirDepletion * 1.5f;
+        charStats.Air -= stats.AirDepletion * 0.5f;
     }
 }
