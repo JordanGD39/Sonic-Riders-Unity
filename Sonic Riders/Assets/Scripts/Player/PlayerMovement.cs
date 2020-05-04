@@ -60,21 +60,25 @@ public class PlayerMovement : MonoBehaviour
             {
                 fallToTheGround = false;
             }
-            rotationAmount = TurnAmount * stats.Cornering;
-
-            if (DriftBoost)
-            {
-                rotationAmount += playerDrift.DriftDir;
-                DriftBoost = false;
-            }
+            rotationAmount = TurnAmount * stats.Cornering;            
 
             rotationAmount *= Time.deltaTime;           
 
             transform.GetChild(0).Rotate(0, rotationAmount, 0);
 
+            if (DriftBoost)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    transform.GetChild(0).Rotate(0, TurnAmount * 0.2f, 0);
+                }
+                
+                DriftBoost = false;
+            }
+
             if (playerDrift.DriftPressed)
             {
-                transform.GetChild(0).GetChild(0).localRotation = new Quaternion(0, playerDrift.DriftDir * 0.1f, 0, transform.GetChild(0).GetChild(0).localRotation.w);
+                transform.GetChild(0).GetChild(0).localRotation = new Quaternion(0, TurnAmount * 0.1f, 0, transform.GetChild(0).GetChild(0).localRotation.w);
             }  
             else
             {
@@ -221,6 +225,13 @@ public class PlayerMovement : MonoBehaviour
                 return;
             }
 
+            float brakeMultiplier = 1;
+
+            if (ridingOnWall && transform.GetChild(0).forward.y < -0.5f)
+            {
+                brakeMultiplier = 0.1f;
+            }
+
             if (Movement.z >= 0.25f)
             {
                 if (speed < stats.Limit[charStats.Level])
@@ -246,11 +257,11 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (speed > 0)
                 {                    
-                    speed -= stats.Dash * (1 + Movement.z)* Time.deltaTime;
+                    speed -= (stats.Dash * (1 + Movement.z) * brakeMultiplier)* Time.deltaTime;
                 }
                 else if (speed < -1)
                 {
-                    speed += 7 * Time.deltaTime;
+                    speed += 7 * brakeMultiplier * Time.deltaTime;
                 }
                 else
                 {
@@ -260,8 +271,8 @@ public class PlayerMovement : MonoBehaviour
             else
             {
                 if (speed > -10 && grounded)
-                {                    
-                    speed -= stats.Dash * (1 + Mathf.Abs(Movement.z)) * Time.deltaTime;
+                {
+                    speed -= (stats.Dash * (1 + Mathf.Abs(Movement.z)) * brakeMultiplier) * Time.deltaTime;
                 }
             }                      
         }

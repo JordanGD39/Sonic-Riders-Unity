@@ -50,7 +50,8 @@ public class PlayerDrift : MonoBehaviour
 
         if (!DriftPressed && driftTimer > 1)
         {
-            driftTimer = 0;            
+            driftTimer = 0;
+            movement.FallToTheGround = false;
             if (movement.Speed < stats.Boost[charStats.Level])
             {
                 movement.Speed = stats.Boost[charStats.Level];
@@ -58,7 +59,7 @@ public class PlayerDrift : MonoBehaviour
             else
             {
                 movement.Speed += 5;
-            }
+            }            
             movement.DriftBoost = true;
         }
 
