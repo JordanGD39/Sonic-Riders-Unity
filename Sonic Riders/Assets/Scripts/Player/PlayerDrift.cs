@@ -16,7 +16,7 @@ public class PlayerDrift : MonoBehaviour
     void Start()
     {
         movement = GetComponent<PlayerMovement>();
-        stats = transform.GetChild(0).GetChild(1).GetComponent<BoardStats>();
+        stats = transform.GetChild(1).GetComponent<BoardStats>();
         charStats = GetComponent<CharacterStats>();
     }
 
@@ -50,7 +50,7 @@ public class PlayerDrift : MonoBehaviour
 
         if (!DriftPressed && driftTimer > 1)
         {
-            driftTimer = 0;
+            driftTimer = 0;            
             if (movement.Speed < stats.Boost[charStats.Level])
             {
                 movement.Speed = stats.Boost[charStats.Level];
@@ -59,11 +59,15 @@ public class PlayerDrift : MonoBehaviour
             {
                 movement.Speed += 5;
             }
+            movement.DriftBoost = true;
         }
 
         movement.Drifting = false;
         driftTimer = 0;
-        DriftDir = 0;
+        if (!movement.DriftBoost)
+        {
+            DriftDir = 0;
+        }        
     }
 
     private void Drift()

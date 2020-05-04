@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     private BoardStats stats;
     private PlayerBoost playerBoost;
     private PlayerJump playerJump;
+    private PlayerDrift playerDrift;
 
     private Rigidbody rb;
 
@@ -17,7 +18,7 @@ public class PlayerMovement : MonoBehaviour
     public float TurnAmount { get; set; }
     [SerializeField] private float speed = 3;
     public float Speed { get { return speed; } set { speed = value; } }
-    private float rotationAmount = 0;
+    [SerializeField] private float rotationAmount = 0;
     public float RotationAmount { get { return rotationAmount; } }
     [SerializeField] private bool ridingOnWall = false;
     [SerializeField] private bool fallToTheGround = false;
@@ -32,15 +33,18 @@ public class PlayerMovement : MonoBehaviour
 
     private float upsideDownTimer = 0;
 
+    public bool DriftBoost { get; set; } = false;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         hud = GameObject.FindGameObjectWithTag("Canvas").GetComponent<HUD>();
         charStats = GetComponent<CharacterStats>();
-        stats = transform.GetChild(0).GetChild(1).GetComponent<BoardStats>();
+        stats = transform.GetChild(1).GetComponent<BoardStats>();
         playerBoost = GetComponent<PlayerBoost>();
         playerJump = GetComponent<PlayerJump>();
+        playerDrift = GetComponent<PlayerDrift>();
     }
 
     // Update is called once per frame
@@ -58,8 +62,24 @@ public class PlayerMovement : MonoBehaviour
             }
             rotationAmount = TurnAmount * stats.Cornering;
 
-            rotationAmount *= Time.deltaTime;            
+            if (DriftBoost)
+            {
+                rotationAmount += playerDrift.DriftDir;
+                DriftBoost = false;
+            }
+
+            rotationAmount *= Time.deltaTime;           
+
             transform.GetChild(0).Rotate(0, rotationAmount, 0);
+
+            if (playerDrift.DriftPressed)
+            {
+                transform.GetChild(0).GetChild(0).localRotation = new Quaternion(0, playerDrift.DriftDir * 0.1f, 0, transform.GetChild(0).GetChild(0).localRotation.w);
+            }  
+            else
+            {
+                transform.GetChild(0).GetChild(0).localRotation = new Quaternion(0, 0, 0, 0);
+            }
         }
 
         Acceleration();
@@ -147,7 +167,7 @@ public class PlayerMovement : MonoBehaviour
             fallToTheGround = true;
         }
 
-        if (grounded && !(fallToTheGround && transform.GetChild(0).forward.y > 0))
+        if (grounded && !(fallToTheGround && transform.GetChild(0).forward.y > -0.8f))
         {            
             rb.velocity = localVel;
         }
@@ -186,10 +206,8 @@ public class PlayerMovement : MonoBehaviour
 
             if (fallToTheGround)
             {
-                if (transform.GetChild(0).forward.y > 0)
-                {
-                    speed = 0;
-                }
+                speed = transform.GetChild(0).InverseTransformDirection(rb.velocity).z;
+                //Debug.Log(speed);
 
                 hud.UpdateSpeedText(rb.velocity.magnitude);
             }
@@ -228,7 +246,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (speed > 0)
                 {                    
-                    speed -= stats.Dash * (1 + Movement.z) * Time.deltaTime;
+                    speed -= stats.Dash * (1 + Movement.z)* Time.deltaTime;
                 }
                 else if (speed < -1)
                 {

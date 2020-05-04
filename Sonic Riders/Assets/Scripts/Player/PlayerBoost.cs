@@ -17,7 +17,7 @@ public class PlayerBoost : MonoBehaviour
     {
         playerMovement = GetComponent<PlayerMovement>();
         charStats = GetComponent<CharacterStats>();
-        stats = transform.GetChild(0).GetChild(1).GetComponent<BoardStats>();
+        stats = transform.GetChild(1).GetComponent<BoardStats>();
     }
 
     // Update is called once per frame
