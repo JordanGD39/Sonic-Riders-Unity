@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerBoost : MonoBehaviour
 {
     private PlayerMovement playerMovement;
+    private PlayerAnimationHandler playerAnimation;
+    private PlayerGrind playerGrind;
     private CharacterStats charStats;
     private BoardStats stats;
 
@@ -16,6 +18,8 @@ public class PlayerBoost : MonoBehaviour
     void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
+        playerGrind = GetComponent<PlayerGrind>();
+        playerAnimation = GetComponent<PlayerAnimationHandler>();
         charStats = GetComponent<CharacterStats>();
         stats = transform.GetChild(1).GetComponent<BoardStats>();
     }
@@ -28,22 +32,27 @@ public class PlayerBoost : MonoBehaviour
             boosting = false;
         }
 
-        if (BoostPressed && playerMovement.Grounded && !boosting /*&& charStats.Air > 0*/)
+        if (BoostPressed && (playerMovement.Grounded || playerGrind.Grinding) && !boosting /*&& charStats.Air > 0*/)
         {
-            BoostPressed = false;
-            playerMovement.FallToTheGround = false;
-            charStats.Air -= stats.BoostDepletion;
-            boosting = true;
-            StopCoroutine("BoostCooldown");
-            StartCoroutine("BoostCooldown");
-            if (playerMovement.Speed < stats.Boost[charStats.Level])
-            {
-                playerMovement.Speed = stats.Boost[charStats.Level];
-            }
-            else
-            {
-                playerMovement.Speed += 5;
-            }
+            playerAnimation.StartBoostAnimation();
+        }
+    }
+
+    public void Boost()
+    {
+        BoostPressed = false;
+        playerMovement.FallToTheGround = false;
+        charStats.Air -= stats.BoostDepletion;
+        boosting = true;
+        StopCoroutine("BoostCooldown");
+        StartCoroutine("BoostCooldown");
+        if (playerMovement.Speed < stats.Boost[charStats.Level])
+        {
+            playerMovement.Speed = stats.Boost[charStats.Level];
+        }
+        else
+        {
+            playerMovement.Speed += 5;
         }
     }
 

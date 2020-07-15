@@ -8,8 +8,10 @@ public class PlayerJump : MonoBehaviour
     [SerializeField] private float jumpheight = 20;
     [SerializeField] private float maxJumpheight = 60;
     [SerializeField] private float jumpGain = 1;
-    
+    public float JumpHeight { set { jumpheight = value; } }
+
     private bool jumpRelease = false;
+    public bool JumpRelease { set { jumpRelease = value; } }
     public bool JumpHold { get; set; } = false;
 
     private Rigidbody rb;
@@ -27,21 +29,23 @@ public class PlayerJump : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonUp("Jump"))
-        {
-            JumpHold = false;
-            jumpRelease = true;
-        }
-
         if (!mov.Grounded)
         {
             if (jumpheight != startingJumpheight)
             {
                 jumpheight = startingJumpheight;
             }
-            
+
+            JumpHold = false;
+
             return;
         }
+
+        if (Input.GetButtonUp("Jump"))
+        {
+            JumpHold = false;
+            jumpRelease = true;
+        }        
 
         if (Input.GetButton("Jump"))
         {

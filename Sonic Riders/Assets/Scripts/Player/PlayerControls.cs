@@ -8,12 +8,17 @@ public class PlayerControls : MonoBehaviour
     private PlayerBoost playerBoost;
     private PlayerDrift playerDrift;
 
+    //AI wont jump only on ramps
+
+    private PlayerGrind playerGrind;
+
     // Start is called before the first frame update
     void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();    
         playerBoost = GetComponent<PlayerBoost>();  
-        playerDrift = GetComponent<PlayerDrift>();  
+        playerDrift = GetComponent<PlayerDrift>();
+        playerGrind = GetComponent<PlayerGrind>();  
     }
 
     // Update is called once per frame
@@ -40,5 +45,7 @@ public class PlayerControls : MonoBehaviour
         playerBoost.BoostPressed =  Input.GetButtonDown("Boost");
 
         playerDrift.DriftPressed = Input.GetButton("Drift");
+
+        playerGrind.JumpPressed = Input.GetButtonDown("Jump");
     }
 }

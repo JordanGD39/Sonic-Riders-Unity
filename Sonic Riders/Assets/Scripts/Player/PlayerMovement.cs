@@ -6,7 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     private HUD hud;
     private CharacterStats charStats;
-    private BoardStats stats;
+    [SerializeField] private BoardStats stats;
     private PlayerBoost playerBoost;
     private PlayerJump playerJump;
     private PlayerDrift playerDrift;
@@ -28,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
     public bool Grounded { get { return grounded; } }
     [SerializeField] private float slowdownAngle = 0.4f;
     [SerializeField] private float raycastLength = 0.8f;
+    [SerializeField] private float raycastLengthUpNormal = 2;
 
     private Vector3 localLandingVelocity = Vector3.zero;
 
@@ -35,13 +36,18 @@ public class PlayerMovement : MonoBehaviour
 
     public bool DriftBoost { get; set; } = false;
 
+    public bool CantMove { get; set; } = false;
+    public Vector3 GrindVelocity { get; set; }
+
+    [SerializeField] private float hitAngle;
+    //[SerializeField] private SphereCollider sphereCollider;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         hud = GameObject.FindGameObjectWithTag("Canvas").GetComponent<HUD>();
         charStats = GetComponent<CharacterStats>();
-        stats = transform.GetChild(1).GetComponent<BoardStats>();
         playerBoost = GetComponent<PlayerBoost>();
         playerJump = GetComponent<PlayerJump>();
         playerDrift = GetComponent<PlayerDrift>();
@@ -51,8 +57,13 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         //Movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-
+        
         grounded = GetAlignment();
+
+        if (CantMove)
+        {
+            return;
+        }
 
         if (grounded)
         {
@@ -98,21 +109,51 @@ public class PlayerMovement : MonoBehaviour
     {
         bool onGround = false;
 
+        RaycastHit transformHit;
         RaycastHit hit;
         Debug.DrawRay(transform.position + new Vector3(0, -0.03f, 0), -transform.up, Color.red);
 
         int layerMask = ~LayerMask.GetMask("Player");
 
+        bool hitSomething = false;
+
+        if(Physics.Raycast(transform.position + new Vector3(0, -0.03f, 0), -transform.up, out transformHit, raycastLengthUpNormal, layerMask))
+        {
+            hitSomething = true;
+
+            if (grounded)
+            {
+                transform.up -= (transform.up - transformHit.normal) * 0.1f;
+            }
+            else
+            {
+                transform.up = transformHit.normal;
+            }           
+        }
+
         if (Physics.Raycast(transform.position + new Vector3(0, -0.03f, 0), -transform.up, out hit, raycastLength, layerMask))
         {
             if (!hit.collider.isTrigger)
             {
-                transform.up -= (transform.up - hit.normal) * 0.1f;
                 onGround = true;
+
+                //Debug.Log(transform.GetChild(0).forward.y);
+
+                hitAngle = Vector3.Angle(Vector3.up, hit.normal);
 
                 if (!grounded)
                 {
                     float normalCalc = -(hit.normal.y - 1);
+
+                    if (transform.GetChild(0).forward.y > 0)
+                    {
+                        normalCalc = -normalCalc;
+                    }
+
+                    if (normalCalc > 0.1f)
+                    {
+                        normalCalc += 0.2f;
+                    }
 
                     if (normalCalc > 1)
                     {
@@ -133,17 +174,20 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         else
-        {           
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, new Quaternion(0, 0, 0, transform.rotation.w), 10);
-
-            if (transform.rotation.x == 1)
+        {
+            if (!hitSomething)
             {
-                upsideDownTimer += Time.deltaTime;
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, new Quaternion(0, 0, 0, transform.rotation.w), 10);
 
-                if (upsideDownTimer > 0.5f)
+                if (transform.rotation.x == 1 || transform.rotation.z == 1)
                 {
-                    transform.rotation = new Quaternion(0, 0, transform.rotation.z, transform.rotation.w);
-                    upsideDownTimer = 0;
+                    upsideDownTimer += Time.deltaTime;
+
+                    if (upsideDownTimer > 0.5f)
+                    {
+                        transform.rotation = new Quaternion(0, 0, 0, transform.rotation.w);
+                        upsideDownTimer = 0;
+                    }
                 }
             }
         }
@@ -155,7 +199,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 localVel = transform.GetChild(0).forward * speed;
 
-        if (transform.rotation.x > -slowdownAngle && transform.rotation.x < slowdownAngle || !grounded)
+        if (NotOnSlowdownAngle() || !grounded)
         {            
             localVel.y = rb.velocity.y;
             ridingOnWall = false;
@@ -171,7 +215,7 @@ public class PlayerMovement : MonoBehaviour
             fallToTheGround = true;
         }
 
-        if (grounded && !(fallToTheGround && transform.GetChild(0).forward.y > -0.8f))
+        if (grounded && !(fallToTheGround && transform.GetChild(0).forward.y > -0.8f) && !CantMove)
         {            
             rb.velocity = localVel;
         }
@@ -194,7 +238,7 @@ public class PlayerMovement : MonoBehaviour
             }
 
             //Losing speed when going up walls
-            if(!(!ridingOnWall && transform.rotation.x > -slowdownAngle && transform.rotation.x < slowdownAngle || ridingOnWall && rb.velocity.y < 0))
+            if(!(!ridingOnWall && NotOnSlowdownAngle() || ridingOnWall && rb.velocity.y < 0))
             {
                 if (speed > 0)
                 {
@@ -284,5 +328,17 @@ public class PlayerMovement : MonoBehaviour
 
             hud.UpdateSpeedText(localLandingVelocity.magnitude);
         }               
+    }
+
+    private bool NotOnSlowdownAngle()
+    {
+        if (hitAngle > slowdownAngle)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 }
