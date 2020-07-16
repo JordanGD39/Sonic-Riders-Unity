@@ -8,10 +8,11 @@ public class CharacterStats : MonoBehaviour
 
     [SerializeField] private int level = 0;
     public int Level { get { return level; } set { level = value; } }
+    public bool IsPlayer { get; set; } = false;
 
     [SerializeField] private float air = 100;
     [SerializeField] private int maxAir = 100;
-    public float Air { get { return air; } set { if (value > maxAir) { value = maxAir; } if (value <= 0) { RunOnFoot(); } air = value; hud.UpdateAirBar(air); } }    
+    public float Air { get { return air; } set { if (value > maxAir) { value = maxAir; } if (value <= 0) { RunOnFoot(); } air = value; if (IsPlayer) { hud.UpdateAirBar(air); } } }    
 
     // Start is called before the first frame update
     void Start()

@@ -18,7 +18,14 @@ public class PlayerAnimationHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        anim.SetFloat("Speed", playerMovement.Speed * 0.03f);
+        float speed = playerMovement.Speed * 0.03f;
+
+        if (speed > 3)
+        {
+            speed = 3;
+        }
+
+        anim.SetFloat("Speed", speed);
         anim.SetBool("Grinding", playerGrind.Grinding);
     }
 

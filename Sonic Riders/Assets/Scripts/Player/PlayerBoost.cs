@@ -10,8 +10,10 @@ public class PlayerBoost : MonoBehaviour
     private CharacterStats charStats;
     private BoardStats stats;
 
+    private Animator canvasAnim;
+
     [SerializeField] private bool boosting = false;
-    public bool Boosting { get { return boosting; } }
+    public bool Boosting { get { return boosting; } set { boosting = value; } }
     public bool BoostPressed { get; set; }
 
     // Start is called before the first frame update
@@ -22,6 +24,7 @@ public class PlayerBoost : MonoBehaviour
         playerAnimation = GetComponent<PlayerAnimationHandler>();
         charStats = GetComponent<CharacterStats>();
         stats = transform.GetChild(1).GetComponent<BoardStats>();
+        canvasAnim = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -34,7 +37,16 @@ public class PlayerBoost : MonoBehaviour
 
         if (BoostPressed && (playerMovement.Grounded || playerGrind.Grinding) && !boosting /*&& charStats.Air > 0*/)
         {
-            playerAnimation.StartBoostAnimation();
+            boosting = true;
+
+            if (!playerGrind.Grinding)
+            {                
+                playerAnimation.StartBoostAnimation();
+            }
+            else
+            {
+                Boost();
+            }
         }
     }
 
@@ -42,8 +54,7 @@ public class PlayerBoost : MonoBehaviour
     {
         BoostPressed = false;
         playerMovement.FallToTheGround = false;
-        charStats.Air -= stats.BoostDepletion;
-        boosting = true;
+        charStats.Air -= stats.BoostDepletion;        
         StopCoroutine("BoostCooldown");
         StartCoroutine("BoostCooldown");
         if (playerMovement.Speed < stats.Boost[charStats.Level])
@@ -53,6 +64,11 @@ public class PlayerBoost : MonoBehaviour
         else
         {
             playerMovement.Speed += 5;
+        }
+
+        if (playerMovement.IsPlayer)
+        {
+            canvasAnim.Play("BoostCircle");
         }
     }
 

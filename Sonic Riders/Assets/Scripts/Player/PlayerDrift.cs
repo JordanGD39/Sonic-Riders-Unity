@@ -9,6 +9,7 @@ public class PlayerDrift : MonoBehaviour
     private CharacterStats charStats;
     public bool DriftPressed { get; set; } = false;
     public float DriftDir { get; set; } = 0;
+    private Animator canvasAnim;
 
     private float driftTimer = 0;
 
@@ -18,6 +19,7 @@ public class PlayerDrift : MonoBehaviour
         movement = GetComponent<PlayerMovement>();
         stats = transform.GetChild(1).GetComponent<BoardStats>();
         charStats = GetComponent<CharacterStats>();
+        canvasAnim = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -61,6 +63,10 @@ public class PlayerDrift : MonoBehaviour
                 movement.Speed += 5;
             }            
             movement.DriftBoost = true;
+            if (movement.IsPlayer)
+            {
+                canvasAnim.Play("BoostCircle");
+            }
         }
 
         movement.Drifting = false;

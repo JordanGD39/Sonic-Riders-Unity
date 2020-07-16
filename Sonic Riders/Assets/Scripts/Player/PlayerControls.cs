@@ -18,7 +18,8 @@ public class PlayerControls : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();    
         playerBoost = GetComponent<PlayerBoost>();  
         playerDrift = GetComponent<PlayerDrift>();
-        playerGrind = GetComponent<PlayerGrind>();  
+        playerGrind = GetComponent<PlayerGrind>();
+        playerMovement.IsPlayer = true;
     }
 
     // Update is called once per frame

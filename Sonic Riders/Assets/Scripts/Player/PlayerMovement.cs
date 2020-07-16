@@ -38,9 +38,9 @@ public class PlayerMovement : MonoBehaviour
 
     public bool CantMove { get; set; } = false;
     public Vector3 GrindVelocity { get; set; }
+    public bool IsPlayer { get; set; }
 
     [SerializeField] private float hitAngle;
-    //[SerializeField] private SphereCollider sphereCollider;
 
     // Start is called before the first frame update
     void Start()
@@ -51,6 +51,8 @@ public class PlayerMovement : MonoBehaviour
         playerBoost = GetComponent<PlayerBoost>();
         playerJump = GetComponent<PlayerJump>();
         playerDrift = GetComponent<PlayerDrift>();
+        
+        charStats.IsPlayer = IsPlayer;
     }
 
     // Update is called once per frame
@@ -108,8 +110,7 @@ public class PlayerMovement : MonoBehaviour
     private bool GetAlignment()
     {
         bool onGround = false;
-
-        RaycastHit transformHit;
+        
         RaycastHit hit;
         Debug.DrawRay(transform.position + new Vector3(0, -0.03f, 0), -transform.up, Color.red);
 
@@ -117,25 +118,20 @@ public class PlayerMovement : MonoBehaviour
 
         bool hitSomething = false;
 
-        if(Physics.Raycast(transform.position + new Vector3(0, -0.03f, 0), -transform.up, out transformHit, raycastLengthUpNormal, layerMask))
-        {
-            hitSomething = true;
-
-            if (grounded)
-            {
-                transform.up -= (transform.up - transformHit.normal) * 0.1f;
-            }
-            else
-            {
-                transform.up = transformHit.normal;
-            }           
-        }
-
         if (Physics.Raycast(transform.position + new Vector3(0, -0.03f, 0), -transform.up, out hit, raycastLength, layerMask))
         {
             if (!hit.collider.isTrigger)
             {
                 onGround = true;
+
+                if (grounded)
+                {
+                    transform.up -= (transform.up - hit.normal) * 0.1f;
+                }
+                else
+                {
+                    transform.up = hit.normal;
+                }
 
                 //Debug.Log(transform.GetChild(0).forward.y);
 
@@ -232,7 +228,10 @@ public class PlayerMovement : MonoBehaviour
                     speed -= 0.2f;
                 }
 
-                hud.UpdateSpeedText(speed);
+                if (IsPlayer)
+                {
+                    hud.UpdateSpeedText(speed);
+                }
 
                 return;
             }
@@ -249,7 +248,10 @@ public class PlayerMovement : MonoBehaviour
                     speed += (stats.Dash + 3f) * Time.deltaTime;
                 }
 
-                hud.UpdateSpeedText(speed);
+                if (IsPlayer)
+                {
+                    hud.UpdateSpeedText(speed);
+                }
             }
 
             if (fallToTheGround)
@@ -257,11 +259,17 @@ public class PlayerMovement : MonoBehaviour
                 speed = transform.GetChild(0).InverseTransformDirection(rb.velocity).z;
                 //Debug.Log(speed);
 
-                hud.UpdateSpeedText(rb.velocity.magnitude);
+                if (IsPlayer)
+                {
+                    hud.UpdateSpeedText(rb.velocity.magnitude);
+                }
             }
             else
             {
-                hud.UpdateSpeedText(speed);
+                if (IsPlayer)
+                {
+                    hud.UpdateSpeedText(speed);
+                }
             }
 
             if (Drifting)
@@ -326,7 +334,10 @@ public class PlayerMovement : MonoBehaviour
 
             speed = localLandingVelocity.magnitude;
 
-            hud.UpdateSpeedText(localLandingVelocity.magnitude);
+            if (IsPlayer)
+            {
+                hud.UpdateSpeedText(localLandingVelocity.magnitude);
+            }
         }               
     }
 
