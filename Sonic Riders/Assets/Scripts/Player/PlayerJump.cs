@@ -8,15 +8,17 @@ public class PlayerJump : MonoBehaviour
     [SerializeField] private float jumpheight = 20;
     [SerializeField] private float maxJumpheight = 60;
     [SerializeField] private float jumpGain = 1;
+    [SerializeField] private float raycastJumpLength = 0.5f;
     public float JumpHeight { set { jumpheight = value; } }
 
-    private bool jumpRelease = false;
-    public bool JumpRelease { set { jumpRelease = value; } }
+    [SerializeField] private bool jumpRelease = false;
+    public bool JumpRelease { get { return jumpRelease; } set { jumpRelease = value; } }
     public bool JumpHold { get; set; } = false;
 
     private Rigidbody rb;
     private PlayerMovement mov;
     private CharacterStats charStats;
+    [SerializeField] private float timeForLength = 0.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -66,6 +68,7 @@ public class PlayerJump : MonoBehaviour
     {
         if (jumpRelease)
         {
+            mov.RaycastLength = raycastJumpLength;
             rb.AddForce(transform.up * jumpheight, ForceMode.Impulse);
             jumpheight = startingJumpheight;
             jumpRelease = false;

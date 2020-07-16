@@ -26,7 +26,9 @@ public class PlayerAnimationHandler : MonoBehaviour
         }
 
         anim.SetFloat("Speed", speed);
+        anim.SetFloat("Direction", playerMovement.TurnAmount);
         anim.SetBool("Grinding", playerGrind.Grinding);
+        anim.SetBool("Grounded", playerMovement.Grounded);
     }
 
     public void StartBoostAnimation()

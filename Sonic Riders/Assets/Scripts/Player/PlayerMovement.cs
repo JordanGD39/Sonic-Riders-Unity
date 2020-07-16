@@ -28,7 +28,10 @@ public class PlayerMovement : MonoBehaviour
     public bool Grounded { get { return grounded; } }
     [SerializeField] private float slowdownAngle = 0.4f;
     [SerializeField] private float raycastLength = 0.8f;
-    [SerializeField] private float raycastLengthUpNormal = 2;
+    public float RaycastLength { get { return raycastLength; } set { raycastLength = value; } }
+    [SerializeField] private float startingRaycastLength = 0.8f;
+    public float StartingRaycastLength { get { return startingRaycastLength; } }
+    [SerializeField] private float extraForceGrounded = 500;
 
     private Vector3 localLandingVelocity = Vector3.zero;
 
@@ -41,6 +44,9 @@ public class PlayerMovement : MonoBehaviour
     public bool IsPlayer { get; set; }
 
     [SerializeField] private float hitAngle;
+    [SerializeField] private float highestFallSpeed;
+
+    [SerializeField] private LayerMask layerMask;
 
     // Start is called before the first frame update
     void Start()
@@ -51,7 +57,6 @@ public class PlayerMovement : MonoBehaviour
         playerBoost = GetComponent<PlayerBoost>();
         playerJump = GetComponent<PlayerJump>();
         playerDrift = GetComponent<PlayerDrift>();
-        
         charStats.IsPlayer = IsPlayer;
     }
 
@@ -98,6 +103,10 @@ public class PlayerMovement : MonoBehaviour
                 transform.GetChild(0).GetChild(0).localRotation = new Quaternion(0, 0, 0, 0);
             }
         }
+        else
+        {
+            raycastLength = 0.01f;
+        }
 
         Acceleration();
 
@@ -113,32 +122,23 @@ public class PlayerMovement : MonoBehaviour
         
         RaycastHit hit;
         Debug.DrawRay(transform.position + new Vector3(0, -0.03f, 0), -transform.up, Color.red);
-
-        int layerMask = ~LayerMask.GetMask("Player");
-
-        bool hitSomething = false;
-
+        
         if (Physics.Raycast(transform.position + new Vector3(0, -0.03f, 0), -transform.up, out hit, raycastLength, layerMask))
         {
             if (!hit.collider.isTrigger)
             {
                 onGround = true;
 
+                hitAngle = Vector3.Angle(Vector3.up, hit.normal);
+
                 if (grounded)
                 {
-                    transform.up -= (transform.up - hit.normal) * 0.1f;
-                }
+                    transform.up -= (transform.up - hit.normal) * 0.1f;                    
+                }                
                 else
                 {
                     transform.up = hit.normal;
-                }
 
-                //Debug.Log(transform.GetChild(0).forward.y);
-
-                hitAngle = Vector3.Angle(Vector3.up, hit.normal);
-
-                if (!grounded)
-                {
                     float normalCalc = -(hit.normal.y - 1);
 
                     if (transform.GetChild(0).forward.y > 0)
@@ -171,19 +171,16 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            if (!hitSomething)
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, new Quaternion(0, 0, 0, transform.rotation.w), 10);
+
+            if (transform.rotation.x == 1 || transform.rotation.z == 1)
             {
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, new Quaternion(0, 0, 0, transform.rotation.w), 10);
+                upsideDownTimer += Time.deltaTime;
 
-                if (transform.rotation.x == 1 || transform.rotation.z == 1)
+                if (upsideDownTimer > 0.5f)
                 {
-                    upsideDownTimer += Time.deltaTime;
-
-                    if (upsideDownTimer > 0.5f)
-                    {
-                        transform.rotation = new Quaternion(0, 0, 0, transform.rotation.w);
-                        upsideDownTimer = 0;
-                    }
+                    transform.rotation = new Quaternion(0, 0, 0, transform.rotation.w);
+                    upsideDownTimer = 0;
                 }
             }
         }
@@ -195,9 +192,13 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 localVel = transform.GetChild(0).forward * speed;
 
+        if (grounded && !playerJump.JumpRelease && raycastLength == startingRaycastLength && !fallToTheGround)
+        {
+            rb.AddForce(-transform.up * extraForceGrounded);
+        }
+
         if (NotOnSlowdownAngle() || !grounded)
-        {            
-            localVel.y = rb.velocity.y;
+        {           
             ridingOnWall = false;
         }      
         else
@@ -205,14 +206,19 @@ public class PlayerMovement : MonoBehaviour
             ridingOnWall = true;
         }
 
-        if (ridingOnWall && speed < 10 || playerJump.JumpHold && ridingOnWall)
+        if (ridingOnWall && speed < 10)
         {
             localVel.y = rb.velocity.y;
-            fallToTheGround = true;
+            fallToTheGround = true;            
+        }
+
+        if (playerJump.JumpHold)
+        {
+            localVel.y = rb.velocity.y;
         }
 
         if (grounded && !(fallToTheGround && transform.GetChild(0).forward.y > -0.8f) && !CantMove)
-        {            
+        {
             rb.velocity = localVel;
         }
     }
@@ -292,7 +298,7 @@ public class PlayerMovement : MonoBehaviour
                 }
                 else
                 {
-                    if (!ridingOnWall && !playerBoost.Boosting || playerBoost.Boosting && speed > stats.Boost[charStats.Level]&& !ridingOnWall)
+                    if ((!playerBoost.Boosting || playerBoost.Boosting && speed > stats.Boost[charStats.Level]) && !ridingOnWall)
                     {
                         speed -= 7 * Time.deltaTime;
                     }     
@@ -332,6 +338,11 @@ public class PlayerMovement : MonoBehaviour
         {
             localLandingVelocity = transform.GetChild(0).InverseTransformDirection(rb.velocity);
 
+            if (rb.velocity.y < highestFallSpeed)
+            {
+                highestFallSpeed = rb.velocity.y;
+            }            
+
             speed = localLandingVelocity.magnitude;
 
             if (IsPlayer)
@@ -351,5 +362,14 @@ public class PlayerMovement : MonoBehaviour
         {
             return true;
         }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {        
+        if (!playerJump.JumpRelease && !grounded && highestFallSpeed < 0)
+        {
+            highestFallSpeed = 0;
+            raycastLength = startingRaycastLength;
+        }        
     }
 }

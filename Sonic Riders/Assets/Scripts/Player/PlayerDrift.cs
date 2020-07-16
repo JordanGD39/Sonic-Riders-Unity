@@ -12,6 +12,7 @@ public class PlayerDrift : MonoBehaviour
     private Animator canvasAnim;
 
     private float driftTimer = 0;
+    [SerializeField] private float brakePower = 30;
 
     // Start is called before the first frame update
     void Start()
@@ -29,7 +30,7 @@ public class PlayerDrift : MonoBehaviour
         {
             if (DriftPressed)
             {
-                if (movement.TurnAmount != 0 || driftTimer > 0)
+                if ((movement.TurnAmount != 0 || driftTimer > 0))
                 {
                     Drift();
                 }
@@ -38,12 +39,12 @@ public class PlayerDrift : MonoBehaviour
                     //Braking
                     if (movement.Speed > 0)
                     {
-                        movement.Speed -= 30 * Time.deltaTime;
+                        movement.Speed -= brakePower * Time.deltaTime;
                     }
-                    else
+                    else if (movement.Speed < 0)
                     {
-                        movement.Speed = 0;
-                    }                    
+                        movement.Speed += brakePower * Time.deltaTime;
+                    }
                 }
                 
                 return;
@@ -79,6 +80,13 @@ public class PlayerDrift : MonoBehaviour
 
     private void Drift()
     {
+        if (movement.Speed <= 0)
+        {
+            movement.Drifting = false;
+            driftTimer = 0;
+            return;
+        }
+
         if (DriftDir == 0)
         {
             if (movement.TurnAmount > 0)
@@ -89,14 +97,7 @@ public class PlayerDrift : MonoBehaviour
             {
                 DriftDir = -1;
             }
-        }
-
-        if (movement.Speed <= 0)
-        {
-            movement.Drifting = false;
-            driftTimer = 0;
-            return;
-        }
+        }       
 
         driftTimer += Time.deltaTime;
         movement.Drifting = true;
