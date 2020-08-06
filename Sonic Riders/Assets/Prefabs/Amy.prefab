@@ -4477,17 +4477,19 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8027152530899255587}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b7b2952b0c54bfb488f379cca767fb8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingJumpheight: 5
-  jumpheight: 1
-  maxJumpheight: 10
+  groundCol: {fileID: 0}
+  startingJumpHeight: 10
+  jumpHeight: 10
+  maxJumpHeight: 15
   jumpGain: 5
   raycastJumpLength: 0.01
   jumpRelease: 0
+  actualJumpRelease: 0
   timeForLength: 0.5
 --- !u!114 &8027152530899255610
 MonoBehaviour:
@@ -4544,6 +4546,7 @@ MonoBehaviour:
   path: {fileID: 0}
   grinding: 0
   speed: 40
+  airGain: 3
   extraCharHeight: 0.5
   jumpHeightOfRamp: 10
   velocity: {x: 0, y: 0, z: 0}
@@ -4572,7 +4575,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f0f331bb89b7c14cb69c042e983e1c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turnSpeed: 2
+  tricks: 0
+  camSpeed: 1
+  lowerCamPos: {x: 0, y: 0, z: 0}
+  higherCamPos: {x: 0, y: 0, z: 0}
 --- !u!1 &8051065450385949594
 GameObject:
   m_ObjectHideFlags: 0

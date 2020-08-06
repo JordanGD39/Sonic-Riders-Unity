@@ -43,7 +43,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool CantMove { get; set; } = false;
     public Vector3 GrindVelocity { get; set; }
-    public bool IsPlayer { get; set; }
+    public bool IsPlayer { get; set; } = false;
 
     [SerializeField] private float hitAngle;
     [SerializeField] private float highestFallSpeed;
@@ -59,7 +59,11 @@ public class PlayerMovement : MonoBehaviour
         playerBoost = GetComponent<PlayerBoost>();
         playerJump = GetComponent<PlayerJump>();
         playerDrift = GetComponent<PlayerDrift>();
-        playerTricks = GetComponent<PlayerTricks>();
+        playerTricks = GetComponent<PlayerTricks>();        
+    }
+
+    public void CheckIfPlayer()
+    {
         charStats.IsPlayer = IsPlayer;
     }
 
@@ -67,8 +71,16 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         //Movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+
+        if (!playerJump.DontDragDown)
+        {
+            grounded = GetAlignment();
+        }
+        else
+        {
+            grounded = false;
+        }
         
-        grounded = GetAlignment();
 
         if (CantMove)
         {
@@ -77,6 +89,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (grounded)
         {
+            transform.GetChild(0).localRotation = new Quaternion(0, transform.GetChild(0).localRotation.y, 0, transform.GetChild(0).localRotation.w);
+
             if (!ridingOnWall)
             {
                 fallToTheGround = false;
@@ -108,7 +122,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            raycastLength = 0.01f;
+            raycastLength = 0;
         }
 
         Acceleration();
@@ -205,9 +219,14 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 localVel = transform.GetChild(0).forward * speed;
 
-        if (grounded && !playerJump.JumpRelease && raycastLength == startingRaycastLength && !fallToTheGround)
+        if (grounded && !playerJump.DontDragDown && !playerTricks.CanDoTricks && raycastLength == startingRaycastLength && !fallToTheGround)
         {
             rb.AddForce(-transform.up * extraForceGrounded);
+        }
+
+        if (playerJump.DontDragDown && transform.InverseTransformDirection(rb.velocity).y < 0)
+        {
+            rb.velocity = new Vector3(rb.velocity.x, playerJump.JumpHeight + playerJump.RampPower, rb.velocity.z);
         }
 
         if (NotOnSlowdownAngle() || !grounded)
@@ -389,7 +408,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
-        if (!playerJump.JumpRelease && !grounded && highestFallSpeed < 0)
+        if (!playerJump.DontDragDown && !grounded)
         {
             highestFallSpeed = 0;
             raycastLength = startingRaycastLength;

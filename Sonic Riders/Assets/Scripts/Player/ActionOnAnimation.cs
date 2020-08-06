@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoostOnAnimation : MonoBehaviour
+public class ActionOnAnimation : MonoBehaviour
 {
     private PlayerControls controls;
     private PlayerBoost playerBoost;
     private PlayerMovement playerMovement;
-    //private CameraShake cameraShake;
-    
+    private PlayerTricks playerTricks;
 
+    private bool canLand = false;
+    
     private void Start()
     {
         playerBoost = GetComponentInParent<PlayerBoost>();
         playerMovement = GetComponentInParent<PlayerMovement>();
-
-        //cameraShake = Camera.main.GetComponent<CameraShake>();
+        playerTricks = GetComponentInParent<PlayerTricks>();
     }
 
     public void BoostNow()
@@ -26,7 +26,17 @@ public class BoostOnAnimation : MonoBehaviour
             return;
         }
 
-        playerBoost.Boost();
-        //StartCoroutine(cameraShake.Shake(0.1f, 0.0001f));     
+        playerBoost.Boost(); 
+    }
+
+    public void CountTrick()
+    {
+        playerTricks.TrickCountUp();
+        playerTricks.CanLand = true;
+    }
+
+    public void CantLand()
+    {
+        playerTricks.CanLand = false;
     }
 }

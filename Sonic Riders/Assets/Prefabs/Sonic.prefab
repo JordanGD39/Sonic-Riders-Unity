@@ -450,11 +450,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7b2952b0c54bfb488f379cca767fb8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  groundCol: {fileID: 97159474546320771}
   startingJumpHeight: 5
   jumpHeight: 5
   maxJumpHeight: 10
   jumpGain: 5
-  raycastJumpLength: 0.01
+  raycastJumpLength: 0
   jumpRelease: 0
   timeForLength: 0.5
 --- !u!114 &7437413400459437338
@@ -469,6 +470,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f0f331bb89b7c14cb69c042e983e1c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tricks: 0
+  camSpeed: 1
+  lowerCamPos: {x: 0, y: 0, z: 0}
+  higherCamPos: {x: 0, y: 0, z: 0}
 --- !u!114 &97159473819385884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -524,6 +529,7 @@ MonoBehaviour:
   path: {fileID: 0}
   grinding: 0
   speed: 40
+  airGain: 0.2
   extraCharHeight: 0.5
   jumpHeightOfRamp: 10
   velocity: {x: 0, y: 0, z: 0}

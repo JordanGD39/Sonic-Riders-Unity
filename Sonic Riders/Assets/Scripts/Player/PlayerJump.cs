@@ -5,19 +5,22 @@ using UnityEngine;
 public class PlayerJump : MonoBehaviour
 {
     private PlayerSound playerSound;
+    [SerializeField] private SphereCollider groundCol;
 
     [SerializeField] private float startingJumpHeight = 20;
     [SerializeField] private float jumpHeight = 20;
     [SerializeField] private float maxJumpHeight = 60;
     [SerializeField] private float jumpGain = 1;
     [SerializeField] private float raycastJumpLength = 0.5f;
-    public float JumpHeight { set { jumpHeight = value; } }
+    public float JumpHeight { get { return jumpHeight; } set { jumpHeight = value; } }
 
     [SerializeField] private bool jumpRelease = false;
+    [SerializeField] private bool actualJumpRelease = false;
     public bool JumpRelease { get { return jumpRelease; } set { jumpRelease = value; } }
     public bool JumpHold { get; set; } = false;
     public bool JumpHoldControls { get; set; } = false;
     public bool JumpButtonUp { get; set; } = false;
+    public bool DontDragDown { get; set; } = false;
 
     private Rigidbody rb;
     private PlayerMovement mov;
@@ -26,6 +29,7 @@ public class PlayerJump : MonoBehaviour
     [SerializeField] private float timeForLength = 0.5f;
 
     private float rampPower;
+    public float RampPower { get { return rampPower; } }
     private float maxRampPower;
     private float worstRampPower;
 
@@ -95,7 +99,7 @@ public class PlayerJump : MonoBehaviour
                 rampPower = 0;
             }
 
-            jumpRelease = true;            
+            jumpRelease = true;
         }        
 
         if (JumpHoldControls)
@@ -118,6 +122,8 @@ public class PlayerJump : MonoBehaviour
         if (jumpRelease)
         {
             mov.RaycastLength = raycastJumpLength;
+            DontDragDown = true;
+            Invoke("CanDragDown", 0.2f);
 
             if (rampPower > 0)
             {
@@ -142,6 +148,11 @@ public class PlayerJump : MonoBehaviour
         }
     }
 
+    private void CanDragDown()
+    {
+        DontDragDown = false;
+    }
+
     public void FallingOffRamp(float worstPower, float speed, float perfectJump, float powerOfRamp)
     {
         if (transform.parent != null && !alreadyFell && transform.localPosition.z > perfectJump && !playerTricks.CanDoTricks)
@@ -157,13 +168,17 @@ public class PlayerJump : MonoBehaviour
 
             jumpRelease = true;
 
-            playerSound.PlaySoundEffect(PlayerSound.sounds.JUMPRAMP);
+            //For now!!!!!
+            if (mov.IsPlayer)
+            {
+                playerSound.PlaySoundEffect(PlayerSound.sounds.JUMPRAMP);
+            }           
 
             Debug.Log("Fell of ramp");
         }
         else
         {
-            if (!jumpRelease)
+            if (!jumpRelease && !DontDragDown)
             {
                 transform.parent = null;
             }

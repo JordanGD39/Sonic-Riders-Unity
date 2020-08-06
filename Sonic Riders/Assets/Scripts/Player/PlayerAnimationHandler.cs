@@ -49,6 +49,10 @@ public class PlayerAnimationHandler : MonoBehaviour
         {
             anim.SetFloat("TrickVerticalDir", playerTricks.TrickDirection.y);
         }        
+        else
+        {
+            anim.SetFloat("TrickVerticalDir", 0);
+        }
     }
 
     public void StartBoostAnimation()

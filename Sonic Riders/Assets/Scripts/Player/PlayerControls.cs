@@ -21,6 +21,8 @@ public class PlayerControls : MonoBehaviour
         playerJump = GetComponent<PlayerJump>();
         playerTricks = GetComponent<PlayerTricks>();
         playerMovement.IsPlayer = true;
+        playerMovement.CheckIfPlayer();
+        AudioManager.instance.Play("Test");
     }
 
     // Update is called once per frame

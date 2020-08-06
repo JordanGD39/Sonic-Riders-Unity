@@ -23,6 +23,7 @@ public class PlayerGrind : MonoBehaviour
     private float closestDistance = 0;
 
     [SerializeField] private float speed = 3;
+    [SerializeField] private float airGain = 0.02f;
     [SerializeField] private float extraCharHeight = 0.2f;
     [SerializeField] private float jumpHeightOfRamp = 30;
 
@@ -49,6 +50,8 @@ public class PlayerGrind : MonoBehaviour
         {
             if (grinding)
             {
+                charStats.Air += airGain;
+
                 velocity = (transform.position - previousPos) / Time.deltaTime;
                 previousPos = transform.position;
 
