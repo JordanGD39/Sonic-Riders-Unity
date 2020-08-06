@@ -8,7 +8,7 @@ public class PlayerGrind : MonoBehaviour
     private PlayerMovement movement;
     private PlayerJump playerJump;
     private Rigidbody rb;
-    [SerializeField] private BoardStats stats;
+    private BoardStats stats;
     private CharacterStats charStats;
 
     public bool JumpPressed { get; set; } = false;
@@ -38,6 +38,7 @@ public class PlayerGrind : MonoBehaviour
         playerJump = GetComponent<PlayerJump>();
         rb = GetComponent<Rigidbody>();
         charStats = GetComponent<CharacterStats>();
+        stats = movement.Stats;
         hud = GameObject.FindGameObjectWithTag("Canvas").GetComponent<HUD>();
     }
 

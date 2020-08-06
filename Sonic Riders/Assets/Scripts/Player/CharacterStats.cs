@@ -12,7 +12,14 @@ public class CharacterStats : MonoBehaviour
 
     [SerializeField] private float air = 100;
     [SerializeField] private int maxAir = 100;
-    public float Air { get { return air; } set { if (value > maxAir) { value = maxAir; } if (value <= 0) { RunOnFoot(); } air = value; if (IsPlayer) { hud.UpdateAirBar(air); } } }    
+    public float Air { get { return air; } set { if (value > maxAir) { value = maxAir; } if (value <= 0) { RunOnFoot(); } air = value; if (IsPlayer) { hud.UpdateAirBar(air); } } }
+
+    [SerializeField] private float speedLoss = 0;
+    public float SpeedLoss { get { return speedLoss; } }
+    [SerializeField] private float extraPower = 0;
+    public float ExtraPower { get { return extraPower; } }
+    [SerializeField] private float extraCornering = 0;
+    public float ExtraCornering { get { return extraCornering; } }
 
     // Start is called before the first frame update
     void Start()

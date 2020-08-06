@@ -7,9 +7,11 @@ public class PlayerMovement : MonoBehaviour
     private HUD hud;
     private CharacterStats charStats;
     [SerializeField] private BoardStats stats;
+    public BoardStats Stats { get { return stats; } }
     private PlayerBoost playerBoost;
     private PlayerJump playerJump;
     private PlayerDrift playerDrift;
+    private PlayerTricks playerTricks;
 
     private Rigidbody rb;
 
@@ -57,6 +59,7 @@ public class PlayerMovement : MonoBehaviour
         playerBoost = GetComponent<PlayerBoost>();
         playerJump = GetComponent<PlayerJump>();
         playerDrift = GetComponent<PlayerDrift>();
+        playerTricks = GetComponent<PlayerTricks>();
         charStats.IsPlayer = IsPlayer;
     }
 
@@ -171,6 +174,11 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
+            if (playerTricks.CanDoTricks)
+            {
+                return onGround;
+            }
+
             transform.rotation = Quaternion.RotateTowards(transform.rotation, new Quaternion(0, 0, 0, transform.rotation.w), 10);
 
             if (transform.rotation.x == 1 || transform.rotation.z == 1)
@@ -247,11 +255,11 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (speed > 0)
                 {
-                    speed -= (stats.Dash + 3f) * Time.deltaTime;
+                    speed -= 11 * Time.deltaTime;
                 }
                 else if(speed < 0)
                 {
-                    speed += (stats.Dash + 3f) * Time.deltaTime;
+                    speed += 11 * Time.deltaTime;
                 }
 
                 if (IsPlayer)
@@ -292,7 +300,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (Movement.z >= 0.25f)
             {
-                if (speed < stats.Limit[charStats.Level])
+                if (speed < stats.Limit[charStats.Level] - charStats.SpeedLoss)
                 {
                     speed += stats.Dash * Movement.z * Time.deltaTime;                                            
                 }
@@ -314,8 +322,18 @@ public class PlayerMovement : MonoBehaviour
             else if (Movement.z < 0.25f && Movement.z >= 0)
             {
                 if (speed > 0)
-                {                    
-                    speed -= (stats.Dash * (1 + Movement.z) * brakeMultiplier)* Time.deltaTime;
+                {
+                    if (rb.velocity.y < 0 && brakeMultiplier < 1)
+                    {
+                        if (speed < 100)
+                        {
+                            speed += 3 * Time.deltaTime;
+                        }
+                    }
+                    else
+                    {
+                        speed -= (stats.Dash * (1 + Movement.z) * brakeMultiplier) * Time.deltaTime;
+                    }                    
                 }
                 else if (speed < -1)
                 {
@@ -365,7 +383,13 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void OnCollisionStay(Collision collision)
-    {        
+    {
+        if (collision != null && collision.gameObject.layer == 0 && playerTricks.CanDoTricks)
+        {
+            transform.rotation = new Quaternion(0, 0, 0, transform.rotation.w);
+            transform.GetChild(0).rotation = new Quaternion(0, transform.GetChild(0).rotation.y, 0, transform.GetChild(0).rotation.w);
+        }
+
         if (!playerJump.JumpRelease && !grounded && highestFallSpeed < 0)
         {
             highestFallSpeed = 0;

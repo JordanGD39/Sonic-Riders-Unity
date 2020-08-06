@@ -18,9 +18,9 @@ public class PlayerDrift : MonoBehaviour
     void Start()
     {
         movement = GetComponent<PlayerMovement>();
-        stats = transform.GetChild(1).GetComponent<BoardStats>();
         charStats = GetComponent<CharacterStats>();
         canvasAnim = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Animator>();
+        stats = movement.Stats;
     }
 
     // Update is called once per frame

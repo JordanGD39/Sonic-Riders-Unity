@@ -23,7 +23,7 @@ public class PlayerBoost : MonoBehaviour
         playerGrind = GetComponent<PlayerGrind>();
         playerAnimation = GetComponent<PlayerAnimationHandler>();
         charStats = GetComponent<CharacterStats>();
-        stats = transform.GetChild(1).GetComponent<BoardStats>();
+        stats = playerMovement.Stats;
         canvasAnim = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Animator>();
     }
 
@@ -57,6 +57,7 @@ public class PlayerBoost : MonoBehaviour
         charStats.Air -= stats.BoostDepletion;        
         StopCoroutine("BoostCooldown");
         StartCoroutine("BoostCooldown");
+
         if (playerMovement.Speed < stats.Boost[charStats.Level])
         {
             playerMovement.Speed = stats.Boost[charStats.Level];
