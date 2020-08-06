@@ -169,6 +169,11 @@ public class PlayerMovement : MonoBehaviour
                     Debug.Log(tempSpeed + " up calc: " + normalCalc);
 
                     speed = tempSpeed;
+
+                    if (playerTricks.CanDoTricks)
+                    {
+                        playerTricks.Landed();
+                    }                    
                 }
             }
         }
@@ -384,12 +389,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
-        if (collision != null && collision.gameObject.layer == 0 && playerTricks.CanDoTricks)
-        {
-            transform.rotation = new Quaternion(0, 0, 0, transform.rotation.w);
-            transform.GetChild(0).rotation = new Quaternion(0, transform.GetChild(0).rotation.y, 0, transform.GetChild(0).rotation.w);
-        }
-
         if (!playerJump.JumpRelease && !grounded && highestFallSpeed < 0)
         {
             highestFallSpeed = 0;

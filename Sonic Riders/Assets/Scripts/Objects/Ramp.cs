@@ -11,6 +11,7 @@ public class Ramp : MonoBehaviour
 
     public float PerfectJump { get { return perfectJumpRange; } }
     public float Power { get { return power; } }
+    public float WorstPower { get { return worstPower; } }
     public float Speed { get { return speed; } }
 
     private void OnTriggerEnter(Collider other)
@@ -25,7 +26,7 @@ public class Ramp : MonoBehaviour
     {
         if (other.transform.GetComponentInParent<PlayerMovement>().CompareTag("Player"))
         {
-            other.transform.GetComponentInParent<PlayerJump>().FallingOffRamp(worstPower, speed, perfectJumpRange);
+            other.transform.GetComponentInParent<PlayerJump>().FallingOffRamp(worstPower, speed, perfectJumpRange, power);
         }
     }    
 }

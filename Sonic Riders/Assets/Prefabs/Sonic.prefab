@@ -450,10 +450,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7b2952b0c54bfb488f379cca767fb8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerSound: {fileID: 6681310777960127017}
-  startingJumpheight: 5
-  jumpheight: 1
-  maxJumpheight: 10
+  startingJumpHeight: 5
+  jumpHeight: 5
+  maxJumpHeight: 10
   jumpGain: 5
   raycastJumpLength: 0.01
   jumpRelease: 0
@@ -470,7 +469,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f0f331bb89b7c14cb69c042e983e1c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turnSpeed: 2
 --- !u!114 &97159473819385884
 MonoBehaviour:
   m_ObjectHideFlags: 0

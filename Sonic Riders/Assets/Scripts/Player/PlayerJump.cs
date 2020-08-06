@@ -6,16 +6,18 @@ public class PlayerJump : MonoBehaviour
 {
     private PlayerSound playerSound;
 
-    [SerializeField] private float startingJumpheight = 20;
-    [SerializeField] private float jumpheight = 20;
-    [SerializeField] private float maxJumpheight = 60;
+    [SerializeField] private float startingJumpHeight = 20;
+    [SerializeField] private float jumpHeight = 20;
+    [SerializeField] private float maxJumpHeight = 60;
     [SerializeField] private float jumpGain = 1;
     [SerializeField] private float raycastJumpLength = 0.5f;
-    public float JumpHeight { set { jumpheight = value; } }
+    public float JumpHeight { set { jumpHeight = value; } }
 
     [SerializeField] private bool jumpRelease = false;
     public bool JumpRelease { get { return jumpRelease; } set { jumpRelease = value; } }
     public bool JumpHold { get; set; } = false;
+    public bool JumpHoldControls { get; set; } = false;
+    public bool JumpButtonUp { get; set; } = false;
 
     private Rigidbody rb;
     private PlayerMovement mov;
@@ -24,6 +26,8 @@ public class PlayerJump : MonoBehaviour
     [SerializeField] private float timeForLength = 0.5f;
 
     private float rampPower;
+    private float maxRampPower;
+    private float worstRampPower;
 
     private bool alreadyFell = false;
 
@@ -42,9 +46,9 @@ public class PlayerJump : MonoBehaviour
     {
         if (!mov.Grounded)
         {
-            if (jumpheight != startingJumpheight)
+            if (jumpHeight != startingJumpHeight)
             {
-                jumpheight = startingJumpheight;
+                jumpHeight = startingJumpHeight;
             }
 
             JumpHold = false;
@@ -52,7 +56,7 @@ public class PlayerJump : MonoBehaviour
             return;
         }
 
-        if (Input.GetButtonUp("Jump"))
+        if (JumpButtonUp)
         {
             JumpHold = false;            
 
@@ -60,6 +64,8 @@ public class PlayerJump : MonoBehaviour
             {
                 Ramp ramp = transform.GetComponentInParent<Ramp>();
                 rampPower = ramp.Power;
+                maxRampPower = rampPower;
+                worstRampPower = ramp.WorstPower;
 
                 if (transform.localPosition.z < ramp.PerfectJump)
                 {
@@ -92,7 +98,7 @@ public class PlayerJump : MonoBehaviour
             jumpRelease = true;            
         }        
 
-        if (Input.GetButton("Jump"))
+        if (JumpHoldControls)
         {
             JumpHold = true;
             if (charStats.Air > 0)
@@ -100,9 +106,9 @@ public class PlayerJump : MonoBehaviour
                 charStats.Air -= 0.05f;                
             }
 
-            if (jumpheight < maxJumpheight)
+            if (jumpHeight < maxJumpHeight)
             {
-                jumpheight += jumpGain * Time.deltaTime;
+                jumpHeight += jumpGain * Time.deltaTime;
             }
         }        
     }
@@ -121,27 +127,29 @@ public class PlayerJump : MonoBehaviour
 
                 rb.velocity = transform.GetChild(0).forward * mov.Speed;
 
-                rb.AddForce(transform.parent.GetChild(0).forward * (jumpheight + rampPower), ForceMode.Impulse);
+                rb.AddForce(transform.parent.GetChild(0).forward * (jumpHeight + rampPower), ForceMode.Impulse);
                 transform.parent = null;
                 alreadyFell = false;
-                playerTricks.CanDoTricks = true;
+                playerTricks.ChangeTrickSpeed(rampPower, maxRampPower, worstRampPower, jumpHeight, startingJumpHeight, maxJumpHeight);
             }
             else
             {                
-                rb.AddForce(transform.up * jumpheight, ForceMode.Impulse);                
+                rb.AddForce(transform.up * jumpHeight, ForceMode.Impulse);                
             }
 
-            jumpheight = startingJumpheight;
+            jumpHeight = startingJumpHeight;
             jumpRelease = false;
         }
     }
 
-    public void FallingOffRamp(float worstPower, float speed, float perfectJump)
+    public void FallingOffRamp(float worstPower, float speed, float perfectJump, float powerOfRamp)
     {
         if (transform.parent != null && !alreadyFell && transform.localPosition.z > perfectJump && !playerTricks.CanDoTricks)
         {            
             alreadyFell = true;
             rampPower = worstPower;
+            maxRampPower = powerOfRamp;
+            worstRampPower = worstPower;
 
             mov.Speed = speed;
 

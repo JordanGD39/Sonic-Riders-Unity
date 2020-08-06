@@ -5,9 +5,11 @@ using UnityEngine;
 public class PlayerAnimationHandler : MonoBehaviour
 {
     [SerializeField] private Animator anim;
+    public Animator Anim { get { return anim; } }
     private PlayerMovement playerMovement;
     private PlayerGrind playerGrind;
     private PlayerJump playerJump;
+    private PlayerTricks playerTricks;
 
     // Start is called before the first frame update
     void Start()
@@ -15,6 +17,7 @@ public class PlayerAnimationHandler : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         playerGrind = GetComponent<PlayerGrind>();
         playerJump = GetComponent<PlayerJump>();
+        playerTricks = GetComponent<PlayerTricks>();
     }
 
     // Update is called once per frame
@@ -36,6 +39,16 @@ public class PlayerAnimationHandler : MonoBehaviour
         anim.SetBool("Grinding", playerGrind.Grinding);
         anim.SetBool("Grounded", playerMovement.Grounded);
         anim.SetBool("ChargingJump", playerJump.JumpHold);
+
+        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Falling") && playerTricks.CanDoTricks)
+        {
+            anim.SetBool("DoingTricks", playerTricks.CanDoTricks);
+        }
+
+        if (playerTricks.CanDoTricks)
+        {
+            anim.SetFloat("TrickVerticalDir", playerTricks.TrickDirection.y);
+        }        
     }
 
     public void StartBoostAnimation()
