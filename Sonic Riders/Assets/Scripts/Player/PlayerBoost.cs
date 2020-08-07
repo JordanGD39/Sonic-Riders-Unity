@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerBoost : MonoBehaviour
 {
     private PlayerMovement playerMovement;
+    private PlayerSound playerSound;
     private PlayerAnimationHandler playerAnimation;
     private PlayerGrind playerGrind;
     private CharacterStats charStats;
@@ -24,6 +25,7 @@ public class PlayerBoost : MonoBehaviour
         playerAnimation = GetComponent<PlayerAnimationHandler>();
         charStats = GetComponent<CharacterStats>();
         stats = playerMovement.Stats;
+        playerSound = GetComponentInChildren<PlayerSound>();
         canvasAnim = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Animator>();
     }
 
@@ -66,6 +68,8 @@ public class PlayerBoost : MonoBehaviour
         {
             playerMovement.Speed += 5;
         }
+
+        playerSound.PlaySoundEffect(PlayerSound.voiceSounds.NONE, PlayerSound.sounds.BOOST);
 
         if (playerMovement.IsPlayer)
         {

@@ -80,13 +80,13 @@ public class PlayerJump : MonoBehaviour
                         rampPower -= ramp.PerfectJump / 2;
                     }
 
-                    playerSound.PlaySoundEffect(PlayerSound.sounds.JUMPRAMP);
+                    playerSound.PlaySoundEffect(PlayerSound.voiceSounds.JUMPRAMP, PlayerSound.sounds.NONE);
                 }
                 else
                 {
                     if (!playerTricks.CanDoTricks)
                     {
-                        playerSound.PlaySoundEffect(PlayerSound.sounds.PERFECTJUMP);
+                        playerSound.PlaySoundEffect(PlayerSound.voiceSounds.PERFECTJUMP, PlayerSound.sounds.NONE);
                     }                    
                 }
 
@@ -121,6 +121,11 @@ public class PlayerJump : MonoBehaviour
     {
         if (jumpRelease)
         {
+            if (mov.IsPlayer)
+            {
+                playerSound.PlaySoundEffect(PlayerSound.voiceSounds.NONE, PlayerSound.sounds.JUMP);
+            }
+
             mov.RaycastLength = raycastJumpLength;
             DontDragDown = true;
             Invoke("CanDragDown", 0.2f);
@@ -171,7 +176,7 @@ public class PlayerJump : MonoBehaviour
             //For now!!!!!
             if (mov.IsPlayer)
             {
-                playerSound.PlaySoundEffect(PlayerSound.sounds.JUMPRAMP);
+                playerSound.PlaySoundEffect(PlayerSound.voiceSounds.JUMPRAMP, PlayerSound.sounds.NONE);
             }           
 
             Debug.Log("Fell of ramp");

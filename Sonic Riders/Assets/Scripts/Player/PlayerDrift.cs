@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerDrift : MonoBehaviour
 {
+    private PlayerSound playerSound;
     private PlayerMovement movement;
     private BoardStats stats;
     private CharacterStats charStats;
@@ -21,6 +22,7 @@ public class PlayerDrift : MonoBehaviour
         charStats = GetComponent<CharacterStats>();
         canvasAnim = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Animator>();
         stats = movement.Stats;
+        playerSound = GetComponentInChildren<PlayerSound>();
     }
 
     // Update is called once per frame
@@ -64,6 +66,9 @@ public class PlayerDrift : MonoBehaviour
                 movement.Speed += 5;
             }            
             movement.DriftBoost = true;
+
+            playerSound.PlaySoundEffect(PlayerSound.voiceSounds.NONE, PlayerSound.sounds.BOOST);
+
             if (movement.IsPlayer)
             {
                 canvasAnim.Play("BoostCircle");

@@ -102,8 +102,11 @@ public class PlayerTricks : MonoBehaviour
             return;
         }
 
+        playerSound.PlaySoundEffect(PlayerSound.voiceSounds.NONE, PlayerSound.sounds.LAND);
+
         if (!playerAnimation.Anim.GetCurrentAnimatorStateInfo(0).IsName("Falling") && !CanLand)
         {
+            playerSound.PlaySoundEffect(PlayerSound.voiceSounds.RAMPFAIL, PlayerSound.sounds.NONE);
             playerMovement.Speed *= 0.1f;
             Debug.Log("Trick speed loss!!!");
             characterStats.Air -= 15;
@@ -115,8 +118,13 @@ public class PlayerTricks : MonoBehaviour
 
             if (speedReward > 0.5f)
             {
+                playerSound.PlaySoundEffect(PlayerSound.voiceSounds.JUMPSUCCES, PlayerSound.sounds.NONE);
                 playerMovement.Speed = playerMovement.Stats.Limit[characterStats.Level];
-            }            
+            }  
+            else
+            {
+                playerSound.PlaySoundEffect(PlayerSound.voiceSounds.RAMPFAIL, PlayerSound.sounds.NONE);
+            }
         }
 
         tricks = 0;

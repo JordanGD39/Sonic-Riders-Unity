@@ -5,10 +5,12 @@ using UnityEngine;
 public class BoostPad : MonoBehaviour
 {
     private Animator canvasAnim;
+    private AudioSource source;
 
     private void Start()
     {
         canvasAnim = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Animator>();
+        source = GetComponentInChildren<AudioSource>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -22,6 +24,11 @@ public class BoostPad : MonoBehaviour
 
             player.transform.position = transform.position;
             other.transform.parent.localRotation = transform.rotation;
+
+            if (!source.isPlaying)
+            {
+                source.Play();
+            }
 
             if (controls != null)
             {

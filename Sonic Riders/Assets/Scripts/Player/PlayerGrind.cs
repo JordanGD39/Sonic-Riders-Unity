@@ -7,6 +7,7 @@ public class PlayerGrind : MonoBehaviour
 {
     private PlayerMovement movement;
     private PlayerJump playerJump;
+    private PlayerSound playerSound;
     private Rigidbody rb;
     private BoardStats stats;
     private CharacterStats charStats;
@@ -41,6 +42,7 @@ public class PlayerGrind : MonoBehaviour
         charStats = GetComponent<CharacterStats>();
         stats = movement.Stats;
         hud = GameObject.FindGameObjectWithTag("Canvas").GetComponent<HUD>();
+        playerSound = GetComponentInChildren<PlayerSound>();
     }
 
     // Update is called once per frame
@@ -50,6 +52,7 @@ public class PlayerGrind : MonoBehaviour
         {
             if (grinding)
             {
+                playerSound.PlaySoundEffect(PlayerSound.voiceSounds.NONE, PlayerSound.sounds.GRIND);
                 charStats.Air += airGain;
 
                 velocity = (transform.position - previousPos) / Time.deltaTime;
@@ -103,6 +106,8 @@ public class PlayerGrind : MonoBehaviour
                     Vector3.ClampMagnitude(velocity, stats.Boost[charStats.Level]);
                     rb.velocity = velocity;
                     movement.CantMove = false;
+
+                    playerSound.StopPlayingGrind();
 
                     if (jumpPressed)
                     {
