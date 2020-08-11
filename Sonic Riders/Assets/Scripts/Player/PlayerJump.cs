@@ -73,11 +73,18 @@ public class PlayerJump : MonoBehaviour
 
                 if (transform.localPosition.z < ramp.PerfectJump)
                 {
-                    rampPower -= Mathf.Abs(transform.localPosition.z) * 0.25f;
-
-                    if (transform.localPosition.y < 0)
+                    if (transform.localPosition.z > -ramp.PerfectJump)
                     {
-                        rampPower -= ramp.PerfectJump / 2;
+                        float powerDiff = rampPower - worstRampPower;
+                        float diffPos = transform.localPosition.z + ramp.PerfectJump;
+                        float percent = diffPos / (ramp.PerfectJump * 2);                        
+                        rampPower -= powerDiff * percent;
+                        Debug.Log("Diff: " + diffPos + " Percent: "+ percent + " power: " + rampPower);
+                    }
+                    else
+                    {
+                        Debug.Log("NANI!!");
+                        rampPower = worstRampPower;
                     }
 
                     playerSound.PlaySoundEffect(PlayerSound.voiceSounds.JUMPRAMP, PlayerSound.sounds.NONE);
@@ -91,8 +98,6 @@ public class PlayerJump : MonoBehaviour
                 }
 
                 Debug.Log("Ramp power " + rampPower);
-
-                mov.Speed = ramp.Speed;
             }
             else
             {
@@ -136,9 +141,11 @@ public class PlayerJump : MonoBehaviour
                 rot.y = transform.parent.rotation.y;
                 transform.GetChild(0).rotation = rot;
 
-                rb.velocity = transform.GetChild(0).forward * mov.Speed;
+                //rb.velocity = transform.GetChild(0).forward * mov.Speed;
 
-                rb.AddForce(transform.parent.GetChild(0).forward * (jumpHeight + rampPower), ForceMode.Impulse);
+                //rb.AddForce(transform.parent.GetChild(0).forward * (jumpHeight + rampPower), ForceMode.Force);
+                rb.velocity = transform.parent.GetChild(0).forward * (jumpHeight + rampPower);
+
                 transform.parent = null;
                 alreadyFell = false;
                 playerTricks.ChangeTrickSpeed(rampPower, maxRampPower, worstRampPower, jumpHeight, startingJumpHeight, maxJumpHeight);
@@ -158,7 +165,7 @@ public class PlayerJump : MonoBehaviour
         DontDragDown = false;
     }
 
-    public void FallingOffRamp(float worstPower, float speed, float perfectJump, float powerOfRamp)
+    public void FallingOffRamp(float worstPower, float perfectJump, float powerOfRamp)
     {
         if (transform.parent != null && !alreadyFell && transform.localPosition.z > perfectJump && !playerTricks.CanDoTricks)
         {            
@@ -166,10 +173,6 @@ public class PlayerJump : MonoBehaviour
             rampPower = worstPower;
             maxRampPower = powerOfRamp;
             worstRampPower = worstPower;
-
-            mov.Speed = speed;
-
-            rb.velocity = transform.GetChild(0).forward * speed;
 
             jumpRelease = true;
 

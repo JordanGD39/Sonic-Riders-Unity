@@ -5,14 +5,18 @@ using UnityEngine;
 public class Ramp : MonoBehaviour
 {
     [SerializeField] private float perfectJumpRange = 7;
-    [SerializeField] private float worstPower = 7;
+    private float worstPower = 7;
     [SerializeField] private float power = 30;
-    [SerializeField] private float speed = 20;
+    [SerializeField] private float multiplier = 0.8f;
 
     public float PerfectJump { get { return perfectJumpRange; } }
     public float Power { get { return power; } }
     public float WorstPower { get { return worstPower; } }
-    public float Speed { get { return speed; } }
+
+    private void Start()
+    {
+        worstPower = power * 0.8f;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -26,7 +30,7 @@ public class Ramp : MonoBehaviour
     {
         if (other.transform.GetComponentInParent<PlayerMovement>().CompareTag("Player"))
         {
-            other.transform.GetComponentInParent<PlayerJump>().FallingOffRamp(worstPower, speed, perfectJumpRange, power);
+            other.transform.GetComponentInParent<PlayerJump>().FallingOffRamp(worstPower, perfectJumpRange, power);
         }
     }    
 }

@@ -34,8 +34,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float startingRaycastLength = 0.8f;
     public float StartingRaycastLength { get { return startingRaycastLength; } }
     [SerializeField] private float extraForceGrounded = 500;
+    [SerializeField] private float failVelocityMultiplier = 0.3f;
 
     private Vector3 localLandingVelocity = Vector3.zero;
+    private Vector3 lastGroundedPos;
+    public Vector3 LastGroundedPos { get { return lastGroundedPos; } }
 
     private float upsideDownTimer = 0;
 
@@ -54,8 +57,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        hud = GameObject.FindGameObjectWithTag("Canvas").GetComponent<HUD>();
-        charStats = GetComponent<CharacterStats>();
+        hud = GameObject.FindGameObjectWithTag("Canvas").GetComponent<HUD>();        
         playerBoost = GetComponent<PlayerBoost>();
         playerJump = GetComponent<PlayerJump>();
         playerDrift = GetComponent<PlayerDrift>();
@@ -64,12 +66,18 @@ public class PlayerMovement : MonoBehaviour
 
     public void CheckIfPlayer()
     {
+        charStats = GetComponent<CharacterStats>();
         charStats.IsPlayer = IsPlayer;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (charStats == null)
+        {
+            return;
+        }
+
         //Movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
         if (!playerJump.DontDragDown)
@@ -89,6 +97,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (grounded)
         {
+            lastGroundedPos = transform.position;
             transform.GetChild(0).localRotation = new Quaternion(0, transform.GetChild(0).localRotation.y, 0, transform.GetChild(0).localRotation.w);
 
             if (!ridingOnWall)
@@ -217,6 +226,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (charStats == null)
+        {
+            return;
+        }
+
         Vector3 localVel = transform.GetChild(0).forward * speed;
 
         if (grounded && !playerJump.DontDragDown && !playerTricks.CanDoTricks && raycastLength == startingRaycastLength && !fallToTheGround)
@@ -226,7 +240,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (playerJump.DontDragDown && transform.InverseTransformDirection(rb.velocity).y < 0)
         {
-            rb.velocity = new Vector3(rb.velocity.x, playerJump.JumpHeight + playerJump.RampPower, rb.velocity.z);
+            Debug.Log("There!");
+            rb.velocity = new Vector3(rb.velocity.x, (playerJump.JumpHeight + playerJump.RampPower) * failVelocityMultiplier, rb.velocity.z);
         }
 
         if (NotOnSlowdownAngle() || !grounded)

@@ -26,7 +26,7 @@ public class PlayerTricks : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        cam = Camera.main.transform;
+        cam = Camera.main.transform.parent;
         camStartingPos = cam.localPosition;
 
         playerMovement = GetComponent<PlayerMovement>();

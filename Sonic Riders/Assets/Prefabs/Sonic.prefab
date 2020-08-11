@@ -59,7 +59,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 97159474546320768}
-  - {fileID: 97159473229880092}
+  - {fileID: 4791478563580813506}
   m_Father: {fileID: 97159473819385862}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -76,6 +76,7 @@ GameObject:
   - component: {fileID: 97159473229880090}
   - component: {fileID: 97159473229880093}
   - component: {fileID: 97159473229880094}
+  - component: {fileID: 4764923495930381376}
   m_Layer: 8
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -91,11 +92,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 97159473229880089}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: -4}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 97159473170429999}
-  m_RootOrder: 1
+  m_Father: {fileID: 4791478563580813506}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &97159473229880091
 Camera:
@@ -191,6 +192,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ed2009dafcb646489f87b39155a938d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4764923495930381376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97159473229880089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a826bf16f33dd04fa9dfd3b01fbbca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minDistance: 1
+  maxDistance: 4
+  percentClipped: 0.87
+  smoothTime: 10
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!1 &97159473726220039
 GameObject:
   m_ObjectHideFlags: 0
@@ -1833,6 +1853,37 @@ Transform:
   m_Father: {fileID: 2357381735468062076}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -30.631, y: -3.2210002, z: -6.9870005}
+--- !u!1 &2306132728947470211
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4791478563580813506}
+  m_Layer: 8
+  m_Name: CameraBase
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4791478563580813506
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2306132728947470211}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: -4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 97159473229880092}
+  m_Father: {fileID: 97159473170429999}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2328863249577421864
 GameObject:
   m_ObjectHideFlags: 0

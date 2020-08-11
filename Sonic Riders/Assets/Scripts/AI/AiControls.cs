@@ -31,6 +31,7 @@ public class AiControls : MonoBehaviour
         playerDrift = GetComponent<PlayerDrift>();
         //playerGrind = GetComponent<PlayerGrind>();
         playerMovement.IsPlayer = false;
+        playerMovement.CheckIfPlayer();
 
         Transform waypointTransform = GameObject.FindGameObjectWithTag("Waypoints").transform;
 

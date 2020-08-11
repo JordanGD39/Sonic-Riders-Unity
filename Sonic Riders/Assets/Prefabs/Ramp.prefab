@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2168465045532130717}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Angle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 2168465046033351359}
   - component: {fileID: 2168465046033351356}
   - component: {fileID: 2168465046033351358}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Ramp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,9 +90,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   perfectJumpRange: 7
-  worstPower: 10
   power: 15
-  speed: 10
+  multiplier: 0.8
 --- !u!1 &5865904937045197182
 GameObject:
   m_ObjectHideFlags: 0
@@ -104,8 +103,7 @@ GameObject:
   - component: {fileID: 6060394268980556430}
   - component: {fileID: 2297963384188904182}
   - component: {fileID: 6319932541944349459}
-  - component: {fileID: 2905261974550314801}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -173,17 +171,3 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &2905261974550314801
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5865904937045197182}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
