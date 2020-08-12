@@ -80,7 +80,7 @@ public class PlayerJump : MonoBehaviour
                         float powerDiff = rampPower - worstRampPower;
                         float diffPos = transform.localPosition.z + CurrRamp.PerfectJump;
                         float percent = diffPos / (CurrRamp.PerfectJump * 2);                        
-                        rampPower -= powerDiff * percent;
+                        rampPower = worstRampPower + powerDiff * percent;
                         Debug.Log("Diff: " + diffPos + " Percent: "+ percent + " power: " + rampPower);
                     }
                     else

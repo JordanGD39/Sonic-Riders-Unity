@@ -71,8 +71,8 @@ public class PlayerTricks : MonoBehaviour
 
         float rampTiming = (rampPower - worstPower) / rampDiff;
         float jumpCharge = (jumpHeight - startingJumpHeight)/ jumpDiff;
-        rampTiming *= 0.7f;
-        jumpCharge *= 0.3f;
+        rampTiming *= 0.6f;
+        jumpCharge *= 0.4f;
 
         speedReward = rampTiming + jumpCharge;
 
@@ -119,7 +119,7 @@ public class PlayerTricks : MonoBehaviour
             if (speedReward > 0.5f)
             {
                 playerSound.PlaySoundEffect(PlayerSound.voiceSounds.JUMPSUCCES, PlayerSound.sounds.NONE);
-                playerMovement.Speed = characterStats.BoardStats.Limit[characterStats.Level];
+                playerMovement.Speed = characterStats.GetCurrentLimit();
             }  
             else
             {

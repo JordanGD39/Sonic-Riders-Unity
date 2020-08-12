@@ -103,7 +103,7 @@ public class PlayerGrind : MonoBehaviour
                     grinding = false;
                     transform.GetChild(0).localRotation = new Quaternion(0, transform.GetChild(0).localRotation.y, 0, transform.GetChild(0).localRotation.w);
                     rb.isKinematic = false;
-                    Vector3.ClampMagnitude(velocity, stats.Boost[charStats.Level]);
+                    Vector3.ClampMagnitude(velocity, charStats.GetCurrentBoost());
                     rb.velocity = velocity;
                     movement.CantMove = false;
 

@@ -302,11 +302,11 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (speed > 0)
                 {
-                    speed -= 11 * Time.deltaTime;
+                    speed -= 13 * Time.deltaTime;
                 }
                 else if(speed < 0)
                 {
-                    speed += 11 * Time.deltaTime;
+                    speed += 13 * Time.deltaTime;
                 }
 
                 if (IsPlayer)
@@ -347,7 +347,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (Movement.z >= 0.25f)
             {
-                if (speed < stats.Limit[charStats.Level] - charStats.SpeedLoss)
+                if (speed < charStats.GetCurrentLimit())
                 {
                     speed += stats.Dash * Movement.z * Time.deltaTime;                                            
                 }
@@ -361,8 +361,15 @@ public class PlayerMovement : MonoBehaviour
                     {
                         if (speed < 100)
                         {
-                            speed += 7 * Time.deltaTime;
-                        }                                           
+                            if (transform.GetChild(0).forward.y < -0.5f)
+                            {
+                                speed += 7 * Time.deltaTime;
+                            }
+                            else if(speed > charStats.GetCurrentLimit())
+                            {
+                                speed -= 7 * Time.deltaTime;
+                            }                            
+                        }
                     }
                 }                
             }

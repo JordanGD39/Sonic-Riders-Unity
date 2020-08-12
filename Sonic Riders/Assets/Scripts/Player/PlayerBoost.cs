@@ -60,9 +60,9 @@ public class PlayerBoost : MonoBehaviour
         StopCoroutine("BoostCooldown");
         StartCoroutine("BoostCooldown");
 
-        if (playerMovement.Speed < stats.Boost[charStats.Level])
+        if (playerMovement.Speed < charStats.GetCurrentBoost())
         {
-            playerMovement.Speed = stats.Boost[charStats.Level];
+            playerMovement.Speed = charStats.GetCurrentBoost();
         }
         else
         {

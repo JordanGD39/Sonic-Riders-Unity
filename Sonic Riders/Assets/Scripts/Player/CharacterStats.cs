@@ -37,4 +37,14 @@ public class CharacterStats : MonoBehaviour
     {
         Debug.Log("Run on foot");
     }
+
+    public float GetCurrentLimit()
+    {
+        return stats.Limit[level] - speedLoss;
+    }
+
+    public float GetCurrentBoost()
+    {
+        return stats.Boost[level];
+    }
 }

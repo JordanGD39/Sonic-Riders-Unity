@@ -9,8 +9,11 @@ public class DeathPlane : MonoBehaviour
         if (other.gameObject.layer == 8)
         {
             PlayerMovement mov = other.GetComponentInParent<PlayerMovement>();
-            mov.transform.position = mov.LastGroundedPos;
-            mov.GetComponent<Rigidbody>().velocity = Vector3.zero;
+
+            if (mov.GetComponentInChildren<CameraDeath>() != null)
+            {
+                mov.GetComponentInChildren<CameraDeath>().StartFollow();
+            }
         }
     }
 }
