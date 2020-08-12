@@ -18,18 +18,26 @@ public class PlayerBounce : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        bounceDir = (transform.position - collision.ClosestPoint(transform.position)).normalized;
-        StartCoroutine("Bounce");
+        if (collision.gameObject.layer == 0)
+        {
+            playerMovement.Bouncing = true;
+            bounceDir = (transform.position - collision.ClosestPoint(transform.position)).normalized;
+            StartCoroutine("Bounce");
+        }        
     }
 
     private IEnumerator Bounce()
     {
+        bool wasGrounded = playerMovement.Grounded;
+
         playerMovement.Speed = speed;
         yield return null;
         playerMovement.CantMove = true;
         rb.velocity = bounceDir * speed;
-        yield return new WaitForSeconds(time);
-        playerMovement.CantMove = false;
+        yield return new WaitForSeconds(time / 2);
+        playerMovement.Bouncing = false;
+        yield return new WaitForSeconds(time / 2);        
         playerMovement.Speed = 0;
+        playerMovement.CantMove = false;
     }
 }

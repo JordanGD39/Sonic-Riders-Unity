@@ -119,7 +119,7 @@ public class PlayerTricks : MonoBehaviour
             if (speedReward > 0.5f)
             {
                 playerSound.PlaySoundEffect(PlayerSound.voiceSounds.JUMPSUCCES, PlayerSound.sounds.NONE);
-                playerMovement.Speed = playerMovement.Stats.Limit[characterStats.Level];
+                playerMovement.Speed = characterStats.BoardStats.Limit[characterStats.Level];
             }  
             else
             {

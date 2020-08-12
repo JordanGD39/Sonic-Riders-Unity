@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum type { SPEED, FLIGHT, POWER, ALL}
+
 public class CharacterStats : MonoBehaviour
 {
     private HUD hud;
@@ -20,6 +22,10 @@ public class CharacterStats : MonoBehaviour
     public float ExtraPower { get { return extraPower; } }
     [SerializeField] private float extraCornering = 0;
     public float ExtraCornering { get { return extraCornering; } }
+    [SerializeField] private type charType;
+    public type CharType { get { return charType; } }
+    [SerializeField] private BoardStats stats;
+    public BoardStats BoardStats { get { return stats; } }
 
     // Start is called before the first frame update
     void Start()

@@ -33,6 +33,8 @@ public class PlayerJump : MonoBehaviour
     private float maxRampPower;
     private float worstRampPower;
 
+    public Ramp CurrRamp { get; set; }
+
     private bool alreadyFell = false;
 
     // Start is called before the first frame update
@@ -66,18 +68,18 @@ public class PlayerJump : MonoBehaviour
 
             if (transform.parent != null)
             {
-                Ramp ramp = transform.GetComponentInParent<Ramp>();
-                rampPower = ramp.Power;
+                CurrRamp = transform.GetComponentInParent<Ramp>();
+                rampPower = CurrRamp.Power;
                 maxRampPower = rampPower;
-                worstRampPower = ramp.WorstPower;
+                worstRampPower = CurrRamp.WorstPower;
 
-                if (transform.localPosition.z < ramp.PerfectJump)
+                if (transform.localPosition.z < CurrRamp.PerfectJump)
                 {
-                    if (transform.localPosition.z > -ramp.PerfectJump)
+                    if (transform.localPosition.z > -CurrRamp.PerfectJump)
                     {
                         float powerDiff = rampPower - worstRampPower;
-                        float diffPos = transform.localPosition.z + ramp.PerfectJump;
-                        float percent = diffPos / (ramp.PerfectJump * 2);                        
+                        float diffPos = transform.localPosition.z + CurrRamp.PerfectJump;
+                        float percent = diffPos / (CurrRamp.PerfectJump * 2);                        
                         rampPower -= powerDiff * percent;
                         Debug.Log("Diff: " + diffPos + " Percent: "+ percent + " power: " + rampPower);
                     }

@@ -24,7 +24,7 @@ public class PlayerBoost : MonoBehaviour
         playerGrind = GetComponent<PlayerGrind>();
         playerAnimation = GetComponent<PlayerAnimationHandler>();
         charStats = GetComponent<CharacterStats>();
-        stats = playerMovement.Stats;
+        stats = charStats.BoardStats;
         playerSound = GetComponentInChildren<PlayerSound>();
         canvasAnim = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Animator>();
     }

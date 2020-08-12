@@ -21,7 +21,7 @@ public class PlayerDrift : MonoBehaviour
         movement = GetComponent<PlayerMovement>();
         charStats = GetComponent<CharacterStats>();
         canvasAnim = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Animator>();
-        stats = movement.Stats;
+        stats = charStats.BoardStats;
         playerSound = GetComponentInChildren<PlayerSound>();
     }
 

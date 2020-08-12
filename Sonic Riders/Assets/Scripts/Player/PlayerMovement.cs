@@ -6,8 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     private HUD hud;
     private CharacterStats charStats;
-    [SerializeField] private BoardStats stats;
-    public BoardStats Stats { get { return stats; } }
+    private BoardStats stats;
     private PlayerBoost playerBoost;
     private PlayerJump playerJump;
     private PlayerDrift playerDrift;
@@ -47,6 +46,7 @@ public class PlayerMovement : MonoBehaviour
     public bool CantMove { get; set; } = false;
     public Vector3 GrindVelocity { get; set; }
     public bool IsPlayer { get; set; } = false;
+    public bool Bouncing { get; set; } = false;
 
     [SerializeField] private float hitAngle;
     [SerializeField] private float highestFallSpeed;
@@ -61,13 +61,14 @@ public class PlayerMovement : MonoBehaviour
         playerBoost = GetComponent<PlayerBoost>();
         playerJump = GetComponent<PlayerJump>();
         playerDrift = GetComponent<PlayerDrift>();
-        playerTricks = GetComponent<PlayerTricks>();        
+        playerTricks = GetComponent<PlayerTricks>();
     }
 
     public void CheckIfPlayer()
     {
         charStats = GetComponent<CharacterStats>();
         charStats.IsPlayer = IsPlayer;
+        stats = charStats.BoardStats;
     }
 
     // Update is called once per frame
@@ -104,7 +105,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 fallToTheGround = false;
             }
-            rotationAmount = TurnAmount * stats.Cornering;            
+            rotationAmount = TurnAmount * stats.Cornering;
 
             rotationAmount *= Time.deltaTime;           
 
@@ -241,7 +242,14 @@ public class PlayerMovement : MonoBehaviour
         if (playerJump.DontDragDown && transform.InverseTransformDirection(rb.velocity).y < 0)
         {
             Debug.Log("There!");
-            rb.velocity = new Vector3(rb.velocity.x, (playerJump.JumpHeight + playerJump.RampPower) * failVelocityMultiplier, rb.velocity.z);
+            if (playerJump.RampPower >  0)
+            {
+                rb.velocity = playerJump.CurrRamp.transform.GetChild(0).forward * (playerJump.JumpHeight + playerJump.RampPower);
+            }
+            else
+            {
+                rb.velocity = new Vector3(rb.velocity.x, playerJump.JumpHeight * failVelocityMultiplier, rb.velocity.z);
+            }
         }
 
         if (NotOnSlowdownAngle() || !grounded)
@@ -423,7 +431,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
-        if (!playerJump.DontDragDown && !grounded)
+        if (!playerJump.DontDragDown && !grounded && !Bouncing)
         {
             highestFallSpeed = 0;
             raycastLength = startingRaycastLength;

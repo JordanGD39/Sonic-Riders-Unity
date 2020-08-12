@@ -18,9 +18,10 @@ public class BoostPad : MonoBehaviour
         if (other.gameObject.layer == 8)
         {
             PlayerMovement player = other.GetComponentInParent<PlayerMovement>();
-            PlayerControls controls = other.GetComponentInParent<PlayerControls>();
+            PlayerControls controls = player.GetComponent<PlayerControls>();
+            CharacterStats characterStats = player.GetComponent<CharacterStats>();
 
-            player.Speed = player.Stats.Limit[player.GetComponent<CharacterStats>().Level] + 10;
+            player.Speed = characterStats.BoardStats.Limit[characterStats.Level] + 10;
 
             player.transform.position = transform.position;
             other.transform.parent.localRotation = transform.rotation;

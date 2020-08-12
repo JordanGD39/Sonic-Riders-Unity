@@ -4470,6 +4470,8 @@ MonoBehaviour:
   speedLoss: 1
   extraPower: 0
   extraCornering: 0
+  charType: 0
+  stats: {fileID: 11400000, guid: cccfd161fcb39714a9103fe27e95fd36, type: 2}
 --- !u!114 &8027152530899255614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4503,7 +4505,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8701788ff92e03f4e92bb1c35e7f96dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stats: {fileID: 11400000, guid: cccfd161fcb39714a9103fe27e95fd36, type: 2}
   speed: 3
   rotationAmount: 0
   ridingOnWall: 0
@@ -4513,6 +4514,7 @@ MonoBehaviour:
   raycastLength: 1
   startingRaycastLength: 2
   extraForceGrounded: 400
+  failVelocityMultiplier: 0.3
   hitAngle: 0
   highestFallSpeed: 0
   layerMask:

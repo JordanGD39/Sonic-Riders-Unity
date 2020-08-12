@@ -40,7 +40,7 @@ public class PlayerGrind : MonoBehaviour
         playerJump = GetComponent<PlayerJump>();
         rb = GetComponent<Rigidbody>();
         charStats = GetComponent<CharacterStats>();
-        stats = movement.Stats;
+        stats = charStats.BoardStats;
         hud = GameObject.FindGameObjectWithTag("Canvas").GetComponent<HUD>();
         playerSound = GetComponentInChildren<PlayerSound>();
     }
