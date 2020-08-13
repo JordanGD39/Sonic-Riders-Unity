@@ -38,6 +38,11 @@ public class CharacterStats : MonoBehaviour
         Debug.Log("Run on foot");
     }
 
+    public bool TypeCheck(type aType)
+    {
+        return (aType == charType || (aType == stats.BoardType && !stats.IsStandard) || charType == type.ALL);
+    }
+
     public float GetCurrentLimit()
     {
         return stats.Limit[level] - speedLoss;

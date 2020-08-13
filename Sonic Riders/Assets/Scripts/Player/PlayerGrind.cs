@@ -36,13 +36,19 @@ public class PlayerGrind : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        charStats = GetComponent<CharacterStats>();
+
+        if (!charStats.TypeCheck(type.SPEED))
+        {
+            enabled = false;
+        }
+
         movement = GetComponent<PlayerMovement>();
         playerJump = GetComponent<PlayerJump>();
         rb = GetComponent<Rigidbody>();
-        charStats = GetComponent<CharacterStats>();
         stats = charStats.BoardStats;
         hud = GameObject.FindGameObjectWithTag("Canvas").GetComponent<HUD>();
-        playerSound = GetComponentInChildren<PlayerSound>();
+        playerSound = GetComponentInChildren<PlayerSound>();        
     }
 
     // Update is called once per frame
@@ -109,7 +115,7 @@ public class PlayerGrind : MonoBehaviour
 
                     playerSound.StopPlayingGrind();
 
-                    if (jumpPressed)
+                    if (jumpPressed && path.path.GetClosestTimeOnPath(transform.position) < 0.9f)
                     {
                         playerJump.JumpHeight = jumpHeightOfRamp;
                         playerJump.JumpRelease = true;

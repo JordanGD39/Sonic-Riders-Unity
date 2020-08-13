@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerBounce : MonoBehaviour
+public class PlayerTrigger : MonoBehaviour
 {
     private PlayerMovement playerMovement;
+    private PlayerFlight playerFlight;
+    private PlayerPunchObstacle playerPunch;
     private Rigidbody rb;
     [SerializeField] private float speed = 2;
     [SerializeField] private float time = 0.5f;
@@ -13,30 +15,52 @@ public class PlayerBounce : MonoBehaviour
     private void Start()
     {
         playerMovement = GetComponentInParent<PlayerMovement>();
+        playerFlight = playerMovement.GetComponent<PlayerFlight>();
+        playerPunch = playerMovement.GetComponent<PlayerPunchObstacle>();
         rb = GetComponentInParent<Rigidbody>();
     }
 
     private void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.layer == 0)
+        switch (collision.gameObject.layer)
+        {            
+            case 0:
+                BounceCol(collision);
+                break;
+            case 10:
+                if (playerFlight.enabled)
+                {
+                    playerFlight.IncreaseFlightSpeed(collision.transform.parent);
+                }
+                break;
+            case 11:
+                playerPunch.Punch(collision.GetComponentInParent<Rigidbody>());
+
+                if (playerPunch.CantPunch)
+                {
+                    BounceCol(collision);
+                }
+                break;
+        }       
+    }
+
+    private void BounceCol(Collider collision)
+    {
+        playerMovement.Bouncing = true;
+
+        Vector3 closestPoint = Vector3.zero;
+
+        if (collision.GetComponent<MeshCollider>() != null)
         {
-            playerMovement.Bouncing = true;
+            closestPoint = NearestVertexTo(transform.position + transform.TransformPoint(new Vector3(0, 0, -1)), collision.GetComponent<MeshFilter>().mesh);
+        }
+        else
+        {
+            closestPoint = collision.ClosestPoint(transform.position);
+        }
 
-            Vector3 closestPoint = Vector3.zero;
-
-            if (collision.GetComponent<MeshCollider>() != null)
-            {
-
-                closestPoint = NearestVertexTo(transform.position + transform.TransformPoint(new Vector3(0,0,-1)), collision.GetComponent<MeshFilter>().mesh);
-            }
-            else
-            {
-                closestPoint = collision.ClosestPoint(transform.position);
-            }
-
-            bounceDir = (transform.position - closestPoint).normalized;            
-            StartCoroutine("Bounce");
-        }        
+        bounceDir = (transform.position - closestPoint).normalized;
+        StartCoroutine("Bounce");
     }
 
     private IEnumerator Bounce()

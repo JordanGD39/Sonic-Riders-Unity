@@ -8,6 +8,7 @@ public class Ramp : MonoBehaviour
     private float worstPower = 7;
     [SerializeField] private float power = 30;
     [SerializeField] private float multiplier = 0.8f;
+    [SerializeField] private bool flightRamp = false;
 
     public float PerfectJump { get { return perfectJumpRange; } }
     public float Power { get { return power; } }
@@ -20,6 +21,11 @@ public class Ramp : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (flightRamp)
+        {
+            return;
+        }
+
         if (other.transform.GetComponentInParent<PlayerMovement>().CompareTag("Player"))
         {
             other.transform.GetComponentInParent<PlayerMovement>().transform.parent = transform;
@@ -30,6 +36,19 @@ public class Ramp : MonoBehaviour
     {
         if (other.transform.GetComponentInParent<PlayerMovement>().CompareTag("Player"))
         {
+            if (flightRamp)
+            {
+                PlayerFlight flight = other.GetComponentInParent<PlayerFlight>();
+
+                if (flight.enabled)
+                {
+                    flight.CanCheckGrounded();
+                    flight.Flying = true;
+                }
+
+                return;
+            }
+
             other.transform.GetComponentInParent<PlayerJump>().FallingOffRamp(worstPower, perfectJumpRange, power);
         }
     }    

@@ -24,7 +24,7 @@ public class BoostPad : MonoBehaviour
             player.Speed = characterStats.BoardStats.Limit[characterStats.Level] + 10;
 
             player.transform.position = transform.position;
-            other.transform.parent.localRotation = transform.rotation;
+            other.transform.parent.forward = transform.forward;
 
             if (!source.isPlaying)
             {

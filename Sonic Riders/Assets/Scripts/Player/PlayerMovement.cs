@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     private PlayerJump playerJump;
     private PlayerDrift playerDrift;
     private PlayerTricks playerTricks;
+    private PlayerFlight playerFlight;
 
     private Rigidbody rb;
 
@@ -62,6 +63,7 @@ public class PlayerMovement : MonoBehaviour
         playerJump = GetComponent<PlayerJump>();
         playerDrift = GetComponent<PlayerDrift>();
         playerTricks = GetComponent<PlayerTricks>();
+        playerFlight = GetComponent<PlayerFlight>();
     }
 
     public void CheckIfPlayer()
@@ -135,7 +137,10 @@ public class PlayerMovement : MonoBehaviour
             raycastLength = 0;
         }
 
-        Acceleration();
+        if (!playerFlight.Flying)
+        {
+            Acceleration();
+        }
 
         if (charStats.Air > 0 && Movement.z != 0 && speed > 0 && grounded)
         {
@@ -203,11 +208,6 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            if (playerTricks.CanDoTricks)
-            {
-                return onGround;
-            }
-
             transform.rotation = Quaternion.RotateTowards(transform.rotation, new Quaternion(0, 0, 0, transform.rotation.w), 10);
 
             if (transform.rotation.x == 1 || transform.rotation.z == 1)
@@ -227,7 +227,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (charStats == null)
+        if (charStats == null || playerFlight.Flying)
         {
             return;
         }

@@ -9,6 +9,7 @@ public class PlayerControls : MonoBehaviour
     private PlayerDrift playerDrift;
     private PlayerJump playerJump;
     private PlayerTricks playerTricks;
+    private PlayerFlight playerFlight;
     private PlayerGrind playerGrind;
 
     // Start is called before the first frame update
@@ -20,6 +21,7 @@ public class PlayerControls : MonoBehaviour
         playerGrind = GetComponent<PlayerGrind>();
         playerJump = GetComponent<PlayerJump>();
         playerTricks = GetComponent<PlayerTricks>();
+        playerFlight = GetComponent<PlayerFlight>();
         playerMovement.IsPlayer = true;
         playerMovement.CheckIfPlayer();
         AudioManager.instance.Play("Test");
@@ -52,7 +54,15 @@ public class PlayerControls : MonoBehaviour
 
         playerDrift.DriftPressed = Input.GetButton("Drift");
 
-        playerGrind.JumpPressed = Input.GetButtonDown("Jump");
+        if (playerGrind.enabled)
+        {
+            playerGrind.JumpPressed = Input.GetButtonDown("Jump");
+        }
+
+        if (playerFlight.enabled)
+        {
+            playerFlight.VerticalRotation = Input.GetAxis("Vertical");
+        }
 
         playerJump.JumpHoldControls = Input.GetButton("Jump");
         playerJump.JumpButtonUp = Input.GetButtonUp("Jump");
