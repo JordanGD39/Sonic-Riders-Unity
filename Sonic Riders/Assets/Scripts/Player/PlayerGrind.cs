@@ -24,9 +24,10 @@ public class PlayerGrind : MonoBehaviour
     private float closestDistance = 0;
 
     [SerializeField] private float speed = 3;
+    [SerializeField] private float jumpSpeed = 20;
     [SerializeField] private float airGain = 0.02f;
     [SerializeField] private float extraCharHeight = 0.2f;
-    [SerializeField] private float jumpHeightOfRamp = 30;
+    [SerializeField] private float jumpHeightOfRail = 30;
 
     private Vector3 previousPos;
     [SerializeField] private Vector3 velocity;
@@ -109,15 +110,25 @@ public class PlayerGrind : MonoBehaviour
                     grinding = false;
                     transform.GetChild(0).localRotation = new Quaternion(0, transform.GetChild(0).localRotation.y, 0, transform.GetChild(0).localRotation.w);
                     rb.isKinematic = false;
-                    Vector3.ClampMagnitude(velocity, charStats.GetCurrentBoost());
-                    rb.velocity = velocity;
+                    rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+
+                    if (!jumpPressed)
+                    {
+                        Vector3.ClampMagnitude(velocity, charStats.GetCurrentBoost());
+                        rb.velocity = velocity;
+                    }
+                    else
+                    {
+                        rb.velocity = transform.GetChild(0).forward * jumpSpeed;
+                    }
+                    
                     movement.CantMove = false;
 
                     playerSound.StopPlayingGrind();
 
-                    if (jumpPressed && path.path.GetClosestTimeOnPath(transform.position) < 0.9f)
+                    if (jumpPressed)
                     {
-                        playerJump.JumpHeight = jumpHeightOfRamp;
+                        playerJump.GrindJumpHeight = jumpHeightOfRail;
                         playerJump.JumpRelease = true;
                     }                    
                 }
@@ -127,6 +138,7 @@ public class PlayerGrind : MonoBehaviour
 
             if (!movement.Grounded && JumpPressed && !grinding)
             {
+                rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
                 rb.isKinematic = true;
                 movement.CantMove = true;
                 speed = movement.Speed;

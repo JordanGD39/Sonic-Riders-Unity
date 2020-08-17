@@ -13,6 +13,7 @@ public class Ramp : MonoBehaviour
     public float PerfectJump { get { return perfectJumpRange; } }
     public float Power { get { return power; } }
     public float WorstPower { get { return worstPower; } }
+    public bool Flight { get { return flightRamp; } }
 
     private void Start()
     {
@@ -21,11 +22,6 @@ public class Ramp : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (flightRamp)
-        {
-            return;
-        }
-
         if (other.transform.GetComponentInParent<PlayerMovement>().CompareTag("Player"))
         {
             other.transform.GetComponentInParent<PlayerMovement>().transform.parent = transform;
@@ -42,14 +38,17 @@ public class Ramp : MonoBehaviour
 
                 if (flight.enabled)
                 {
-                    flight.CanCheckGrounded();
-                    flight.Flying = true;
+                    flight.FallingOffRamp(perfectJumpRange);
                 }
-
-                return;
+                else
+                {
+                    flight.transform.parent = null;
+                }
             }
-
-            other.transform.GetComponentInParent<PlayerJump>().FallingOffRamp(worstPower, perfectJumpRange, power);
+            else
+            {
+                other.transform.GetComponentInParent<PlayerJump>().FallingOffRamp(worstPower, perfectJumpRange, power);
+            }
         }
     }    
 }

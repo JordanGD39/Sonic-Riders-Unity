@@ -22,6 +22,11 @@ public class CameraCollision : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (transform.parent == null)
+        {
+            return;
+        }
+
         Vector3 desiredPos = transform.parent.TransformPoint(dollyDir * maxDistance);
         RaycastHit hit;
 

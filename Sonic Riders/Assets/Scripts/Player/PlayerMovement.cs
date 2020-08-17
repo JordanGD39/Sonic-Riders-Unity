@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     private PlayerDrift playerDrift;
     private PlayerTricks playerTricks;
     private PlayerFlight playerFlight;
+    private ThirdPersonCamera thirdPersonCamera;
 
     private Rigidbody rb;
 
@@ -64,6 +65,7 @@ public class PlayerMovement : MonoBehaviour
         playerDrift = GetComponent<PlayerDrift>();
         playerTricks = GetComponent<PlayerTricks>();
         playerFlight = GetComponent<PlayerFlight>();
+        thirdPersonCamera = Camera.main.GetComponentInParent<ThirdPersonCamera>();
     }
 
     public void CheckIfPlayer()
@@ -100,6 +102,12 @@ public class PlayerMovement : MonoBehaviour
 
         if (grounded)
         {
+            if (IsPlayer)
+            {
+                thirdPersonCamera.enabled = false;
+                thirdPersonCamera.transform.localRotation = new Quaternion(0, 0, 0, thirdPersonCamera.transform.localRotation.w);
+            }
+
             lastGroundedPos = transform.position;
             transform.GetChild(0).localRotation = new Quaternion(0, transform.GetChild(0).localRotation.y, 0, transform.GetChild(0).localRotation.w);
 
@@ -134,6 +142,21 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
+            if (IsPlayer && !playerTricks.CanDoTricks && !playerFlight.Flying)
+            {
+                if (!thirdPersonCamera.enabled)
+                {
+                    thirdPersonCamera.ResetRotation();
+                    thirdPersonCamera.enabled = true;
+                }               
+            }
+
+            if (IsPlayer && (playerFlight.Flying || playerTricks.CanDoTricks) && thirdPersonCamera.enabled)
+            {
+                thirdPersonCamera.enabled = false;
+                thirdPersonCamera.transform.localRotation = new Quaternion(0, 0, 0, thirdPersonCamera.transform.localRotation.w);
+            }
+
             raycastLength = 0;
         }
 
@@ -155,7 +178,7 @@ public class PlayerMovement : MonoBehaviour
         RaycastHit hit;
         Debug.DrawRay(transform.position + new Vector3(0, -0.03f, 0), -transform.up, Color.red);
         
-        if (Physics.Raycast(transform.position + new Vector3(0, -0.03f, 0), -transform.up, out hit, raycastLength, layerMask))
+        if (Physics.Raycast(transform.position + new Vector3(0, -0.03f, 0), -transform.GetChild(0).up, out hit, raycastLength, layerMask))
         {
             if (!hit.collider.isTrigger)
             {

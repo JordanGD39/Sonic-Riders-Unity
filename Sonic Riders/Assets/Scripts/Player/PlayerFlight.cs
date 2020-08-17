@@ -8,8 +8,10 @@ public class PlayerFlight : MonoBehaviour
     private PlayerMovement playerMovement;
     private Rigidbody rb;
     private HUD hud;
-
-    public bool Flying { get; set; } = false;
+    private Animator canvasAnim;
+    private PlayerSound playerSound;
+    private bool flying = false;
+    public bool Flying { get { return flying; } }
     public float VerticalRotation { get; set; } = 0;
 
     [SerializeField] private float flightSpeedLoss = 3;
@@ -34,12 +36,14 @@ public class PlayerFlight : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         cornering = charStats.BoardStats.Cornering * turnMultiplier;
         hud = GameObject.FindGameObjectWithTag("Canvas").GetComponent<HUD>();
+        canvasAnim = hud.GetComponent<Animator>();
+        playerSound = GetComponentInChildren<PlayerSound>();
     }
     
     // Update is called once per frame
     void Update()
     {
-        if (Flying)
+        if (flying)
         {
             charStats.Air += airGain;
 
@@ -57,27 +61,37 @@ public class PlayerFlight : MonoBehaviour
 
             transform.GetChild(0).Rotate(vertcialRotAmount, rotationAmount, 0);
 
-            if ((playerMovement.Speed < 10 || playerMovement.Grounded) && canCheck)
+            if (playerMovement.Speed < 10 || playerMovement.Grounded && canCheck)
             {               
                 Quaternion otherRot = transform.GetChild(0).localRotation;
                 otherRot.x = 0;
                 otherRot.z = 0;
                 transform.GetChild(0).localRotation = otherRot;
 
-                Flying = false;
+                flying = false;
             }
         }
     }
 
     private void FixedUpdate()
     {
-        if (Flying)
+        if (flying)
         {
             rb.velocity = transform.GetChild(0).forward * playerMovement.Speed;
         }
     }
 
-    public void CanCheckGrounded()
+    public void FallingOffRamp(float perfectJump)
+    {
+        if (transform.localPosition.z > perfectJump && !flying)
+        {
+            CanCheckGrounded();
+            flying = true;
+            transform.parent = null;
+        }
+    }
+
+    private void CanCheckGrounded()
     {
         canCheck = false;
         StartCoroutine("CheckGrounded");
@@ -91,9 +105,16 @@ public class PlayerFlight : MonoBehaviour
     
     public void IncreaseFlightSpeed(Transform portal)
     {
-        Flying = true;
+        canCheck = true;
+        flying = true;
         transform.GetChild(0).forward = portal.forward;
 
         playerMovement.Speed = 50;
+        playerSound.PlaySoundEffect(PlayerSound.voiceSounds.NONE, PlayerSound.sounds.BOOST);
+
+        if (playerMovement.IsPlayer)
+        {
+            canvasAnim.Play("BoostCircle");
+        }
     }
 }

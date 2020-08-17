@@ -13,6 +13,7 @@ public class PlayerJump : MonoBehaviour
     [SerializeField] private float jumpGain = 1;
     [SerializeField] private float raycastJumpLength = 0.5f;
     public float JumpHeight { get { return jumpHeight; } set { jumpHeight = value; } }
+    public float GrindJumpHeight { get; set; } = 0;
 
     [SerializeField] private bool jumpRelease = false;
     [SerializeField] private bool actualJumpRelease = false;
@@ -62,6 +63,20 @@ public class PlayerJump : MonoBehaviour
             return;
         }
 
+        if (JumpHoldControls)
+        {
+            JumpHold = true;
+            if (charStats.Air > 0)
+            {
+                charStats.Air -= 0.05f;
+            }
+
+            if (jumpHeight < maxJumpHeight)
+            {
+                jumpHeight += jumpGain * Time.deltaTime;
+            }
+        }
+
         if (JumpButtonUp)
         {
             JumpHold = false;            
@@ -69,6 +84,14 @@ public class PlayerJump : MonoBehaviour
             if (transform.parent != null)
             {
                 CurrRamp = transform.GetComponentInParent<Ramp>();
+
+                if (CurrRamp.Flight)
+                {
+                    rampPower = 0;
+                    jumpRelease = true;
+                    return;
+                }
+
                 rampPower = CurrRamp.Power;
                 maxRampPower = rampPower;
                 worstRampPower = CurrRamp.WorstPower;
@@ -85,7 +108,6 @@ public class PlayerJump : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log("NANI!!");
                         rampPower = worstRampPower;
                     }
 
@@ -107,21 +129,7 @@ public class PlayerJump : MonoBehaviour
             }
 
             jumpRelease = true;
-        }        
-
-        if (JumpHoldControls)
-        {
-            JumpHold = true;
-            if (charStats.Air > 0)
-            {
-                charStats.Air -= 0.05f;                
-            }
-
-            if (jumpHeight < maxJumpHeight)
-            {
-                jumpHeight += jumpGain * Time.deltaTime;
-            }
-        }        
+        }             
     }
 
     private void FixedUpdate()
@@ -154,10 +162,11 @@ public class PlayerJump : MonoBehaviour
             }
             else
             {                
-                rb.AddForce(transform.up * jumpHeight, ForceMode.Impulse);                
+                rb.AddForce(transform.up * (jumpHeight + GrindJumpHeight), ForceMode.Impulse);                
             }
 
             jumpHeight = startingJumpHeight;
+            GrindJumpHeight = 0;
             jumpRelease = false;
         }
     }

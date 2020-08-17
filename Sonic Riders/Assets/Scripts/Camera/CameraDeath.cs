@@ -47,6 +47,7 @@ public class CameraDeath : MonoBehaviour
     private IEnumerator WaitForRespawn()
     {
         yield return new WaitForSeconds(timeToRespawn);
+        canvasAnim.Play("DeathFadeOut");
         followPlayer = false;
         player.position = playerMovement.LastGroundedPos;
         playerRb.velocity = Vector3.zero;
