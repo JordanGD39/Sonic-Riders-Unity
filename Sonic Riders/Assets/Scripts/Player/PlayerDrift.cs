@@ -28,7 +28,7 @@ public class PlayerDrift : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (movement.Grounded /*&& charStats.Air > 0*/)
+        if (movement.Grounded && charStats.Air > 0)
         {
             if (DriftPressed)
             {
@@ -107,6 +107,6 @@ public class PlayerDrift : MonoBehaviour
         driftTimer += Time.deltaTime;
         movement.Drifting = true;
         movement.Speed -= 4 * Time.deltaTime;
-        charStats.Air -= stats.AirDepletion * 0.5f;
+        charStats.Air -= stats.AirDepletion * 0.5f * Time.deltaTime;
     }
 }

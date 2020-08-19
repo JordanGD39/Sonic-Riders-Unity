@@ -51,7 +51,7 @@ public class PlayerJump : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!mov.Grounded)
+        if (!mov.Grounded || charStats.Air <= 0)
         {
             if (jumpHeight != startingJumpHeight)
             {
@@ -68,7 +68,7 @@ public class PlayerJump : MonoBehaviour
             JumpHold = true;
             if (charStats.Air > 0)
             {
-                charStats.Air -= 0.05f;
+                charStats.Air -= 5 * Time.deltaTime;
             }
 
             if (jumpHeight < maxJumpHeight)
@@ -161,8 +161,9 @@ public class PlayerJump : MonoBehaviour
                 playerTricks.ChangeTrickSpeed(rampPower, maxRampPower, worstRampPower, jumpHeight, startingJumpHeight, maxJumpHeight);
             }
             else
-            {                
-                rb.AddForce(transform.up * (jumpHeight + GrindJumpHeight), ForceMode.Impulse);                
+            {
+                Vector3 localJumpVel = transform.GetChild(0).TransformDirection(new Vector3(0, jumpHeight, mov.Speed));
+                rb.velocity = localJumpVel;
             }
 
             jumpHeight = startingJumpHeight;

@@ -60,7 +60,7 @@ public class PlayerGrind : MonoBehaviour
             if (grinding)
             {
                 playerSound.PlaySoundEffect(PlayerSound.voiceSounds.NONE, PlayerSound.sounds.GRIND);
-                charStats.Air += airGain;
+                charStats.Air += airGain * Time.deltaTime;
 
                 velocity = (transform.position - previousPos) / Time.deltaTime;
                 previousPos = transform.position;

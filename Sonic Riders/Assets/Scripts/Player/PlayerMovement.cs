@@ -131,7 +131,7 @@ public class PlayerMovement : MonoBehaviour
                 DriftBoost = false;
             }
 
-            if (playerDrift.DriftPressed)
+            if (playerDrift.DriftPressed && charStats.Air > 0)
             {
                 transform.GetChild(0).GetChild(0).localRotation = new Quaternion(0, TurnAmount * 0.1f, 0, transform.GetChild(0).GetChild(0).localRotation.w);
             }  
@@ -167,7 +167,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (charStats.Air > 0 && Movement.z != 0 && speed > 0 && grounded)
         {
-            charStats.Air -= stats.AirDepletion;
+            charStats.Air -= stats.AirDepletion * Time.deltaTime;
         }
     }
 
@@ -267,11 +267,12 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log("There!");
             if (playerJump.RampPower >  0)
             {
-                rb.velocity = playerJump.CurrRamp.transform.GetChild(0).forward * (playerJump.JumpHeight + playerJump.RampPower);
+                rb.velocity = playerJump.CurrRamp.transform.GetChild(0).forward * ((playerJump.JumpHeight + playerJump.RampPower) * 0.5f);
             }
             else
             {
-                rb.velocity = new Vector3(rb.velocity.x, playerJump.JumpHeight * failVelocityMultiplier, rb.velocity.z);
+                Vector3 localJumpVel = transform.GetChild(0).TransformDirection(new Vector3(0, playerJump.JumpHeight * 0.5f, Speed));
+                rb.velocity = localJumpVel;
             }
         }
 
@@ -384,7 +385,7 @@ public class PlayerMovement : MonoBehaviour
                     {
                         if (speed < 100)
                         {
-                            if (transform.GetChild(0).forward.y < -0.5f)
+                            if (transform.GetChild(0).forward.y < -0.5f || playerBoost.Boosting)
                             {
                                 speed += 7 * Time.deltaTime;
                             }

@@ -37,7 +37,7 @@ public class PlayerBoost : MonoBehaviour
             boosting = false;
         }
 
-        if (BoostPressed && (playerMovement.Grounded || playerGrind.Grinding) && !boosting /*&& charStats.Air > 0*/)
+        if (BoostPressed && (playerMovement.Grounded || playerGrind.Grinding) && !boosting && charStats.Air > stats.BoostDepletion)
         {
             boosting = true;
 

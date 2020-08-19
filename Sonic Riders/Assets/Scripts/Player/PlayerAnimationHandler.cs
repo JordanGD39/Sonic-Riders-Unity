@@ -11,6 +11,8 @@ public class PlayerAnimationHandler : MonoBehaviour
     private PlayerJump playerJump;
     private PlayerTricks playerTricks;
 
+    [SerializeField] private float runSpeedMultiplier = 2f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,17 +26,13 @@ public class PlayerAnimationHandler : MonoBehaviour
     void Update()
     {
         float speed = playerMovement.Speed * 0.03f;
+        float runSpeed = speed * runSpeedMultiplier;
 
-        if (speed > 3)
-        {
-            speed = 3;
-        }
-        else if (speed < 0)
-        {
-            speed = 0;
-        }
+        speed = Mathf.Clamp(speed, 0, 3);
+        runSpeed = Mathf.Clamp(runSpeed, -4, 4);
 
         anim.SetFloat("Speed", speed);
+        anim.SetFloat("RunSpeed", runSpeed);
         anim.SetFloat("Direction", playerMovement.TurnAmount);
         anim.SetBool("Grinding", playerGrind.Grinding);
         anim.SetBool("Grounded", playerMovement.Grounded);
@@ -53,6 +51,11 @@ public class PlayerAnimationHandler : MonoBehaviour
         {
             anim.SetFloat("TrickVerticalDir", 0);
         }
+    }
+
+    public void RunningState(bool state)
+    {
+        anim.SetBool("OutOfAir", state);
     }
 
     public void StartBoostAnimation()

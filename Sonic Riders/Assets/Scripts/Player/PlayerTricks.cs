@@ -113,10 +113,9 @@ public class PlayerTricks : MonoBehaviour
         }
         else
         {
-            characterStats.Air += speedReward * 50;
-            characterStats.Air += tricks * 30;
+            characterStats.Air += tricks * 20;
 
-            if (speedReward > 0.5f)
+            if (tricks >= 1)
             {
                 playerSound.PlaySoundEffect(PlayerSound.voiceSounds.JUMPSUCCES, PlayerSound.sounds.NONE);
                 playerMovement.Speed = characterStats.GetCurrentLimit();

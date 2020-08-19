@@ -409,7 +409,7 @@ MonoBehaviour:
   grinding: 0
   speed: 40
   jumpSpeed: 10
-  airGain: 0.2
+  airGain: 8
   extraCharHeight: 0.5
   jumpHeightOfRail: -5
   velocity: {x: 0, y: 0, z: 0}
@@ -426,6 +426,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 750681227764016596}
+  runSpeedMultiplier: 2
 --- !u!114 &5968698961733329538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -456,7 +457,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flightSpeedLoss: 5
   turnMultiplier: 0.5
-  airGain: 0.02
+  airGain: 8
 --- !u!1 &97159474546320783
 GameObject:
   m_ObjectHideFlags: 0
