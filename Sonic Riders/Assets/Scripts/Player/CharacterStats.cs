@@ -70,7 +70,7 @@ public class CharacterStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        hud = GameObject.FindGameObjectWithTag("Canvas").GetComponent<HUD>();
+        hud = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponent<HUD>();
         playerAnimation = GetComponent<PlayerAnimationHandler>();
     }
 

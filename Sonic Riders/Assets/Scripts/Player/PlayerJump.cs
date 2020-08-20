@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class PlayerJump : MonoBehaviour
 {
-    private PlayerSound playerSound;
-    [SerializeField] private SphereCollider groundCol;
+    private AudioManagerHolder audioHolder;
 
     [SerializeField] private float startingJumpHeight = 20;
     [SerializeField] private float jumpHeight = 20;
@@ -29,8 +28,8 @@ public class PlayerJump : MonoBehaviour
     private CharacterStats charStats;
     [SerializeField] private float timeForLength = 0.5f;
 
-    private float rampPower;
-    public float RampPower { get { return rampPower; } }
+    [SerializeField] private float rampPower;
+    public float RampPower { get { return rampPower; } set { rampPower = value; } }
     private float maxRampPower;
     private float worstRampPower;
 
@@ -45,7 +44,7 @@ public class PlayerJump : MonoBehaviour
         mov = GetComponent<PlayerMovement>();
         playerTricks = GetComponent<PlayerTricks>();
         charStats = GetComponent<CharacterStats>();
-        playerSound = GetComponentInChildren<PlayerSound>();
+        audioHolder = GetComponent<AudioManagerHolder>();
     }
 
     // Update is called once per frame
@@ -111,13 +110,13 @@ public class PlayerJump : MonoBehaviour
                         rampPower = worstRampPower;
                     }
 
-                    playerSound.PlaySoundEffect(PlayerSound.voiceSounds.JUMPRAMP, PlayerSound.sounds.NONE);
+                    audioHolder.VoiceManager.Play(Constants.VoiceSounds.rampJump);
                 }
                 else
                 {
                     if (!playerTricks.CanDoTricks)
                     {
-                        playerSound.PlaySoundEffect(PlayerSound.voiceSounds.PERFECTJUMP, PlayerSound.sounds.NONE);
+                        audioHolder.VoiceManager.Play(Constants.VoiceSounds.perfectJump);
                     }                    
                 }
 
@@ -138,7 +137,7 @@ public class PlayerJump : MonoBehaviour
         {
             if (mov.IsPlayer)
             {
-                playerSound.PlaySoundEffect(PlayerSound.voiceSounds.NONE, PlayerSound.sounds.JUMP);
+                audioHolder.SfxManager.Play(Constants.SoundEffects.jump);
             }
 
             mov.RaycastLength = raycastJumpLength;
@@ -191,7 +190,7 @@ public class PlayerJump : MonoBehaviour
             //For now!!!!!
             if (mov.IsPlayer)
             {
-                playerSound.PlaySoundEffect(PlayerSound.voiceSounds.JUMPRAMP, PlayerSound.sounds.NONE);
+                audioHolder.VoiceManager.Play(Constants.VoiceSounds.rampJump);
             }           
 
             Debug.Log("Fell of ramp");

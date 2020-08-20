@@ -9,7 +9,7 @@ public class PlayerFlight : MonoBehaviour
     private Rigidbody rb;
     private HUD hud;
     private Animator canvasAnim;
-    private PlayerSound playerSound;
+    private AudioManagerHolder audioHolder;
     private bool flying = false;
     public bool Flying { get { return flying; } }
     public float VerticalRotation { get; set; } = 0;
@@ -35,9 +35,9 @@ public class PlayerFlight : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         rb = GetComponent<Rigidbody>();
         cornering = charStats.BoardStats.Cornering * turnMultiplier;
-        hud = GameObject.FindGameObjectWithTag("Canvas").GetComponent<HUD>();
+        hud = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponent<HUD>();
         canvasAnim = hud.GetComponent<Animator>();
-        playerSound = GetComponentInChildren<PlayerSound>();
+        audioHolder = GetComponent<AudioManagerHolder>();
     }
     
     // Update is called once per frame
@@ -67,6 +67,11 @@ public class PlayerFlight : MonoBehaviour
                 otherRot.x = 0;
                 otherRot.z = 0;
                 transform.GetChild(0).localRotation = otherRot;
+
+                if (playerMovement.Grounded)
+                {
+                    playerMovement.Speed = charStats.GetCurrentLimit();
+                }
 
                 flying = false;
             }
@@ -110,7 +115,7 @@ public class PlayerFlight : MonoBehaviour
         transform.GetChild(0).forward = portal.forward;
 
         playerMovement.Speed = 50;
-        playerSound.PlaySoundEffect(PlayerSound.voiceSounds.NONE, PlayerSound.sounds.BOOST);
+        audioHolder.SfxManager.Play(Constants.SoundEffects.boost);
 
         if (playerMovement.IsPlayer)
         {

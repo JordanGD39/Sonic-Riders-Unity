@@ -230,6 +230,7 @@ GameObject:
   - component: {fileID: 97159473819385887}
   - component: {fileID: 5968698961733329538}
   - component: {fileID: 8803422805985233871}
+  - component: {fileID: 6231802682143261819}
   m_Layer: 8
   m_Name: Sonic
   m_TagString: Player
@@ -328,7 +329,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7b2952b0c54bfb488f379cca767fb8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundCol: {fileID: 97159474546320771}
   startingJumpHeight: 15
   jumpHeight: 15
   maxJumpHeight: 18
@@ -337,6 +337,7 @@ MonoBehaviour:
   jumpRelease: 0
   actualJumpRelease: 0
   timeForLength: 0.5
+  rampPower: 0
 --- !u!114 &7437413400459437338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -458,6 +459,20 @@ MonoBehaviour:
   flightSpeedLoss: 5
   turnMultiplier: 0.5
   airGain: 8
+--- !u!114 &6231802682143261819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97159473819385861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb95a7f3a249d9e469f5235b145d484b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  voiceManager: {fileID: 0}
+  sfxManager: {fileID: 0}
 --- !u!1 &97159474546320783
 GameObject:
   m_ObjectHideFlags: 0
@@ -3155,7 +3170,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3107899352354394811}
-  - component: {fileID: 1520226017284573659}
+  - component: {fileID: 4738764517568740430}
   m_Layer: 8
   m_Name: SFXmaker
   m_TagString: Untagged
@@ -3177,103 +3192,56 @@ Transform:
   m_Father: {fileID: 97159473819385862}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &1520226017284573659
-AudioSource:
+--- !u!114 &4738764517568740430
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4695371355078036550}
   m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300002, guid: 4d6df4263f01c194c86a7a990200a169,
-    type: 2}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 1
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 5
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f05d0bda8ed6cf40b8344d9c401ca38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Jump
+    clip: {fileID: 8300000, guid: 842af8528ea1cdc4bad6807d0c2eb9cb, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 1
+    minRange: 5
+    maxRange: 100
+    source: {fileID: 0}
+  - name: Boost
+    clip: {fileID: 8300000, guid: 671e03d222f8b27458869d099f787c8b, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 1
+    minRange: 5
+    maxRange: 100
+    source: {fileID: 0}
+  - name: Land
+    clip: {fileID: 8300000, guid: d6f493fa0e079164aa444767354c11a6, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 1
+    minRange: 5
+    maxRange: 100
+    source: {fileID: 0}
+  - name: Grind
+    clip: {fileID: 8300000, guid: 632324952e3ca234c9f57407a78f0adc, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    spatialBlend: 1
+    minRange: 5
+    maxRange: 100
+    source: {fileID: 0}
+  mixer: {fileID: 24300002, guid: 4d6df4263f01c194c86a7a990200a169, type: 2}
 --- !u!1 &4866947445163636593
 GameObject:
   m_ObjectHideFlags: 0
@@ -5617,8 +5585,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5684328548243715194}
-  - component: {fileID: 6681310777960127017}
-  - component: {fileID: 4225128003033749186}
+  - component: {fileID: 9018395722538073958}
   m_Layer: 8
   m_Name: SoundMaker
   m_TagString: Untagged
@@ -5640,7 +5607,7 @@ Transform:
   m_Father: {fileID: 97159473819385862}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6681310777960127017
+--- !u!114 &9018395722538073958
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5649,121 +5616,101 @@ MonoBehaviour:
   m_GameObject: {fileID: 8890370845573034668}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc7e41a6988f95a47a778e2e48d648d6, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f05d0bda8ed6cf40b8344d9c401ca38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  voiceClips:
-  - {fileID: 8300000, guid: 9faa447a44fcf83498874a7c4c4a662f, type: 3}
-  - {fileID: 8300000, guid: 44f5516ca74c50f4b9ae1bf605e421fd, type: 3}
-  - {fileID: 8300000, guid: 1c2e7e824de8ca24a9f38dd226d398c4, type: 3}
-  - {fileID: 8300000, guid: 0a0c284d47bef1a41b6638f090db789c, type: 3}
-  - {fileID: 8300000, guid: 6a23a09197e31c042b6ff0e95ef035cb, type: 3}
-  - {fileID: 8300000, guid: 43f6487f129f3dd41bf6735a8e42b243, type: 3}
-  - {fileID: 8300000, guid: af32cdbce1125c648b7665dc9a81f92a, type: 3}
-  - {fileID: 8300000, guid: 17887abdd5e1c9645af8d094ef890919, type: 3}
-  playerSfx:
-  - {fileID: 8300000, guid: 671e03d222f8b27458869d099f787c8b, type: 3}
-  - {fileID: 8300000, guid: 842af8528ea1cdc4bad6807d0c2eb9cb, type: 3}
-  - {fileID: 8300000, guid: d6f493fa0e079164aa444767354c11a6, type: 3}
-  sfxSource: {fileID: 1520226017284573659}
-  grindSource: {fileID: 1242459868861778290}
---- !u!82 &4225128003033749186
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8890370845573034668}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300002, guid: 9794a27f0158ee9429d22b7dc579fdcc,
-    type: 2}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  sounds:
+  - name: Opening
+    clip: {fileID: 8300000, guid: 9faa447a44fcf83498874a7c4c4a662f, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 1
+    minRange: 5
+    maxRange: 100
+    source: {fileID: 0}
+  - name: RampJump
+    clip: {fileID: 8300000, guid: 44f5516ca74c50f4b9ae1bf605e421fd, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 1
+    minRange: 5
+    maxRange: 100
+    source: {fileID: 0}
+  - name: '?'
+    clip: {fileID: 8300000, guid: c5a87ac479805134c8fe8c0383700122, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 1
+    minRange: 5
+    maxRange: 100
+    source: {fileID: 0}
+  - name: LandFail
+    clip: {fileID: 8300000, guid: 0a0c284d47bef1a41b6638f090db789c, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 1
+    minRange: 5
+    maxRange: 100
+    source: {fileID: 0}
+  - name: DrivePast
+    clip: {fileID: 8300000, guid: f51388f7e4ddf914d9116a43c73cf6b8, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 1
+    minRange: 5
+    maxRange: 100
+    source: {fileID: 0}
+  - name: Win
+    clip: {fileID: 8300000, guid: 17887abdd5e1c9645af8d094ef890919, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 1
+    minRange: 5
+    maxRange: 100
+    source: {fileID: 0}
+  - name: Lose
+    clip: {fileID: 8300000, guid: af32cdbce1125c648b7665dc9a81f92a, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 1
+    minRange: 5
+    maxRange: 100
+    source: {fileID: 0}
+  - name: Hit
+    clip: {fileID: 8300000, guid: 43f6487f129f3dd41bf6735a8e42b243, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 1
+    minRange: 5
+    maxRange: 100
+    source: {fileID: 0}
+  - name: LandSucces
+    clip: {fileID: 8300000, guid: 6a23a09197e31c042b6ff0e95ef035cb, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 1
+    minRange: 5
+    maxRange: 100
+    source: {fileID: 0}
+  - name: PerfectJump
+    clip: {fileID: 8300000, guid: 1c2e7e824de8ca24a9f38dd226d398c4, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 1
+    minRange: 5
+    maxRange: 100
+    source: {fileID: 0}
+  mixer: {fileID: 24300002, guid: 9794a27f0158ee9429d22b7dc579fdcc, type: 2}
 --- !u!1 &8922661200967279409
 GameObject:
   m_ObjectHideFlags: 0

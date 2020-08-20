@@ -21,7 +21,7 @@ public class CameraDeath : MonoBehaviour
         startPos = transform.localPosition;
         prevParent = transform.parent;
         playerRb = player.GetComponent<Rigidbody>();
-        canvasAnim = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Animator>();
+        canvasAnim = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponent<Animator>();
     }
 
     // Update is called once per frame

@@ -9,7 +9,7 @@ public class BoostPad : MonoBehaviour
 
     private void Start()
     {
-        canvasAnim = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Animator>();
+        canvasAnim = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponent<Animator>();
         source = GetComponentInChildren<AudioSource>();
     }
 

@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class PlayerDrift : MonoBehaviour
 {
-    private PlayerSound playerSound;
     private PlayerMovement movement;
     private BoardStats stats;
     private CharacterStats charStats;
+    private AudioManagerHolder audioHolder;
     public bool DriftPressed { get; set; } = false;
     public float DriftDir { get; set; } = 0;
     private Animator canvasAnim;
@@ -20,9 +20,9 @@ public class PlayerDrift : MonoBehaviour
     {
         movement = GetComponent<PlayerMovement>();
         charStats = GetComponent<CharacterStats>();
-        canvasAnim = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Animator>();
+        canvasAnim = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponent<Animator>();
         stats = charStats.BoardStats;
-        playerSound = GetComponentInChildren<PlayerSound>();
+        audioHolder = GetComponent<AudioManagerHolder>();
     }
 
     // Update is called once per frame
@@ -67,7 +67,7 @@ public class PlayerDrift : MonoBehaviour
             }            
             movement.DriftBoost = true;
 
-            playerSound.PlaySoundEffect(PlayerSound.voiceSounds.NONE, PlayerSound.sounds.BOOST);
+            audioHolder.SfxManager.Play(Constants.SoundEffects.boost);
 
             if (movement.IsPlayer)
             {

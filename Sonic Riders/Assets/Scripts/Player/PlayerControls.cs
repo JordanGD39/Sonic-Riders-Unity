@@ -24,7 +24,7 @@ public class PlayerControls : MonoBehaviour
         playerFlight = GetComponent<PlayerFlight>();
         playerMovement.IsPlayer = true;
         playerMovement.CheckIfPlayer();
-        AudioManager.instance.Play("Test");
+        GameManager.instance.GetAudioManager.Play("Test");
     }
 
     // Update is called once per frame

@@ -25,6 +25,11 @@ public class PlayerAnimationHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (anim == null)
+        {
+            return;
+        }
+
         float speed = playerMovement.Speed * 0.03f;
         float runSpeed = speed * runSpeedMultiplier;
 

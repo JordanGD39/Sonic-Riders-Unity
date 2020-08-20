@@ -59,7 +59,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        hud = GameObject.FindGameObjectWithTag("Canvas").GetComponent<HUD>();        
+        hud = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponent<HUD>();        
         playerBoost = GetComponent<PlayerBoost>();
         playerJump = GetComponent<PlayerJump>();
         playerDrift = GetComponent<PlayerDrift>();
@@ -267,7 +267,7 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log("There!");
             if (playerJump.RampPower >  0)
             {
-                rb.velocity = playerJump.CurrRamp.transform.GetChild(0).forward * ((playerJump.JumpHeight + playerJump.RampPower) * 0.5f);
+                rb.velocity = playerJump.CurrRamp.transform.GetChild(0).forward * (playerJump.JumpHeight + playerJump.RampPower);
             }
             else
             {

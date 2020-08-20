@@ -5,9 +5,9 @@ using PathCreation;
 
 public class PlayerGrind : MonoBehaviour
 {
+    private AudioManagerHolder audioHolder;
     private PlayerMovement movement;
     private PlayerJump playerJump;
-    private PlayerSound playerSound;
     private Rigidbody rb;
     private BoardStats stats;
     private CharacterStats charStats;
@@ -48,8 +48,8 @@ public class PlayerGrind : MonoBehaviour
         playerJump = GetComponent<PlayerJump>();
         rb = GetComponent<Rigidbody>();
         stats = charStats.BoardStats;
-        hud = GameObject.FindGameObjectWithTag("Canvas").GetComponent<HUD>();
-        playerSound = GetComponentInChildren<PlayerSound>();        
+        hud = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponent<HUD>();
+        audioHolder = GetComponent<AudioManagerHolder>();
     }
 
     // Update is called once per frame
@@ -59,7 +59,7 @@ public class PlayerGrind : MonoBehaviour
         {
             if (grinding)
             {
-                playerSound.PlaySoundEffect(PlayerSound.voiceSounds.NONE, PlayerSound.sounds.GRIND);
+                audioHolder.SfxManager.Play(Constants.SoundEffects.grind);
                 charStats.Air += airGain * Time.deltaTime;
 
                 velocity = (transform.position - previousPos) / Time.deltaTime;
@@ -124,11 +124,12 @@ public class PlayerGrind : MonoBehaviour
                     
                     movement.CantMove = false;
 
-                    playerSound.StopPlayingGrind();
+                    audioHolder.SfxManager.StopPlaying(Constants.SoundEffects.grind);
 
                     if (jumpPressed)
                     {
                         playerJump.GrindJumpHeight = jumpHeightOfRail;
+                        playerJump.RampPower = 0;
                         playerJump.JumpRelease = true;
                     }                    
                 }

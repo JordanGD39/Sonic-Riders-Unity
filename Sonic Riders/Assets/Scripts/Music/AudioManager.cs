@@ -7,8 +7,6 @@ public class AudioManager : MonoBehaviour
 {
     public Sound[] sounds;
 
-    public static AudioManager instance;
-
     [SerializeField] private AudioMixerGroup mixer;
     
     private Sound currSound;
@@ -23,17 +21,6 @@ public class AudioManager : MonoBehaviour
 
     void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-        DontDestroyOnLoad(gameObject);
-
         foreach (Sound s in sounds)
         {
             s.source = gameObject.AddComponent<AudioSource>();
@@ -43,6 +30,9 @@ public class AudioManager : MonoBehaviour
             s.source.pitch = s.pitch;
             s.source.loop = s.loop;
             s.source.outputAudioMixerGroup = mixer;
+            s.source.spatialBlend = s.spatialBlend;
+            s.source.minDistance = s.minRange;
+            s.source.maxDistance = s.maxRange;
         }
     }
 
@@ -75,8 +65,12 @@ public class AudioManager : MonoBehaviour
         {
             currSound = currS;
             Debug.Log("Playing music " + name);
-        }        
-        currS.source.Play();
+        }
+
+        if (!currS.source.isPlaying)
+        {
+            currS.source.Play();
+        }
     }
 
     public void StopPlaying(string sound)

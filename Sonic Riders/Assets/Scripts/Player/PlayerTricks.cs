@@ -8,7 +8,7 @@ public class PlayerTricks : MonoBehaviour
     public Vector2 TrickDirection { get; set; }
 
     private PlayerMovement playerMovement;
-    private PlayerSound playerSound;
+    private AudioManagerHolder audioHolder;
     private PlayerAnimationHandler playerAnimation;
     private CharacterStats characterStats;
 
@@ -30,7 +30,7 @@ public class PlayerTricks : MonoBehaviour
         camStartingPos = cam.localPosition;
 
         playerMovement = GetComponent<PlayerMovement>();
-        playerSound = GetComponentInChildren<PlayerSound>();
+        audioHolder = GetComponent<AudioManagerHolder>();
         playerAnimation = GetComponent<PlayerAnimationHandler>();
         characterStats = GetComponent<CharacterStats>();
         rb = GetComponent<Rigidbody>();
@@ -95,18 +95,17 @@ public class PlayerTricks : MonoBehaviour
     {
         if (!playerMovement.IsPlayer)
         {
-            characterStats.Air += 50;
-            characterStats.Air += 30;
+            characterStats.Air += 100;
             CanDoTricks = false;
             transform.GetChild(0).localRotation = new Quaternion(0, transform.GetChild(0).localRotation.y, 0, transform.GetChild(0).localRotation.w);
             return;
         }
 
-        playerSound.PlaySoundEffect(PlayerSound.voiceSounds.NONE, PlayerSound.sounds.LAND);
+        audioHolder.SfxManager.Play(Constants.SoundEffects.land);
 
         if (!playerAnimation.Anim.GetCurrentAnimatorStateInfo(0).IsName("Falling") && !CanLand)
         {
-            playerSound.PlaySoundEffect(PlayerSound.voiceSounds.RAMPFAIL, PlayerSound.sounds.NONE);
+            audioHolder.VoiceManager.Play(Constants.VoiceSounds.landFail);
             playerMovement.Speed *= 0.1f;
             Debug.Log("Trick speed loss!!!");
             characterStats.Air -= 15;
@@ -117,12 +116,12 @@ public class PlayerTricks : MonoBehaviour
 
             if (tricks >= 1)
             {
-                playerSound.PlaySoundEffect(PlayerSound.voiceSounds.JUMPSUCCES, PlayerSound.sounds.NONE);
+                audioHolder.VoiceManager.Play(Constants.VoiceSounds.landSucces);
                 playerMovement.Speed = characterStats.GetCurrentLimit();
             }  
             else
             {
-                playerSound.PlaySoundEffect(PlayerSound.voiceSounds.RAMPFAIL, PlayerSound.sounds.NONE);
+                audioHolder.VoiceManager.Play(Constants.VoiceSounds.landFail);
             }
         }
 
