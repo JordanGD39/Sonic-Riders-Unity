@@ -69,11 +69,11 @@ public class PlayerGrind : MonoBehaviour
                 {
                     if (movement.Speed > 0)
                     {
-                        movement.Speed -= (stats.Dash - 3f) * Time.deltaTime;
+                        movement.Speed -= 7 * Time.deltaTime;
                     }
                     else
                     {
-                        movement.Speed += (stats.Dash - 3f) * Time.deltaTime;
+                        movement.Speed += 7 * Time.deltaTime;
                     }
                     
                 }
@@ -81,11 +81,11 @@ public class PlayerGrind : MonoBehaviour
                 {
                     if (movement.Speed > 0)
                     {
-                        movement.Speed += (stats.Dash - 3f) * Time.deltaTime;
+                        movement.Speed += 7 * Time.deltaTime;
                     }
                     else
                     {
-                        movement.Speed -= (stats.Dash - 3f) * Time.deltaTime;
+                        movement.Speed -= 7 * Time.deltaTime;
                     }
                 }
 

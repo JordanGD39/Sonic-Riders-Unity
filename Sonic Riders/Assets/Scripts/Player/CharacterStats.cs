@@ -16,6 +16,56 @@ public class CharacterStats : MonoBehaviour
     [SerializeField] private float air = 100;
     [SerializeField] private int maxAir = 100;
 
+    [SerializeField] private int rings = 0;
+    [SerializeField] private int maxRings = 30;
+
+    public int Rings
+    {
+        get { return rings; }
+
+        set
+        {
+            if (value >= maxRings)
+            {
+                if (maxRings > 60)
+                {
+                    value = maxRings;
+                }
+                else
+                {
+                    value -= maxRings;
+
+                    level++;
+                    hud.UpdateLevel(level);
+                    maxAir += 100;
+                    air = maxAir;
+
+                    if (maxRings < 60)
+                    {
+                        maxRings = 60;
+
+                        if (value >= maxRings)
+                        {
+                            level++;
+                            hud.UpdateLevel(level);
+                            maxAir += 100;
+                            air = maxAir;
+                            value -= maxRings;
+                            maxRings = 100;
+                        }
+                    }
+                    else
+                    {
+                        maxRings = 100;
+                    }
+                }                
+            }
+
+            rings = value;
+            hud.UpdateRings(rings, maxRings);
+        }
+    }
+
     public float Air
     {
         get { return air; }
@@ -56,6 +106,8 @@ public class CharacterStats : MonoBehaviour
     public float SpeedLoss { get { return speedLoss; } }
     [SerializeField] private float extraPower = 0;
     public float ExtraPower { get { return extraPower; } }
+    [SerializeField] private float extraDash = 0;
+    public float ExtraDash { get { return extraDash; } }
     [SerializeField] private float extraCornering = 0;
     public float ExtraCornering { get { return extraCornering; } }
     [SerializeField] private type charType;
@@ -63,7 +115,7 @@ public class CharacterStats : MonoBehaviour
     [SerializeField] private BoardStats stats;
     public BoardStats BoardStats { get { return stats; } }
 
-    private float runSpeed = 30;
+    [SerializeField] private float runSpeed = 30;
 
     private bool alreadyRunning = false;
 
@@ -105,5 +157,20 @@ public class CharacterStats : MonoBehaviour
     public float GetCurrentBoost()
     {
         return stats.Boost[level];
+    }
+
+    public float GetCurrentPower()
+    {
+        return stats.Power[level] + extraPower;
+    }
+
+    public float GetCurrentDash()
+    {
+        return stats.Dash + extraDash;
+    }
+
+    public float GetCurrentCornering()
+    {
+        return stats.Cornering + extraCornering;
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerAnimationHandler : MonoBehaviour
 {
     [SerializeField] private Animator anim;
+    [SerializeField] private bool notReady = false;
     public Animator Anim { get { return anim; } }
     private PlayerMovement playerMovement;
     private PlayerGrind playerGrind;
@@ -25,7 +26,7 @@ public class PlayerAnimationHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (anim == null)
+        if (notReady)
         {
             return;
         }

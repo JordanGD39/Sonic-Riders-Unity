@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    private AudioManager audioManager;
+    [SerializeField] private AudioManager audioManager;
     public AudioManager GetAudioManager { get { return audioManager; } }
 
     void Awake()
@@ -23,13 +23,14 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-
+    /*
     // Start is called before the first frame update
     void Start()
     {
         audioManager = GetComponent<AudioManager>();
     }
-    /*
+
+    
     // Update is called once per frame
     void Update()
     {

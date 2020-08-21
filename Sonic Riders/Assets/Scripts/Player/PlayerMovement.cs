@@ -165,7 +165,7 @@ public class PlayerMovement : MonoBehaviour
             Acceleration();
         }
 
-        if (charStats.Air > 0 && Movement.z != 0 && speed > 0 && grounded)
+        if (charStats.Air > 0 && Movement.z != 0 && speed != 0 && grounded)
         {
             charStats.Air -= stats.AirDepletion * Time.deltaTime;
         }
@@ -324,13 +324,16 @@ public class PlayerMovement : MonoBehaviour
             //Losing speed when going up walls
             if(!(!ridingOnWall && NotOnSlowdownAngle() || ridingOnWall && rb.velocity.y < 0))
             {
+                float forwardAngle = transform.GetChild(0).forward.y * 1.7f;
+                float clampDriveUpSpeed = Mathf.Clamp(forwardAngle, 0, 1);
+
                 if (speed > 0)
                 {
-                    speed -= 13 * Time.deltaTime;
+                    speed -= 13 * clampDriveUpSpeed * Time.deltaTime;
                 }
                 else if(speed < 0)
                 {
-                    speed += 13 * Time.deltaTime;
+                    speed += 13 * clampDriveUpSpeed * Time.deltaTime;
                 }
 
                 if (IsPlayer)
@@ -373,13 +376,13 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (speed < charStats.GetCurrentLimit())
                 {
-                    speed += stats.Dash * Movement.z * Time.deltaTime;                                            
+                    speed += charStats.GetCurrentDash() * Movement.z * Time.deltaTime;                                            
                 }
                 else
                 {
                     if ((!playerBoost.Boosting || playerBoost.Boosting && speed > stats.Boost[charStats.Level]) && !ridingOnWall)
                     {
-                        speed -= 7 * Time.deltaTime;
+                        speed -= 2 * Time.deltaTime;
                     }     
                     else
                     {
@@ -387,11 +390,11 @@ public class PlayerMovement : MonoBehaviour
                         {
                             if (transform.GetChild(0).forward.y < -0.5f || playerBoost.Boosting)
                             {
-                                speed += 7 * Time.deltaTime;
+                                speed += 7 * -transform.GetChild(0).forward.y * Time.deltaTime;
                             }
                             else if(speed > charStats.GetCurrentLimit())
                             {
-                                speed -= 7 * Time.deltaTime;
+                                speed -= 2 * Time.deltaTime;
                             }                            
                         }
                     }
@@ -410,7 +413,7 @@ public class PlayerMovement : MonoBehaviour
                     }
                     else
                     {
-                        speed -= (stats.Dash * (1 + Movement.z) * brakeMultiplier) * Time.deltaTime;
+                        speed -= (charStats.GetCurrentDash() * (1 + Movement.z) * brakeMultiplier) * Time.deltaTime;
                     }                    
                 }
                 else if (speed < -1)
@@ -424,9 +427,16 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
-                if (speed > -10 && grounded)
+                if (grounded)
                 {
-                    speed -= (stats.Dash * (1 + Mathf.Abs(Movement.z)) * brakeMultiplier) * Time.deltaTime;
+                    if (speed > -10)
+                    {
+                        speed -= (charStats.GetCurrentDash() * (1 + Mathf.Abs(Movement.z)) * brakeMultiplier) * Time.deltaTime;
+                    }
+                    else
+                    {
+                        speed += 2 * Time.deltaTime;
+                    }
                 }
             }                      
         }

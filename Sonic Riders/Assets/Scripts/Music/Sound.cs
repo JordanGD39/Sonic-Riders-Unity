@@ -20,6 +20,9 @@ public class Sound
     public float minRange = 1;
     public float maxRange = 100;
 
+    [Range(0f, 255f)]
+    public int priority = 10;
+
     [HideInInspector]
     public AudioSource source;
 }

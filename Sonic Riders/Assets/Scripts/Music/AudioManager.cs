@@ -33,6 +33,7 @@ public class AudioManager : MonoBehaviour
             s.source.spatialBlend = s.spatialBlend;
             s.source.minDistance = s.minRange;
             s.source.maxDistance = s.maxRange;
+            s.source.priority = s.priority;
         }
     }
 
@@ -67,7 +68,7 @@ public class AudioManager : MonoBehaviour
             Debug.Log("Playing music " + name);
         }
 
-        if (!currS.source.isPlaying)
+        if (!currS.source.isPlaying || name != Constants.SoundEffects.grind)
         {
             currS.source.Play();
         }

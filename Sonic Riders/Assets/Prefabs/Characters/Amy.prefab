@@ -4469,9 +4469,11 @@ MonoBehaviour:
   maxAir: 100
   speedLoss: 1
   extraPower: 0
-  extraCornering: 0
+  extraDash: 0.5
+  extraCornering: 1
   charType: 0
   stats: {fileID: 11400000, guid: cccfd161fcb39714a9103fe27e95fd36, type: 2}
+  runSpeed: 30
 --- !u!114 &8027152530899255614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4484,7 +4486,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7b2952b0c54bfb488f379cca767fb8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundCol: {fileID: 0}
   startingJumpHeight: 10
   jumpHeight: 10
   maxJumpHeight: 15
@@ -4493,6 +4494,7 @@ MonoBehaviour:
   jumpRelease: 0
   actualJumpRelease: 0
   timeForLength: 0.5
+  rampPower: 0
 --- !u!114 &8027152530899255610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4548,9 +4550,10 @@ MonoBehaviour:
   path: {fileID: 0}
   grinding: 0
   speed: 40
+  jumpSpeed: 20
   airGain: 3
   extraCharHeight: 0.5
-  jumpHeightOfRamp: 10
+  jumpHeightOfRail: 30
   velocity: {x: 0, y: 0, z: 0}
 --- !u!114 &8027152530899255609
 MonoBehaviour:
@@ -4565,6 +4568,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 0}
+  runSpeedMultiplier: 2
 --- !u!114 &8002959670789412004
 MonoBehaviour:
   m_ObjectHideFlags: 0

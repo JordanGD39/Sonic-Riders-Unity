@@ -67,14 +67,19 @@ public class PlayerTrigger : MonoBehaviour
     {
         bool wasGrounded = playerMovement.Grounded;
 
-        playerMovement.Speed = speed;
-        yield return null;
         playerMovement.CantMove = true;
-        rb.velocity = bounceDir * speed;
+
+        Debug.Log(transform.InverseTransformDirection(bounceDir).z);
+
+        if (Mathf.Abs(transform.InverseTransformDirection(bounceDir).z) > 0.8f)
+        {
+            playerMovement.Speed = speed;
+        }
+
+        rb.AddForce(bounceDir * speed, ForceMode.Impulse);
         yield return new WaitForSeconds(time / 2);
         playerMovement.Bouncing = false;
-        yield return new WaitForSeconds(time / 2);        
-        playerMovement.Speed = 0;
+        yield return new WaitForSeconds(time / 2);
         playerMovement.CantMove = false;
     }
 
