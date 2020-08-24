@@ -5,8 +5,10 @@ using UnityEngine;
 public class PlayerPunchObstacle : MonoBehaviour
 {
     private CharacterStats charStats;
-    [SerializeField] private Transform leftPunchAngle;
+    private AudioManagerHolder audioHolder;
+    private PlayerAnimationHandler playerAnimation;
     [SerializeField] private Transform rightPunchAngle;
+    [SerializeField] private Transform leftPunchAngle;
     [SerializeField] private float punchPower = 20;
     [SerializeField] private float cantPunchMultiplier = 0.5f;
 
@@ -16,6 +18,8 @@ public class PlayerPunchObstacle : MonoBehaviour
     void Start()
     {
         charStats = GetComponent<CharacterStats>();
+        audioHolder = GetComponent<AudioManagerHolder>();
+        playerAnimation = GetComponent<PlayerAnimationHandler>();
 
         if (charStats.TypeCheck(type.POWER))
         {
@@ -34,9 +38,12 @@ public class PlayerPunchObstacle : MonoBehaviour
         if (!CantPunch)
         {
             obstacleRb.AddForce(rightPunchAngle.forward * punchPower);
+            audioHolder.SfxManager.Play(Constants.SoundEffects.punch);
+            playerAnimation.Anim.SetTrigger("Punch");
         }
         else
         {
+            audioHolder.SfxManager.Play(Constants.SoundEffects.bounceWall);
             obstacleRb.AddForce(transform.forward * punchPower);
         }
     }

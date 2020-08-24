@@ -250,6 +250,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //Debug.LogError("Movement is called!");
+
         if (charStats == null || playerFlight.Flying)
         {
             return;
@@ -262,9 +264,9 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(-transform.up * extraForceGrounded);
         }
 
-        if (playerJump.DontDragDown && transform.InverseTransformDirection(rb.velocity).y < 0)
+        /*if (playerJump.DontDragDown && transform.InverseTransformDirection(rb.velocity).y < 0)
         {
-            Debug.Log("There!");
+            Debug.LogError("There! " + rb.velocity.y);
             if (playerJump.RampPower >  0)
             {
                 rb.velocity = playerJump.CurrRamp.transform.GetChild(0).forward * (playerJump.JumpHeight + playerJump.RampPower);
@@ -274,7 +276,7 @@ public class PlayerMovement : MonoBehaviour
                 Vector3 localJumpVel = transform.GetChild(0).TransformDirection(new Vector3(0, playerJump.JumpHeight * 0.5f, Speed));
                 rb.velocity = localJumpVel;
             }
-        }
+        }*/
 
         if (NotOnSlowdownAngle() || !grounded)
         {           
@@ -291,12 +293,7 @@ public class PlayerMovement : MonoBehaviour
             fallToTheGround = true;            
         }
 
-        if (playerJump.JumpHold)
-        {
-            localVel.y = rb.velocity.y;
-        }
-
-        if (grounded && !(fallToTheGround && transform.GetChild(0).forward.y > -0.8f) && !CantMove)
+        if (grounded && !(fallToTheGround && transform.GetChild(0).forward.y > -0.8f) && !CantMove && !playerJump.DontDragDown)
         {
             rb.velocity = localVel;
         }

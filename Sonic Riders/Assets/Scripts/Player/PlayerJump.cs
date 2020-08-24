@@ -33,9 +33,12 @@ public class PlayerJump : MonoBehaviour
     private float maxRampPower;
     private float worstRampPower;
 
+    [SerializeField] private float highestYvel = 0;
+
     public Ramp CurrRamp { get; set; }
 
     private bool alreadyFell = false;
+    private bool canClamp = false;
 
     // Start is called before the first frame update
     void Start()
@@ -140,12 +143,13 @@ public class PlayerJump : MonoBehaviour
                 audioHolder.SfxManager.Play(Constants.SoundEffects.jump);
             }
 
-            mov.RaycastLength = raycastJumpLength;
             DontDragDown = true;
-            Invoke("CanDragDown", 0.2f);
+            mov.RaycastLength = raycastJumpLength;
+            Invoke("CanDragDown", 0.5f);
 
             if (rampPower > 0)
             {
+                canClamp = false;
                 Quaternion rot = transform.GetChild(0).rotation;
                 rot.y = transform.parent.rotation.y;
                 transform.GetChild(0).rotation = rot;
@@ -161,13 +165,27 @@ public class PlayerJump : MonoBehaviour
             }
             else
             {
-                Vector3 localJumpVel = transform.GetChild(0).TransformDirection(new Vector3(0, jumpHeight, mov.Speed));
-                rb.velocity = localJumpVel;
+                rb.AddForce(transform.up * jumpHeight, ForceMode.VelocityChange);
+                highestYvel = 0;
+                canClamp = true;
             }
 
             jumpHeight = startingJumpHeight;
             GrindJumpHeight = 0;
             jumpRelease = false;
+        }
+
+        if (rb.velocity.y > highestYvel)
+        {
+            highestYvel = rb.velocity.y;
+        }
+
+        if (canClamp && !mov.Grounded)
+        {
+            Vector3 localVel = transform.GetChild(0).InverseTransformDirection(rb.velocity);
+            localVel.y = Mathf.Clamp(localVel.y, -99, 6.5f + (jumpHeight - startingJumpHeight));
+            rb.velocity = transform.GetChild(0).TransformDirection(localVel);
+            //Debug.Log(localVel);
         }
     }
 

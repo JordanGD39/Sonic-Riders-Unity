@@ -71,9 +71,12 @@ public class PlayerTrigger : MonoBehaviour
 
         Debug.Log(transform.InverseTransformDirection(bounceDir).z);
 
+        bool hitDirectly = false;
+
         if (Mathf.Abs(transform.InverseTransformDirection(bounceDir).z) > 0.8f)
         {
             playerMovement.Speed = speed;
+            hitDirectly = true;
         }
 
         rb.AddForce(bounceDir * speed, ForceMode.Impulse);
@@ -81,6 +84,12 @@ public class PlayerTrigger : MonoBehaviour
         playerMovement.Bouncing = false;
         yield return new WaitForSeconds(time / 2);
         playerMovement.CantMove = false;
+
+        if (hitDirectly && wasGrounded)
+        {
+            playerMovement.Speed = 0;
+            rb.velocity = Vector3.zero;
+        }
     }
 
     public Vector3 NearestVertexTo(Vector3 point, Mesh mesh)

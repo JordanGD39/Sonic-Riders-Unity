@@ -10,7 +10,39 @@ public class CharacterStats : MonoBehaviour
     private PlayerAnimationHandler playerAnimation;
 
     [SerializeField] private int level = 0;
-    public int Level { get { return level; } set { level = value; } }
+    public int Level
+    {
+        get { return level; }
+        set
+        {
+            switch (value)
+            {
+                case -1:
+                    value = 0;
+                    break;
+                case 0:
+                    maxRings = 30;
+                    maxAir = 100;                    
+                    break;
+                case 1:
+                    maxRings = 60;
+                    maxAir = 200;
+                    break;
+                case 2:
+                    maxRings = 100;
+                    maxAir = 300;
+                    break;
+            }
+
+            if (value > level || air > maxAir)
+            {
+                air = maxAir;
+            }
+
+            level = value;
+            hud.UpdateLevel(level);
+        }
+    }
     public bool IsPlayer { get; set; } = false;
 
     [SerializeField] private float air = 100;
@@ -35,28 +67,13 @@ public class CharacterStats : MonoBehaviour
                 {
                     value -= maxRings;
 
-                    level++;
-                    hud.UpdateLevel(level);
-                    maxAir += 100;
-                    air = maxAir;
+                    Level++;
 
-                    if (maxRings < 60)
+                    if (value >= maxRings)
                     {
-                        maxRings = 60;
+                        value -= maxRings;
 
-                        if (value >= maxRings)
-                        {
-                            level++;
-                            hud.UpdateLevel(level);
-                            maxAir += 100;
-                            air = maxAir;
-                            value -= maxRings;
-                            maxRings = 100;
-                        }
-                    }
-                    else
-                    {
-                        maxRings = 100;
+                        Level++;
                     }
                 }                
             }

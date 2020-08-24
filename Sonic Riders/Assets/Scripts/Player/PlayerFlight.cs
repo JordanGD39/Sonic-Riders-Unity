@@ -115,7 +115,7 @@ public class PlayerFlight : MonoBehaviour
         transform.GetChild(0).forward = portal.forward;
 
         playerMovement.Speed = 50;
-        audioHolder.SfxManager.Play(Constants.SoundEffects.boost);
+        audioHolder.SfxManager.Play(Constants.SoundEffects.flightRing);
 
         if (playerMovement.IsPlayer)
         {

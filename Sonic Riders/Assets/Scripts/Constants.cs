@@ -28,5 +28,9 @@ public class Constants
         public const string boost = "Boost";
         public const string land = "Land";
         public const string grind = "Grind";
+        public const string bounceWall = "BounceWall";
+        public const string bounceRider = "BounceRider";
+        public const string punch = "Punch";
+        public const string flightRing = "FlightRing";
     }
 }

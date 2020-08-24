@@ -269,7 +269,7 @@ Rigidbody:
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 1
 --- !u!114 &97159473819385863
@@ -312,11 +312,15 @@ MonoBehaviour:
   level: 0
   air: 100
   maxAir: 100
+  rings: 0
+  maxRings: 0
   speedLoss: 0
   extraPower: 0
+  extraDash: 0
   extraCornering: 0
   charType: 0
   stats: {fileID: 11400000, guid: cccfd161fcb39714a9103fe27e95fd36, type: 2}
+  runSpeed: 30
 --- !u!114 &97159473819385880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -338,6 +342,7 @@ MonoBehaviour:
   actualJumpRelease: 0
   timeForLength: 0.5
   rampPower: 0
+  highestYvel: 0
 --- !u!114 &7437413400459437338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -374,7 +379,7 @@ MonoBehaviour:
   slowdownAngle: 50
   raycastLength: 1
   startingRaycastLength: 2
-  extraForceGrounded: 400
+  extraForceGrounded: 450
   failVelocityMultiplier: 0.3
   hitAngle: 0
   highestFallSpeed: 0
@@ -427,6 +432,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 750681227764016596}
+  notReady: 0
   runSpeedMultiplier: 2
 --- !u!114 &5968698961733329538
 MonoBehaviour:
@@ -440,8 +446,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49cde4a97e8d2b24bbcc360f0ef06276, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftPunchAngle: {fileID: 8816989539514340291}
   rightPunchAngle: {fileID: 6144771267618781424}
+  leftPunchAngle: {fileID: 8816989539514340291}
   punchPower: 20
   cantPunchMultiplier: 0.5
 --- !u!114 &8803422805985233871
@@ -3213,6 +3219,7 @@ MonoBehaviour:
     spatialBlend: 1
     minRange: 5
     maxRange: 100
+    priority: 10
     source: {fileID: 0}
   - name: Boost
     clip: {fileID: 8300000, guid: 671e03d222f8b27458869d099f787c8b, type: 3}
@@ -3222,6 +3229,7 @@ MonoBehaviour:
     spatialBlend: 1
     minRange: 5
     maxRange: 100
+    priority: 10
     source: {fileID: 0}
   - name: Land
     clip: {fileID: 8300000, guid: d6f493fa0e079164aa444767354c11a6, type: 3}
@@ -3231,6 +3239,7 @@ MonoBehaviour:
     spatialBlend: 1
     minRange: 5
     maxRange: 100
+    priority: 10
     source: {fileID: 0}
   - name: Grind
     clip: {fileID: 8300000, guid: 632324952e3ca234c9f57407a78f0adc, type: 3}
@@ -3240,6 +3249,7 @@ MonoBehaviour:
     spatialBlend: 1
     minRange: 5
     maxRange: 100
+    priority: 10
     source: {fileID: 0}
   mixer: {fileID: 24300002, guid: 4d6df4263f01c194c86a7a990200a169, type: 2}
 --- !u!1 &4866947445163636593
@@ -5628,6 +5638,7 @@ MonoBehaviour:
     spatialBlend: 1
     minRange: 5
     maxRange: 100
+    priority: 10
     source: {fileID: 0}
   - name: RampJump
     clip: {fileID: 8300000, guid: 44f5516ca74c50f4b9ae1bf605e421fd, type: 3}
@@ -5637,6 +5648,7 @@ MonoBehaviour:
     spatialBlend: 1
     minRange: 5
     maxRange: 100
+    priority: 10
     source: {fileID: 0}
   - name: '?'
     clip: {fileID: 8300000, guid: c5a87ac479805134c8fe8c0383700122, type: 3}
@@ -5646,6 +5658,7 @@ MonoBehaviour:
     spatialBlend: 1
     minRange: 5
     maxRange: 100
+    priority: 10
     source: {fileID: 0}
   - name: LandFail
     clip: {fileID: 8300000, guid: 0a0c284d47bef1a41b6638f090db789c, type: 3}
@@ -5655,6 +5668,7 @@ MonoBehaviour:
     spatialBlend: 1
     minRange: 5
     maxRange: 100
+    priority: 10
     source: {fileID: 0}
   - name: DrivePast
     clip: {fileID: 8300000, guid: f51388f7e4ddf914d9116a43c73cf6b8, type: 3}
@@ -5664,6 +5678,7 @@ MonoBehaviour:
     spatialBlend: 1
     minRange: 5
     maxRange: 100
+    priority: 10
     source: {fileID: 0}
   - name: Win
     clip: {fileID: 8300000, guid: 17887abdd5e1c9645af8d094ef890919, type: 3}
@@ -5673,6 +5688,7 @@ MonoBehaviour:
     spatialBlend: 1
     minRange: 5
     maxRange: 100
+    priority: 10
     source: {fileID: 0}
   - name: Lose
     clip: {fileID: 8300000, guid: af32cdbce1125c648b7665dc9a81f92a, type: 3}
@@ -5682,6 +5698,7 @@ MonoBehaviour:
     spatialBlend: 1
     minRange: 5
     maxRange: 100
+    priority: 10
     source: {fileID: 0}
   - name: Hit
     clip: {fileID: 8300000, guid: 43f6487f129f3dd41bf6735a8e42b243, type: 3}
@@ -5691,6 +5708,7 @@ MonoBehaviour:
     spatialBlend: 1
     minRange: 5
     maxRange: 100
+    priority: 10
     source: {fileID: 0}
   - name: LandSucces
     clip: {fileID: 8300000, guid: 6a23a09197e31c042b6ff0e95ef035cb, type: 3}
@@ -5700,6 +5718,7 @@ MonoBehaviour:
     spatialBlend: 1
     minRange: 5
     maxRange: 100
+    priority: 10
     source: {fileID: 0}
   - name: PerfectJump
     clip: {fileID: 8300000, guid: 1c2e7e824de8ca24a9f38dd226d398c4, type: 3}
@@ -5709,6 +5728,7 @@ MonoBehaviour:
     spatialBlend: 1
     minRange: 5
     maxRange: 100
+    priority: 10
     source: {fileID: 0}
   mixer: {fileID: 24300002, guid: 9794a27f0158ee9429d22b7dc579fdcc, type: 2}
 --- !u!1 &8922661200967279409

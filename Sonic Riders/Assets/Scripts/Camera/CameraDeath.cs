@@ -9,6 +9,7 @@ public class CameraDeath : MonoBehaviour
     private Rigidbody playerRb;
     private Transform prevParent;
     private PlayerMovement playerMovement;
+    private CharacterStats charStats;
     private Vector3 startPos;
     private Animator canvasAnim;
 
@@ -17,6 +18,7 @@ public class CameraDeath : MonoBehaviour
     private void Start()
     {
         playerMovement = GetComponentInParent<PlayerMovement>();
+        charStats = GetComponentInParent<CharacterStats>();
         player = playerMovement.transform;
         startPos = transform.localPosition;
         prevParent = transform.parent;
@@ -54,5 +56,7 @@ public class CameraDeath : MonoBehaviour
         transform.parent = prevParent;
         transform.localPosition = startPos;
         transform.localRotation = new Quaternion(0, 0, 0, transform.localRotation.w);
+        charStats.Level--;
+        charStats.Rings = 0;
     }
 }
