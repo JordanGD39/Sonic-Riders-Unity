@@ -11,12 +11,14 @@ public class PlayerTrigger : MonoBehaviour
     [SerializeField] private float speed = 2;
     [SerializeField] private float time = 0.5f;
     private Vector3 bounceDir;
+    private CharacterStats charStats;
 
     private void Start()
     {
         playerMovement = GetComponentInParent<PlayerMovement>();
         playerFlight = playerMovement.GetComponent<PlayerFlight>();
         playerPunch = playerMovement.GetComponent<PlayerPunchObstacle>();
+        charStats = playerMovement.GetComponent<CharacterStats>();
         rb = GetComponentInParent<Rigidbody>();
     }
 
@@ -36,7 +38,7 @@ public class PlayerTrigger : MonoBehaviour
             case 11:
                 playerPunch.Punch(collision.GetComponentInParent<Rigidbody>());
 
-                if (playerPunch.CantPunch)
+                if (playerPunch.CantPunch || charStats.Air <= 0)
                 {
                     BounceCol(collision);
                 }

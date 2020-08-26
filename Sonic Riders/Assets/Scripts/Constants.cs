@@ -7,6 +7,7 @@ public class Constants
     public class Tags
     {
         public const string canvas = "Canvas";
+        public const string player = "Player";
     }
 
     public class VoiceSounds

@@ -7,6 +7,7 @@ public class PlayerPunchObstacle : MonoBehaviour
     private CharacterStats charStats;
     private AudioManagerHolder audioHolder;
     private PlayerAnimationHandler playerAnimation;
+    private PlayerMovement playerMovement;
     [SerializeField] private Transform rightPunchAngle;
     [SerializeField] private Transform leftPunchAngle;
     [SerializeField] private float punchPower = 20;
@@ -20,6 +21,7 @@ public class PlayerPunchObstacle : MonoBehaviour
         charStats = GetComponent<CharacterStats>();
         audioHolder = GetComponent<AudioManagerHolder>();
         playerAnimation = GetComponent<PlayerAnimationHandler>();
+        playerMovement = GetComponent<PlayerMovement>();
 
         if (charStats.TypeCheck(type.POWER))
         {
@@ -35,11 +37,15 @@ public class PlayerPunchObstacle : MonoBehaviour
     public void Punch(Rigidbody obstacleRb)
     {
         obstacleRb.isKinematic = false;
-        if (!CantPunch)
+        if (!CantPunch && charStats.Air > 0)
         {
             obstacleRb.AddForce(rightPunchAngle.forward * punchPower);
             audioHolder.SfxManager.Play(Constants.SoundEffects.punch);
-            playerAnimation.Anim.SetTrigger("Punch");
+
+            if (playerMovement.Grounded)
+            {
+                playerAnimation.Anim.SetTrigger("Punch");
+            }
         }
         else
         {
