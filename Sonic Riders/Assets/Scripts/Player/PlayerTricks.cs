@@ -91,7 +91,7 @@ public class PlayerTricks : MonoBehaviour
     }
 
     // Update is called once per frame
-    public void Landed()
+    public void Landed(bool landedOnGround)
     {
         if (!playerMovement.IsPlayer)
         {
@@ -103,7 +103,7 @@ public class PlayerTricks : MonoBehaviour
 
         audioHolder.SfxManager.Play(Constants.SoundEffects.land);
 
-        if (!playerAnimation.Anim.GetCurrentAnimatorStateInfo(0).IsName("Falling") && !CanLand)
+        if (!playerAnimation.Anim.GetCurrentAnimatorStateInfo(0).IsName("Falling") && !CanLand && landedOnGround)
         {
             audioHolder.VoiceManager.Play(Constants.VoiceSounds.landFail);
             playerMovement.Speed *= 0.1f;

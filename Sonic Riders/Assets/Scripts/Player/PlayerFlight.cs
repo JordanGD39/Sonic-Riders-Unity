@@ -6,6 +6,7 @@ public class PlayerFlight : MonoBehaviour
 {
     private CharacterStats charStats;
     private PlayerMovement playerMovement;
+    private PlayerTricks playerTricks;
     private Rigidbody rb;
     private HUD hud;
     private Animator canvasAnim;
@@ -21,6 +22,7 @@ public class PlayerFlight : MonoBehaviour
     private float vertcialRotAmount = 0;
     private bool canCheck = false;
     [SerializeField] private float airGain = 0.02f;
+    private float flightSpeed = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +35,7 @@ public class PlayerFlight : MonoBehaviour
         }
 
         playerMovement = GetComponent<PlayerMovement>();
+        playerTricks = GetComponent<PlayerTricks>();
         rb = GetComponent<Rigidbody>();
         cornering = charStats.BoardStats.Cornering * turnMultiplier;
         hud = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponent<HUD>();
@@ -50,6 +53,11 @@ public class PlayerFlight : MonoBehaviour
             if (playerMovement.Speed > 0)
             {
                 playerMovement.Speed -= flightSpeedLoss * Time.deltaTime;
+            }
+
+            if (!playerMovement.Grounded)
+            {
+                flightSpeed = playerMovement.Speed;
             }
 
             hud.UpdateSpeedText(playerMovement.Speed);
@@ -70,7 +78,7 @@ public class PlayerFlight : MonoBehaviour
 
                 if (playerMovement.Grounded)
                 {
-                    playerMovement.Speed = charStats.GetCurrentLimit();
+                    playerMovement.Speed = flightSpeed;
                 }
 
                 flying = false;
@@ -110,6 +118,11 @@ public class PlayerFlight : MonoBehaviour
     
     public void IncreaseFlightSpeed(Transform portal)
     {
+        if (playerTricks.CanDoTricks)
+        {
+            playerTricks.Landed(false);
+        }
+
         canCheck = true;
         flying = true;
         transform.GetChild(0).forward = portal.forward;

@@ -8,6 +8,7 @@ public class Capsule : MonoBehaviour
 
     private AudioSource source;
     [SerializeField] private GameObject model;
+    [SerializeField] private float respawnTime = 3;
 
     private void Start()
     {
@@ -19,6 +20,11 @@ public class Capsule : MonoBehaviour
         model.SetActive(false);
         other.GetComponentInParent<CharacterStats>().Rings += 100;
         source.Play();
-        Destroy(gameObject, source.clip.length);
+        Invoke("Respawn", respawnTime);
+    }
+
+    private void Respawn()
+    {
+        model.SetActive(true);
     }
 }

@@ -8,14 +8,17 @@ public class ActionOnAnimation : MonoBehaviour
     private PlayerBoost playerBoost;
     private PlayerMovement playerMovement;
     private PlayerTricks playerTricks;
-
+    private PlayerAnimationHandler playerAnimation;
+    private PlayerPunchObstacle playerPunchObstacle;
     private bool canLand = false;
     
     private void Start()
     {
-        playerBoost = GetComponentInParent<PlayerBoost>();
         playerMovement = GetComponentInParent<PlayerMovement>();
-        playerTricks = GetComponentInParent<PlayerTricks>();
+        playerBoost = playerMovement.GetComponent<PlayerBoost>();
+        playerTricks = playerMovement.GetComponent<PlayerTricks>();
+        playerAnimation = playerMovement.GetComponent<PlayerAnimationHandler>();
+        playerPunchObstacle = playerMovement.GetComponent<PlayerPunchObstacle>();
     }
 
     public void BoostNow()
@@ -27,6 +30,21 @@ public class ActionOnAnimation : MonoBehaviour
         }
 
         playerBoost.Boost(); 
+    }
+
+    public void TriggerRightPunch()
+    {
+        playerPunchObstacle.RightPunch = true;
+    }
+
+    public void TriggerLeftPunch()
+    {
+        playerPunchObstacle.RightPunch = false;
+    }
+
+    public void PunchDone()
+    {
+        playerAnimation.Anim.SetBool("Punching", false);
     }
 
     public void CountTrick()

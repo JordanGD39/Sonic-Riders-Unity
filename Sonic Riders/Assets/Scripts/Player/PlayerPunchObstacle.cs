@@ -12,8 +12,10 @@ public class PlayerPunchObstacle : MonoBehaviour
     [SerializeField] private Transform leftPunchAngle;
     [SerializeField] private float punchPower = 20;
     [SerializeField] private float cantPunchMultiplier = 0.5f;
+    [SerializeField] private float extraPowerMultiplier = 50;
 
     public bool CantPunch { get; set; } = true;
+    public bool RightPunch { get; set; } = true;
 
     // Start is called before the first frame update
     void Start()
@@ -27,30 +29,39 @@ public class PlayerPunchObstacle : MonoBehaviour
         {
             CantPunch = false;
         }
-
-        if (CantPunch)
-        {
-            punchPower *= cantPunchMultiplier;
-        }
     }
 
     public void Punch(Rigidbody obstacleRb)
     {
         obstacleRb.isKinematic = false;
+
+        //Removing speed loss in formula so that slower characters punch less hard but adding power so that Powerful characters punch harder
+        float maxSpeed = charStats.GetCurrentLimit() + (charStats.ExtraPower * extraPowerMultiplier) + charStats.SpeedLoss;
+        float speedPowerCalc = playerMovement.Speed / maxSpeed;
+
         if (!CantPunch && charStats.Air > 0)
         {
-            obstacleRb.AddForce(rightPunchAngle.forward * punchPower);
-            audioHolder.SfxManager.Play(Constants.SoundEffects.punch);
-
             if (playerMovement.Grounded)
             {
                 playerAnimation.Anim.SetTrigger("Punch");
+                playerAnimation.Anim.SetBool("Punching", true);
             }
+
+            Transform punch = rightPunchAngle;
+
+            if (!RightPunch)
+            {
+                punch = leftPunchAngle;
+            }
+
+            obstacleRb.AddForce(punch.forward * (punchPower * speedPowerCalc));
+            audioHolder.SfxManager.Play(Constants.SoundEffects.punch);
+
         }
         else
         {
             audioHolder.SfxManager.Play(Constants.SoundEffects.bounceWall);
-            obstacleRb.AddForce(transform.forward * punchPower);
+            obstacleRb.AddForce((obstacleRb.transform.position - transform.position).normalized * (punchPower * cantPunchMultiplier * speedPowerCalc));
         }
     }
 }

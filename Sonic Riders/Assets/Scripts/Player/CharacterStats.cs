@@ -36,7 +36,7 @@ public class CharacterStats : MonoBehaviour
 
             if (value > level || air > maxAir)
             {
-                air = maxAir;
+                Air = maxAir;
             }
 
             level = value;
@@ -50,6 +50,8 @@ public class CharacterStats : MonoBehaviour
 
     [SerializeField] private int rings = 0;
     [SerializeField] private int maxRings = 30;
+
+    public bool OffRoad { get; set; } = false;
 
     public int Rings
     {
@@ -158,6 +160,11 @@ public class CharacterStats : MonoBehaviour
     public float GetCurrentLimit()
     {
         float speed = 0;
+
+        if (OffRoad)
+        {
+            return speed = stats.Power[level] + extraPower;
+        }
 
         if (air <= 0)
         {

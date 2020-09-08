@@ -22,7 +22,7 @@ public class Ramp : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.transform.GetComponentInParent<PlayerMovement>().CompareTag("Player") && other.transform.GetComponentInParent<PlayerMovement>().transform.parent == null)
+        if (other.transform.GetComponentInParent<PlayerMovement>().CompareTag("Player"))
         {
             other.transform.GetComponentInParent<PlayerMovement>().transform.parent = transform;
         }
@@ -30,7 +30,7 @@ public class Ramp : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.transform.GetComponentInParent<PlayerMovement>().CompareTag("Player") && other.transform.GetComponentInParent<PlayerMovement>().transform.parent == null)
+        if (other.transform.GetComponentInParent<PlayerMovement>().CompareTag("Player"))
         {
             if (flightRamp)
             {

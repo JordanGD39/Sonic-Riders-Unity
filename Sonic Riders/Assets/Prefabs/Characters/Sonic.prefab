@@ -297,6 +297,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boosting: 0
+  camPos: {x: 0, y: 1.5, z: -1}
+  camSpeedBoost: 5
+  camSpeedStopBoosting: 2
 --- !u!114 &97159473819385881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -381,6 +384,7 @@ MonoBehaviour:
   startingRaycastLength: 2
   extraForceGrounded: 450
   failVelocityMultiplier: 0.3
+  offRoadDeccMultiplier: 4
   hitAngle: 0
   highestFallSpeed: 0
   layerMask:
@@ -450,6 +454,7 @@ MonoBehaviour:
   leftPunchAngle: {fileID: 8816989539514340291}
   punchPower: 20
   cantPunchMultiplier: 0.5
+  extraPowerMultiplier: 50
 --- !u!114 &8803422805985233871
 MonoBehaviour:
   m_ObjectHideFlags: 0

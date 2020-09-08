@@ -36,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
     public float StartingRaycastLength { get { return startingRaycastLength; } }
     [SerializeField] private float extraForceGrounded = 500;
     [SerializeField] private float failVelocityMultiplier = 0.3f;
+    [SerializeField] private float offRoadDeccMultiplier = 2;
 
     private Vector3 localLandingVelocity = Vector3.zero;
     private Vector3 lastGroundedPos;
@@ -55,6 +56,8 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private LayerMask layerMask;
 
+    private ParticleSystem ps;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -65,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
         playerDrift = GetComponent<PlayerDrift>();
         playerTricks = GetComponent<PlayerTricks>();
         playerFlight = GetComponent<PlayerFlight>();
-        thirdPersonCamera = Camera.main.GetComponentInParent<ThirdPersonCamera>();
+        thirdPersonCamera = Camera.main.GetComponentInParent<ThirdPersonCamera>();        
     }
 
     public void CheckIfPlayer()
@@ -73,6 +76,11 @@ public class PlayerMovement : MonoBehaviour
         charStats = GetComponent<CharacterStats>();
         charStats.IsPlayer = IsPlayer;
         stats = charStats.BoardStats;
+
+        if (IsPlayer)
+        {
+            ps = GetComponentInChildren<ParticleSystem>();
+        }
     }
 
     // Update is called once per frame
@@ -224,7 +232,7 @@ public class PlayerMovement : MonoBehaviour
 
                     if (playerTricks.CanDoTricks)
                     {
-                        playerTricks.Landed();
+                        playerTricks.Landed(true);
                     }                    
                 }
             }
@@ -301,6 +309,26 @@ public class PlayerMovement : MonoBehaviour
 
     private void Acceleration()
     {
+        if (IsPlayer)
+        {
+            //Debug.Log(ps.isPlaying);
+
+            if (speed >= 50)
+            {
+                if (!ps.isPlaying)
+                {
+                    ps.Play();
+                }
+            }
+            else
+            {
+                if (!ps.isStopped)
+                {
+                    ps.Stop();
+                }
+            }
+        }        
+
         if (grounded)
         {
             if (playerJump.JumpHold)
@@ -379,7 +407,15 @@ public class PlayerMovement : MonoBehaviour
                 {
                     if ((!playerBoost.Boosting || playerBoost.Boosting && speed > stats.Boost[charStats.Level]) && !ridingOnWall)
                     {
-                        speed -= 2 * Time.deltaTime;
+                        float deccMultiplier = 1;
+
+                        if (charStats.OffRoad)
+                        {
+                            //Multiplier for decceleration
+                            deccMultiplier = offRoadDeccMultiplier;
+                        }
+
+                        speed -= 2 * deccMultiplier * Time.deltaTime;
                     }     
                     else
                     {
@@ -473,6 +509,9 @@ public class PlayerMovement : MonoBehaviour
         {
             highestFallSpeed = 0;
             raycastLength = startingRaycastLength;
-        }        
+        }
+
+        //Off road layer
+        charStats.OffRoad = collision.gameObject.layer == 12;
     }
 }

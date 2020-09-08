@@ -7,6 +7,7 @@ public class PlayerTrigger : MonoBehaviour
     private PlayerMovement playerMovement;
     private PlayerFlight playerFlight;
     private PlayerPunchObstacle playerPunch;
+    private AudioManagerHolder audioHolder;
     private Rigidbody rb;
     [SerializeField] private float speed = 2;
     [SerializeField] private float time = 0.5f;
@@ -19,6 +20,7 @@ public class PlayerTrigger : MonoBehaviour
         playerFlight = playerMovement.GetComponent<PlayerFlight>();
         playerPunch = playerMovement.GetComponent<PlayerPunchObstacle>();
         charStats = playerMovement.GetComponent<CharacterStats>();
+        audioHolder = playerMovement.GetComponent<AudioManagerHolder>();
         rb = GetComponentInParent<Rigidbody>();
     }
 
@@ -80,6 +82,7 @@ public class PlayerTrigger : MonoBehaviour
             playerMovement.Speed = speed;
             hitDirectly = true;
         }
+        audioHolder.SfxManager.Play(Constants.SoundEffects.bounceWall);
 
         rb.AddForce(bounceDir * speed, ForceMode.Impulse);
         yield return new WaitForSeconds(time / 2);

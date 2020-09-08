@@ -5,6 +5,7 @@ using UnityEngine;
 public class Ring : MonoBehaviour
 {
     [SerializeField] private float rotateSpeed = 60;
+    [SerializeField] private float respawnTime = 3;
 
     private AudioSource source;
     private GameObject model;
@@ -26,6 +27,11 @@ public class Ring : MonoBehaviour
         model.SetActive(false);
         other.GetComponentInParent<CharacterStats>().Rings++;
         source.Play();
-        Destroy(gameObject, source.clip.length);
+        Invoke("Respawn", respawnTime);
+    }
+
+    private void Respawn()
+    {
+        model.SetActive(true);
     }
 }

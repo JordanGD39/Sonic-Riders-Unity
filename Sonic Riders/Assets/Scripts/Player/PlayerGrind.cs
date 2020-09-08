@@ -7,6 +7,7 @@ public class PlayerGrind : MonoBehaviour
 {
     private AudioManagerHolder audioHolder;
     private PlayerMovement movement;
+    private PlayerTricks playerTricks;
     private PlayerJump playerJump;
     private Rigidbody rb;
     private BoardStats stats;
@@ -45,6 +46,7 @@ public class PlayerGrind : MonoBehaviour
         }
 
         movement = GetComponent<PlayerMovement>();
+        playerTricks = GetComponent<PlayerTricks>();
         playerJump = GetComponent<PlayerJump>();
         rb = GetComponent<Rigidbody>();
         stats = charStats.BoardStats;
@@ -100,9 +102,14 @@ public class PlayerGrind : MonoBehaviour
 
                 closestDistance += speed * Time.deltaTime;
                 Vector3 desiredPos = path.path.GetPointAtDistance(closestDistance, EndOfPathInstruction.Stop);
-                desiredPos.y += extraCharHeight;
+                desiredPos += transform.GetChild(0).TransformDirection(0, extraCharHeight, 0);
                 transform.position = desiredPos;
                 transform.GetChild(0).localRotation = path.path.GetRotationAtDistance(closestDistance, EndOfPathInstruction.Stop);
+
+                if (path.path.GetClosestTimeOnPath(transform.position) == 0 && speed < 0)
+                {
+                    movement.Speed = 20;
+                }
 
                 if (JumpPressed || path.path.GetClosestTimeOnPath(transform.position) > 0.99f)
                 {
@@ -139,6 +146,11 @@ public class PlayerGrind : MonoBehaviour
 
             if (!movement.Grounded && JumpPressed && !grinding)
             {
+                if (playerTricks.CanDoTricks)
+                {
+                    playerTricks.Landed(false);
+                }
+
                 rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
                 rb.isKinematic = true;
                 movement.CantMove = true;

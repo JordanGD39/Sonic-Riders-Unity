@@ -12,10 +12,20 @@ public class PlayerBoost : MonoBehaviour
     private BoardStats stats;
 
     private Animator canvasAnim;
-
+    private Transform cam;
     [SerializeField] private bool boosting = false;
     public bool Boosting { get { return boosting; } set { boosting = value; } }
     public bool BoostPressed { get; set; }
+
+    [SerializeField] private Vector3 camPos;
+    private Vector3 oldCamPos;
+    [SerializeField] private float camSpeedBoost = 5;
+    [SerializeField] private float camSpeedStopBoosting = 2;
+
+    private bool startCameraPos = false;
+    private bool startPuttingBackCameraPos = false;
+
+    private ParticleSystem ps;
 
     // Start is called before the first frame update
     void Start()
@@ -27,14 +37,21 @@ public class PlayerBoost : MonoBehaviour
         stats = charStats.BoardStats;
         audioHolder = GetComponent<AudioManagerHolder>();
         canvasAnim = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponent<Animator>();
+        cam = Camera.main.transform.parent;
+        oldCamPos = cam.localPosition;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (boosting && !playerMovement.Grounded)
+        if (boosting && (!playerMovement.Grounded || charStats.OffRoad))
         {
             boosting = false;
+
+            if (charStats.IsPlayer)
+            {
+                startPuttingBackCameraPos = true;
+            }
         }
 
         if (BoostPressed && (playerMovement.Grounded || playerGrind.Grinding) && !boosting && charStats.Air > stats.BoostDepletion)
@@ -50,15 +67,44 @@ public class PlayerBoost : MonoBehaviour
                 Boost();
             }
         }
+
+        if (startPuttingBackCameraPos)
+        {
+            startCameraPos = false;
+            float step = camSpeedStopBoosting * Time.deltaTime;
+            cam.localPosition = Vector3.MoveTowards(cam.localPosition, oldCamPos, step);
+
+            if (cam.localPosition == oldCamPos)
+            {
+                startPuttingBackCameraPos = false;
+            }
+        }
+
+        if (startCameraPos)
+        {
+            float step = camSpeedBoost * Time.deltaTime;
+            cam.localPosition = Vector3.MoveTowards(cam.localPosition, camPos, step);
+
+            if (cam.localPosition == camPos)
+            {
+                startCameraPos = false;
+            }
+        }
     }
 
     public void Boost()
     {
+        if (charStats.IsPlayer)
+        {
+            startCameraPos = true;
+        }
+
         BoostPressed = false;
         playerMovement.FallToTheGround = false;
-        charStats.Air -= stats.BoostDepletion;        
+        charStats.Air -= stats.BoostDepletion;
+
         StopCoroutine("BoostCooldown");
-        StartCoroutine("BoostCooldown");
+        StartCoroutine("BoostCooldown");     
 
         if (playerMovement.Speed < charStats.GetCurrentBoost())
         {
@@ -82,5 +128,10 @@ public class PlayerBoost : MonoBehaviour
         yield return new WaitForSeconds(stats.BoostTime);
 
         boosting = false;
+
+        if (charStats.IsPlayer)
+        {
+            startPuttingBackCameraPos = true;
+        }
     }
 }
