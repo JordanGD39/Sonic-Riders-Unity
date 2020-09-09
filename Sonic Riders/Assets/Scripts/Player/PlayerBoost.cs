@@ -15,7 +15,6 @@ public class PlayerBoost : MonoBehaviour
     private Transform cam;
     [SerializeField] private bool boosting = false;
     public bool Boosting { get { return boosting; } set { boosting = value; } }
-    public bool BoostPressed { get; set; }
 
     [SerializeField] private Vector3 camPos;
     private Vector3 oldCamPos;
@@ -54,20 +53,6 @@ public class PlayerBoost : MonoBehaviour
             }
         }
 
-        if (BoostPressed && (playerMovement.Grounded || playerGrind.Grinding) && !boosting && charStats.Air > stats.BoostDepletion)
-        {
-            boosting = true;
-
-            if (!playerGrind.Grinding)
-            {                
-                playerAnimation.StartBoostAnimation();
-            }
-            else
-            {
-                Boost();
-            }
-        }
-
         if (startPuttingBackCameraPos)
         {
             startCameraPos = false;
@@ -92,14 +77,32 @@ public class PlayerBoost : MonoBehaviour
         }
     }
 
+    public void CheckBoost()
+    {
+        if (!((playerMovement.Grounded || playerGrind.Grinding) && !boosting && charStats.Air > stats.BoostDepletion))
+        {
+            return;
+        }
+
+        boosting = true;
+
+        if (!playerGrind.Grinding)
+        {
+            playerAnimation.StartBoostAnimation();
+        }
+        else
+        {
+            Boost();
+        }
+    }
+
     public void Boost()
     {
         if (charStats.IsPlayer)
         {
             startCameraPos = true;
         }
-
-        BoostPressed = false;
+        
         playerMovement.FallToTheGround = false;
         charStats.Air -= stats.BoostDepletion;
 

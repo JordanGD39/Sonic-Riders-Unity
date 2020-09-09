@@ -18,7 +18,6 @@ public class BoostPad : MonoBehaviour
         if (other.gameObject.layer == 8)
         {
             PlayerMovement player = other.GetComponentInParent<PlayerMovement>();
-            PlayerControls controls = player.GetComponent<PlayerControls>();
             CharacterStats characterStats = player.GetComponent<CharacterStats>();
 
             player.Speed = characterStats.BoardStats.Limit[characterStats.Level] + 10;
@@ -31,7 +30,7 @@ public class BoostPad : MonoBehaviour
                 source.Play();
             }
 
-            if (controls != null)
+            if (player.IsPlayer)
             {
                 canvasAnim.Play("BoostCircle");
             }

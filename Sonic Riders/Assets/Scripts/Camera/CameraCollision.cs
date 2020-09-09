@@ -6,6 +6,7 @@ public class CameraCollision : MonoBehaviour
 {
     [SerializeField] private float minDistance = 1;
     [SerializeField] private float maxDistance = 4;
+    public float MaxDistance { set { maxDistance = value; } }
     [SerializeField] private float percentClipped = 0.87f;
     [SerializeField] private float smoothTime = 10;
     private Vector3 dollyDir;

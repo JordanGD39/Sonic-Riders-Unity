@@ -19,7 +19,6 @@ public class PlayerJump : MonoBehaviour
     public bool JumpRelease { get { return jumpRelease; } set { jumpRelease = value; } }
     public bool JumpHold { get; set; } = false;
     public bool JumpHoldControls { get; set; } = false;
-    public bool JumpButtonUp { get; set; } = false;
     public bool DontDragDown { get; set; } = false;
 
     private Rigidbody rb;
@@ -60,28 +59,40 @@ public class PlayerJump : MonoBehaviour
                 jumpHeight = startingJumpHeight;
             }
 
-            JumpHold = false;
-
             return;
         }
 
         if (JumpHoldControls)
         {
-            JumpHold = true;
-            if (charStats.Air > 0)
-            {
-                charStats.Air -= 5 * Time.deltaTime;
-            }
+            HoldingJump();
+        }
+    }
 
-            if (jumpHeight < maxJumpHeight)
-            {
-                jumpHeight += jumpGain * Time.deltaTime;
-            }
+    public void HoldingJump()
+    {
+        if (!(mov.Grounded && charStats.Air > 0))
+        {
+            return;
         }
 
-        if (JumpButtonUp)
+        JumpHold = true;
+
+        if (charStats.Air > 0)
         {
-            JumpHold = false;            
+            charStats.Air -= 5 * Time.deltaTime;
+        }
+
+        if (jumpHeight < maxJumpHeight)
+        {
+            jumpHeight += jumpGain * Time.deltaTime;
+        }
+    }
+
+    public void CheckRelease()
+    {
+        if (mov.Grounded && charStats.Air > 0)
+        {
+            JumpHold = false;
 
             if (transform.parent != null)
             {
@@ -104,9 +115,9 @@ public class PlayerJump : MonoBehaviour
                     {
                         float powerDiff = rampPower - worstRampPower;
                         float diffPos = transform.localPosition.z + CurrRamp.PerfectJump;
-                        float percent = diffPos / (CurrRamp.PerfectJump * 2);                        
+                        float percent = diffPos / (CurrRamp.PerfectJump * 2);
                         rampPower = worstRampPower + powerDiff * percent;
-                        Debug.Log("Diff: " + diffPos + " Percent: "+ percent + " power: " + rampPower);
+                        Debug.Log("Diff: " + diffPos + " Percent: " + percent + " power: " + rampPower);
                     }
                     else
                     {
@@ -120,7 +131,7 @@ public class PlayerJump : MonoBehaviour
                     if (!playerTricks.CanDoTricks)
                     {
                         audioHolder.VoiceManager.Play(Constants.VoiceSounds.perfectJump);
-                    }                    
+                    }
                 }
 
                 Debug.Log("Ramp power " + rampPower);
@@ -131,7 +142,7 @@ public class PlayerJump : MonoBehaviour
             }
 
             jumpRelease = true;
-        }             
+        }
     }
 
     private void FixedUpdate()

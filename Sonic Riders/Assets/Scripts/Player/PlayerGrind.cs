@@ -13,7 +13,7 @@ public class PlayerGrind : MonoBehaviour
     private BoardStats stats;
     private CharacterStats charStats;
 
-    public bool JumpPressed { get; set; } = false;
+    //public bool JumpPressed { get; set; } = false;
 
     [SerializeField] private PathCreator path;
     public PathCreator Path { get { return path; } set { path = value; } }
@@ -111,55 +111,68 @@ public class PlayerGrind : MonoBehaviour
                     movement.Speed = 20;
                 }
 
-                if (JumpPressed || path.path.GetClosestTimeOnPath(transform.position) > 0.99f)
+                if (path.path.GetClosestTimeOnPath(transform.position) > 0.99f)
                 {
-                    bool jumpPressed = JumpPressed;
-                    grinding = false;
-                    transform.GetChild(0).localRotation = new Quaternion(0, transform.GetChild(0).localRotation.y, 0, transform.GetChild(0).localRotation.w);
-                    rb.isKinematic = false;
-                    rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
-
-                    if (!jumpPressed)
-                    {
-                        Vector3.ClampMagnitude(velocity, charStats.GetCurrentBoost());
-                        rb.velocity = velocity;
-                    }
-                    else
-                    {
-                        rb.velocity = transform.GetChild(0).forward * jumpSpeed;
-                    }
-                    
-                    movement.CantMove = false;
-
-                    audioHolder.SfxManager.StopPlaying(Constants.SoundEffects.grind);
-
-                    if (jumpPressed)
-                    {
-                        playerJump.GrindJumpHeight = jumpHeightOfRail;
-                        playerJump.RampPower = 0;
-                        playerJump.JumpRelease = true;
-                    }                    
+                    OffRail(false);                    
                 }
 
                 return;
+            }                        
+        }        
+    }
+
+    public void CheckGrind()
+    {
+        //Debug.Log("wgdwgd");
+
+        if (!movement.Grounded && !grinding && Path != null)
+        {
+            if (playerTricks.CanDoTricks)
+            {
+                playerTricks.Landed(false);
             }
 
-            if (!movement.Grounded && JumpPressed && !grinding)
-            {
-                if (playerTricks.CanDoTricks)
-                {
-                    playerTricks.Landed(false);
-                }
+            rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+            rb.isKinematic = true;
+            movement.CantMove = true;
+            speed = movement.Speed;
+            closestDistance = path.path.GetClosestDistanceAlongPath(transform.position);
+            transform.GetChild(0).localRotation = Quaternion.LookRotation(path.path.GetDirectionAtDistance(closestDistance, EndOfPathInstruction.Stop));
+            transform.position = path.path.GetClosestPointOnPath(transform.position);
+            grinding = true;
+        }
+        else if (grinding)
+        {
+            OffRail(true);
+        }
+    }
 
-                rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
-                rb.isKinematic = true;
-                movement.CantMove = true;
-                speed = movement.Speed;
-                closestDistance = path.path.GetClosestDistanceAlongPath(transform.position);
-                transform.GetChild(0).localRotation = Quaternion.LookRotation(path.path.GetDirectionAtDistance(closestDistance, EndOfPathInstruction.Stop));
-                transform.position = path.path.GetClosestPointOnPath(transform.position);                
-                grinding = true;
-            }            
-        }        
+    private void OffRail(bool jumpPressed)
+    {
+        grinding = false;
+        transform.GetChild(0).localRotation = new Quaternion(0, transform.GetChild(0).localRotation.y, 0, transform.GetChild(0).localRotation.w);
+        rb.isKinematic = false;
+        rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+
+        if (!jumpPressed)
+        {
+            Vector3.ClampMagnitude(velocity, charStats.GetCurrentBoost());
+            rb.velocity = velocity;
+        }
+        else
+        {
+            rb.velocity = transform.GetChild(0).forward * jumpSpeed;
+        }
+
+        movement.CantMove = false;
+
+        audioHolder.SfxManager.StopPlaying(Constants.SoundEffects.grind);
+
+        if (jumpPressed)
+        {
+            playerJump.GrindJumpHeight = jumpHeightOfRail;
+            playerJump.RampPower = 0;
+            playerJump.JumpRelease = true;
+        }
     }
 }

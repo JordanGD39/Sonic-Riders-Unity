@@ -86,11 +86,6 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (charStats == null)
-        {
-            return;
-        }
-
         //Movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
         if (!playerJump.DontDragDown)
@@ -103,7 +98,7 @@ public class PlayerMovement : MonoBehaviour
         }
         
 
-        if (CantMove)
+        if (CantMove || charStats == null)
         {
             return;
         }
@@ -150,7 +145,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            if (IsPlayer && !playerTricks.CanDoTricks && !playerFlight.Flying)
+            /*if (IsPlayer && !playerTricks.CanDoTricks && !playerFlight.Flying)
             {
                 if (!thirdPersonCamera.enabled)
                 {
@@ -163,7 +158,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 thirdPersonCamera.enabled = false;
                 thirdPersonCamera.transform.localRotation = new Quaternion(0, 0, 0, thirdPersonCamera.transform.localRotation.w);
-            }
+            }*/
 
             raycastLength = 0;
         }
@@ -511,7 +506,10 @@ public class PlayerMovement : MonoBehaviour
             raycastLength = startingRaycastLength;
         }
 
-        //Off road layer
-        charStats.OffRoad = collision.gameObject.layer == 12;
+        if (charStats != null)
+        {
+            //Off road layer
+            charStats.OffRoad = collision.gameObject.layer == 12;
+        }        
     }
 }
