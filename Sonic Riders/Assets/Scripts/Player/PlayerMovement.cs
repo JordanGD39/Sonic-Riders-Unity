@@ -48,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool CantMove { get; set; } = false;
     public Vector3 GrindVelocity { get; set; }
-    public bool IsPlayer { get; set; } = false;
+    //public bool IsPlayer { get; set; } = false;
     public bool Bouncing { get; set; } = false;
 
     [SerializeField] private float hitAngle;
@@ -62,25 +62,20 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        hud = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponent<HUD>();        
+        charStats = GetComponent<CharacterStats>();               
         playerBoost = GetComponent<PlayerBoost>();
         playerJump = GetComponent<PlayerJump>();
         playerDrift = GetComponent<PlayerDrift>();
         playerTricks = GetComponent<PlayerTricks>();
         playerFlight = GetComponent<PlayerFlight>();
-        thirdPersonCamera = Camera.main.GetComponentInParent<ThirdPersonCamera>();        
+        thirdPersonCamera = Camera.main.GetComponentInParent<ThirdPersonCamera>();
+        stats = charStats.BoardStats;
+        ps = GetComponentInChildren<ParticleSystem>();
     }
 
-    public void CheckIfPlayer()
+    public void GiveCanvasHud()
     {
-        charStats = GetComponent<CharacterStats>();
-        charStats.IsPlayer = IsPlayer;
-        stats = charStats.BoardStats;
-
-        if (IsPlayer)
-        {
-            ps = GetComponentInChildren<ParticleSystem>();
-        }
+        hud = charStats.Canvas.GetComponent<HUD>();
     }
 
     // Update is called once per frame
@@ -105,7 +100,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (grounded)
         {
-            if (IsPlayer)
+            if (charStats.IsPlayer)
             {
                 thirdPersonCamera.enabled = false;
                 thirdPersonCamera.transform.localRotation = new Quaternion(0, 0, 0, thirdPersonCamera.transform.localRotation.w);
@@ -304,7 +299,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Acceleration()
     {
-        if (IsPlayer)
+        if (charStats.IsPlayer)
         {
             //Debug.Log(ps.isPlaying);
 
@@ -333,7 +328,7 @@ public class PlayerMovement : MonoBehaviour
                     speed -= 0.2f;
                 }
 
-                if (IsPlayer)
+                if (charStats.IsPlayer)
                 {
                     hud.UpdateSpeedText(speed);
                 }
@@ -356,7 +351,7 @@ public class PlayerMovement : MonoBehaviour
                     speed += 13 * clampDriveUpSpeed * Time.deltaTime;
                 }
 
-                if (IsPlayer)
+                if (charStats.IsPlayer)
                 {
                     hud.UpdateSpeedText(speed);
                 }
@@ -367,14 +362,14 @@ public class PlayerMovement : MonoBehaviour
                 speed = transform.GetChild(0).InverseTransformDirection(rb.velocity).z;
                 //Debug.Log(speed);
 
-                if (IsPlayer)
+                if (charStats.IsPlayer)
                 {
                     hud.UpdateSpeedText(rb.velocity.magnitude);
                 }
             }
             else
             {
-                if (IsPlayer)
+                if (charStats.IsPlayer)
                 {
                     hud.UpdateSpeedText(speed);
                 }
@@ -479,7 +474,7 @@ public class PlayerMovement : MonoBehaviour
 
             speed = localLandingVelocity.magnitude;
 
-            if (IsPlayer)
+            if (charStats.IsPlayer)
             {
                 hud.UpdateSpeedText(localLandingVelocity.magnitude);
             }

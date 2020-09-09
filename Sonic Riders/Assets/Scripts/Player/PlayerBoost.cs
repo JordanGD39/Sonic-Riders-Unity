@@ -12,12 +12,10 @@ public class PlayerBoost : MonoBehaviour
     private BoardStats stats;
 
     private Animator canvasAnim;
-    private Transform cam;
     [SerializeField] private bool boosting = false;
     public bool Boosting { get { return boosting; } set { boosting = value; } }
 
     [SerializeField] private Vector3 camPos;
-    private Vector3 oldCamPos;
     [SerializeField] private float camSpeedBoost = 5;
     [SerializeField] private float camSpeedStopBoosting = 2;
 
@@ -35,9 +33,11 @@ public class PlayerBoost : MonoBehaviour
         charStats = GetComponent<CharacterStats>();
         stats = charStats.BoardStats;
         audioHolder = GetComponent<AudioManagerHolder>();
-        canvasAnim = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponent<Animator>();
-        cam = Camera.main.transform.parent;
-        oldCamPos = cam.localPosition;
+    }
+
+    public void GiveAnim()
+    {
+        canvasAnim = charStats.Canvas.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -57,9 +57,9 @@ public class PlayerBoost : MonoBehaviour
         {
             startCameraPos = false;
             float step = camSpeedStopBoosting * Time.deltaTime;
-            cam.localPosition = Vector3.MoveTowards(cam.localPosition, oldCamPos, step);
+            charStats.Cam.localPosition = Vector3.MoveTowards(charStats.Cam.localPosition, charStats.CamStartPos, step);
 
-            if (cam.localPosition == oldCamPos)
+            if (charStats.Cam.localPosition == charStats.CamStartPos)
             {
                 startPuttingBackCameraPos = false;
             }
@@ -68,9 +68,9 @@ public class PlayerBoost : MonoBehaviour
         if (startCameraPos)
         {
             float step = camSpeedBoost * Time.deltaTime;
-            cam.localPosition = Vector3.MoveTowards(cam.localPosition, camPos, step);
+            charStats.Cam.localPosition = Vector3.MoveTowards(charStats.Cam.localPosition, camPos, step);
 
-            if (cam.localPosition == camPos)
+            if (charStats.Cam.localPosition == camPos)
             {
                 startCameraPos = false;
             }
@@ -120,7 +120,7 @@ public class PlayerBoost : MonoBehaviour
 
         audioHolder.SfxManager.Play(Constants.SoundEffects.boost);
 
-        if (playerMovement.IsPlayer)
+        if (charStats.IsPlayer)
         {
             canvasAnim.Play("BoostCircle");
         }

@@ -50,8 +50,13 @@ public class PlayerGrind : MonoBehaviour
         playerJump = GetComponent<PlayerJump>();
         rb = GetComponent<Rigidbody>();
         stats = charStats.BoardStats;
-        hud = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponent<HUD>();
+        //hud = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponent<HUD>();
         audioHolder = GetComponent<AudioManagerHolder>();
+    }
+
+    public void GiveCanvasHud()
+    {
+        hud = charStats.Canvas.GetComponent<HUD>();
     }
 
     // Update is called once per frame

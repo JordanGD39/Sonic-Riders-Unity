@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class BoostPad : MonoBehaviour
 {
-    private Animator canvasAnim;
+    //private Animator canvasAnim;
     private AudioSource source;
 
     private void Start()
     {
-        canvasAnim = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponent<Animator>();
+        //canvasAnim = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponent<Animator>();
         source = GetComponentInChildren<AudioSource>();
     }
 
@@ -30,9 +30,9 @@ public class BoostPad : MonoBehaviour
                 source.Play();
             }
 
-            if (player.IsPlayer)
+            if (characterStats.IsPlayer)
             {
-                canvasAnim.Play("BoostCircle");
+                characterStats.Canvas.GetComponent<Animator>().Play("BoostCircle");
             }
         }        
     }

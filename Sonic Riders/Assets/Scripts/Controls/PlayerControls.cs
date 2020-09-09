@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.UI;
 
 public class PlayerControls : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class PlayerControls : MonoBehaviour
     private PlayerTricks playerTricks;
     private PlayerFlight playerFlight;
     private PlayerGrind playerGrind;
+    private CharacterStats characterStats;
 
     private InputAction moveAction;
     private InputAction jumpAction;
@@ -39,26 +41,7 @@ public class PlayerControls : MonoBehaviour
             {
                 cams[i].GetComponent<CameraCollision>().MaxDistance = 3.5f;
             }
-        }
-
-        switch (playerInputManager.playerCount)
-        {
-            case 2:
-                cams[0].rect = new Rect(0, 0.5f, 1, 0.5f);
-                cams[1].rect = new Rect(0, 0, 1, 0.5f);
-                break;
-            case 3:
-                cams[0].rect = new Rect(0, 0.5f, 0.5f, 0.5f);
-                cams[1].rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
-                cams[2].rect = new Rect(0, 0, 0.5f, 0.5f);
-                break;
-            case 4:
-                cams[0].rect = new Rect(0, 0.5f, 0.5f, 0.5f);
-                cams[1].rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
-                cams[2].rect = new Rect(0, 0, 0.5f, 0.5f);
-                cams[3].rect = new Rect(0, 0.5f, 0.5f, 0.5f);
-                break;
-        }
+        }       
 
         playerMovement = player.GetComponent<PlayerMovement>();
         playerBoost = player.GetComponent<PlayerBoost>();
@@ -67,6 +50,53 @@ public class PlayerControls : MonoBehaviour
         playerJump = player.GetComponent<PlayerJump>();
         playerTricks = player.GetComponent<PlayerTricks>();
         playerFlight = player.GetComponent<PlayerFlight>();
+        CharacterStats charStats = player.GetComponent<CharacterStats>();
+
+        Transform canvasHolder = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).transform;
+
+        charStats.Canvas = canvasHolder.transform.GetChild(playerInput.playerIndex);
+
+        playerBoost.GiveAnim();
+        playerDrift.GiveAnim();
+        playerMovement.GiveCanvasHud();
+        playerGrind.GiveCanvasHud();
+        playerFlight.GiveCanvasHud();
+        charStats.GiveCanvasHud();
+
+        CanvasScaler scaler = canvasHolder.GetChild(0).GetComponent<CanvasScaler>();
+        CanvasScaler scaler1 = canvasHolder.GetChild(1).GetComponent<CanvasScaler>();
+        //CanvasScaler scaler2 = canvasHolder.GetChild(2).GetComponent<CanvasScaler>();
+        //CanvasScaler scaler3 = canvasHolder.GetChild(3).GetComponent<CanvasScaler>();
+
+        switch (playerInputManager.playerCount)
+        {
+            case 2:
+                cams[0].rect = new Rect(0, 0.5f, 1, 0.5f);
+                scaler.referenceResolution *= 2;
+                cams[1].rect = new Rect(0, 0, 1, 0.5f);
+                scaler1.referenceResolution *= 2;
+                break;
+            case 3:
+                cams[0].rect = new Rect(0, 0.5f, 0.5f, 0.5f);
+                scaler.referenceResolution = new Vector2(scaler.referenceResolution.x * 2, scaler.referenceResolution.y * 2);
+                cams[1].rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
+                scaler1.referenceResolution = new Vector2(scaler1.referenceResolution.x * 2, scaler1.referenceResolution.y * 2);
+                cams[2].rect = new Rect(0, 0, 0.5f, 0.5f);
+                //scaler2.referenceResolution = new Vector2(scaler2.referenceResolution.x * 2, scaler2.referenceResolution.y * 2);
+                break;
+            case 4:
+                cams[0].rect = new Rect(0, 0.5f, 0.5f, 0.5f);
+                scaler.referenceResolution *= 2;
+                cams[1].rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
+                scaler1.referenceResolution *= 2;
+                cams[2].rect = new Rect(0, 0, 0.5f, 0.5f);
+                //scaler2.referenceResolution = new Vector2(scaler2.referenceResolution.x * 2, scaler2.referenceResolution.y * 2);
+                cams[3].rect = new Rect(0, 0.5f, 0.5f, 0.5f);
+                //scaler3.referenceResolution = new Vector2(scaler3.referenceResolution.x * 2, scaler3.referenceResolution.y * 2);
+                break;
+        }
+
+        player.GetComponent<AiControls>().enabled = false;
 
         inputMaster = new InputMaster();
         
@@ -84,8 +114,13 @@ public class PlayerControls : MonoBehaviour
 
         //inputMaster.Player.Enable();
 
-        playerMovement.IsPlayer = true;
-        playerMovement.CheckIfPlayer();
+        charStats.IsPlayer = true;
+        charStats.PlayerIndex = playerInput.playerIndex;
+        
+        charStats.Cam = cams[playerInput.playerIndex].transform.parent;
+        charStats.CamStartPos = charStats.Cam.localPosition;
+        charStats.Cam.GetComponentInChildren<CameraDeath>().GiveCanvasAnim();
+
         GameManager.instance.GetAudioManager.Play("Test");
     }
 

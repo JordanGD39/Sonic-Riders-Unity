@@ -38,9 +38,14 @@ public class PlayerFlight : MonoBehaviour
         playerTricks = GetComponent<PlayerTricks>();
         rb = GetComponent<Rigidbody>();
         cornering = charStats.BoardStats.Cornering * turnMultiplier;
-        hud = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponent<HUD>();
-        canvasAnim = hud.GetComponent<Animator>();
+        
         audioHolder = GetComponent<AudioManagerHolder>();
+    }
+
+    public void GiveCanvasHud()
+    {
+        hud = charStats.Canvas.GetComponent<HUD>();
+        canvasAnim = hud.GetComponent<Animator>();
     }
     
     // Update is called once per frame
@@ -130,7 +135,7 @@ public class PlayerFlight : MonoBehaviour
         playerMovement.Speed = 50;
         audioHolder.SfxManager.Play(Constants.SoundEffects.flightRing);
 
-        if (playerMovement.IsPlayer)
+        if (charStats.IsPlayer)
         {
             canvasAnim.Play("BoostCircle");
         }

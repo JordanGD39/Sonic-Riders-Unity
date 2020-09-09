@@ -15,9 +15,7 @@ public class PlayerTricks : MonoBehaviour
     private float speedReward;
     [SerializeField] private int tricks = 0;
     public bool CanLand { get; set; } = false;
-
-    private Transform cam;
-    private Vector3 camStartingPos;
+    
     [SerializeField] private float camSpeed = 1;
     private Rigidbody rb;
     [SerializeField] private Vector3 lowerCamPos;
@@ -26,19 +24,17 @@ public class PlayerTricks : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        cam = Camera.main.transform.parent;
-        camStartingPos = cam.localPosition;
-
         playerMovement = GetComponent<PlayerMovement>();
         audioHolder = GetComponent<AudioManagerHolder>();
         playerAnimation = GetComponent<PlayerAnimationHandler>();
         characterStats = GetComponent<CharacterStats>();
+        
         rb = GetComponent<Rigidbody>();
     }
 
     private void Update()
     {
-        if (CanDoTricks && playerMovement.IsPlayer)
+        if (CanDoTricks && characterStats.IsPlayer)
         {
             Vector3 pos = Vector3.zero;
 
@@ -52,8 +48,8 @@ public class PlayerTricks : MonoBehaviour
             }
 
             float step = camSpeed * Time.deltaTime;
-            cam.localPosition = Vector3.MoveTowards(cam.localPosition, pos, step);
-            cam.LookAt(transform.position);
+            characterStats.Cam.localPosition = Vector3.MoveTowards(characterStats.Cam.localPosition, pos, step);
+            characterStats.Cam.LookAt(transform.position);
         }        
     }
 
@@ -81,7 +77,7 @@ public class PlayerTricks : MonoBehaviour
             speedReward = 0.25f;
         }
 
-        if (playerMovement.IsPlayer)
+        if (characterStats.IsPlayer)
         {
             playerAnimation.Anim.SetFloat("TrickSpeed", speedReward);
         }
@@ -93,7 +89,7 @@ public class PlayerTricks : MonoBehaviour
     // Update is called once per frame
     public void Landed(bool landedOnGround)
     {
-        if (!playerMovement.IsPlayer)
+        if (!characterStats.IsPlayer)
         {
             characterStats.Air += 100;
             CanDoTricks = false;
@@ -132,7 +128,7 @@ public class PlayerTricks : MonoBehaviour
 
         CanDoTricks = false;
 
-        cam.localPosition = camStartingPos;
-        cam.localRotation = new Quaternion(0, 0, 0, cam.localRotation.w);
+        characterStats.Cam.localPosition = characterStats.CamStartPos;
+        characterStats.Cam.localRotation = new Quaternion(0, 0, 0, characterStats.Cam.localRotation.w);
     }
 }

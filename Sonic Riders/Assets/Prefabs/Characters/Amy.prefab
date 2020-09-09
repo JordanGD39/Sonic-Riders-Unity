@@ -19835,6 +19835,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2550244683747776450}
   - component: {fileID: 1101062210}
+  - component: {fileID: 1796178193718137989}
   m_Layer: 0
   m_Name: AmyModel
   m_TagString: Untagged
@@ -19879,6 +19880,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1796178193718137989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1530964250561586641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4373c347c2e533f4b92059c27e81f2ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1580813682967951813
 GameObject:
   m_ObjectHideFlags: 0
@@ -20811,7 +20824,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 10
@@ -20821,7 +20834,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 10
     maxRange: 100
     priority: 10
@@ -20831,7 +20844,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 10
@@ -20841,7 +20854,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 10
@@ -20851,7 +20864,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 10
@@ -20861,7 +20874,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 10
@@ -20871,7 +20884,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 10
@@ -20881,7 +20894,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 10
@@ -20891,7 +20904,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 10
@@ -20901,7 +20914,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 10
     maxRange: 100
     priority: 10
@@ -21273,6 +21286,66 @@ Transform:
   m_Father: {fileID: 2290714422261144652}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3312087632677282506
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4842901642087463191}
+  - component: {fileID: 6924970207587481229}
+  - component: {fileID: 6898669532558273090}
+  m_Layer: 8
+  m_Name: TriggerCollision
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4842901642087463191
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3312087632677282506}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -13.819735, y: -0.03999999, z: 40.1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8027152530315469990}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &6924970207587481229
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3312087632677282506}
+  m_Material: {fileID: 13400000, guid: adb92f450ce525945bac104d8631d746, type: 2}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 1.2555461
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.78595376, z: -0.04314804}
+--- !u!114 &6898669532558273090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3312087632677282506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0b74b7fb15d69a40afec1e65b4a1fab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  time: 0.25
 --- !u!1 &3334787512168075275
 GameObject:
   m_ObjectHideFlags: 0
@@ -23668,7 +23741,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 20
@@ -23678,7 +23751,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 20
@@ -23688,7 +23761,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 20
@@ -23698,7 +23771,7 @@ MonoBehaviour:
     volume: 0.4
     pitch: 1
     loop: 1
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 20
@@ -23708,7 +23781,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 20
@@ -23718,7 +23791,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 20
@@ -23728,7 +23801,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 20
@@ -23738,7 +23811,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 20
@@ -24039,6 +24112,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2550244683747776450}
+  - {fileID: 4842901642087463191}
   m_Father: {fileID: 8027152528939579657}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -24090,6 +24164,7 @@ GameObject:
   - component: {fileID: 8002959670789412004}
   - component: {fileID: 8481494378227404814}
   - component: {fileID: 8604640829794261858}
+  - component: {fileID: 8745121954287190491}
   m_Layer: 8
   m_Name: Amy
   m_TagString: Player
@@ -24159,7 +24234,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boosting: 0
-  camPos: {x: 0, y: 0, z: 0}
+  camPos: {x: 0, y: 1.5, z: -1}
   camSpeedBoost: 5
   camSpeedStopBoosting: 2
 --- !u!114 &8027152530899255615
@@ -24297,9 +24372,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tricks: 0
-  camSpeed: 1
-  lowerCamPos: {x: 0, y: 0, z: 0}
-  higherCamPos: {x: 0, y: 0, z: 0}
+  camSpeed: 25
+  lowerCamPos: {x: 0, y: -5, z: -4}
+  higherCamPos: {x: 0, y: 5, z: -4}
 --- !u!114 &8481494378227404814
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24312,9 +24387,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 840e4809a02c5fb4c85310a5a3364bff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flightSpeedLoss: 3
+  flightSpeedLoss: 5
   turnMultiplier: 0.5
-  airGain: 0.02
+  airGain: 8
 --- !u!114 &8604640829794261858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24329,6 +24404,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   voiceManager: {fileID: 5393937119835857402}
   sfxManager: {fileID: 3355216193394072569}
+--- !u!114 &8745121954287190491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8027152530899255587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49cde4a97e8d2b24bbcc360f0ef06276, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rightPunchAngle: {fileID: 7123264228242042694}
+  leftPunchAngle: {fileID: 5727067319416303822}
+  punchPower: 700
+  cantPunchMultiplier: 0.7
+  extraPowerMultiplier: 20
 --- !u!1 &8051065450385949594
 GameObject:
   m_ObjectHideFlags: 0

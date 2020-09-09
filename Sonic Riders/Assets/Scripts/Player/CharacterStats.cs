@@ -6,6 +6,10 @@ public enum type { SPEED, FLIGHT, POWER, ALL}
 
 public class CharacterStats : MonoBehaviour
 {
+    public int PlayerIndex { get; set; } = 0;
+    public Transform Cam { get; set; }
+    public Transform Canvas { get; set; }
+    public Vector3 CamStartPos { get; set; }
     private HUD hud;
     private PlayerAnimationHandler playerAnimation;
 
@@ -141,8 +145,13 @@ public class CharacterStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        hud = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponent<HUD>();
+        //hud = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponent<HUD>();
         playerAnimation = GetComponent<PlayerAnimationHandler>();
+    }
+
+    public void GiveCanvasHud()
+    {
+        hud = Canvas.GetComponent<HUD>();
     }
 
     private void RunOnFoot()

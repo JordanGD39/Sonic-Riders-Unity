@@ -20,9 +20,14 @@ public class PlayerDrift : MonoBehaviour
     {
         movement = GetComponent<PlayerMovement>();
         charStats = GetComponent<CharacterStats>();
-        canvasAnim = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponent<Animator>();
+
         stats = charStats.BoardStats;
         audioHolder = GetComponent<AudioManagerHolder>();
+    }
+
+    public void GiveAnim()
+    {
+        canvasAnim = charStats.Canvas.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -69,7 +74,7 @@ public class PlayerDrift : MonoBehaviour
 
             audioHolder.SfxManager.Play(Constants.SoundEffects.boost);
 
-            if (movement.IsPlayer)
+            if (charStats.IsPlayer)
             {
                 canvasAnim.Play("BoostCircle");
             }

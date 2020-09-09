@@ -149,7 +149,7 @@ public class PlayerJump : MonoBehaviour
     {
         if (jumpRelease)
         {
-            if (mov.IsPlayer)
+            if (charStats.IsPlayer)
             {
                 audioHolder.SfxManager.Play(Constants.SoundEffects.jump);
             }
@@ -217,7 +217,7 @@ public class PlayerJump : MonoBehaviour
             jumpRelease = true;
 
             //For now!!!!!
-            if (mov.IsPlayer)
+            if (charStats.IsPlayer)
             {
                 audioHolder.VoiceManager.Play(Constants.VoiceSounds.rampJump);
             }           
