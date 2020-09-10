@@ -3323,7 +3323,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 10
@@ -3333,7 +3333,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 10
@@ -3343,7 +3343,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 10
@@ -3353,7 +3353,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 1
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 10
@@ -4132,7 +4132,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6220821524391264472}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -10676,7 +10676,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 10
@@ -10686,8 +10686,8 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
-    minRange: 5
+    spatialBlend: 0
+    minRange: 10
     maxRange: 100
     priority: 10
     source: {fileID: 0}
@@ -10696,7 +10696,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 10
@@ -10706,7 +10706,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 10
@@ -10716,7 +10716,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 10
@@ -10726,7 +10726,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 10
@@ -10736,7 +10736,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 10
@@ -10746,7 +10746,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 10
@@ -10756,7 +10756,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
+    spatialBlend: 0
     minRange: 5
     maxRange: 100
     priority: 10
@@ -10766,8 +10766,8 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
-    spatialBlend: 1
-    minRange: 5
+    spatialBlend: 0
+    minRange: 10
     maxRange: 100
     priority: 10
     source: {fileID: 0}

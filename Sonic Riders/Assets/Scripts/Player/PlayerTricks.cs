@@ -50,6 +50,7 @@ public class PlayerTricks : MonoBehaviour
             float step = camSpeed * Time.deltaTime;
             characterStats.Cam.localPosition = Vector3.MoveTowards(characterStats.Cam.localPosition, pos, step);
             characterStats.Cam.LookAt(transform.position);
+            Debug.Log(characterStats.Cam.transform.localRotation);
         }        
     }
 

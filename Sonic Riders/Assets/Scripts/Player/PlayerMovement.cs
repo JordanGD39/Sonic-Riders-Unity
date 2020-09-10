@@ -68,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
         playerDrift = GetComponent<PlayerDrift>();
         playerTricks = GetComponent<PlayerTricks>();
         playerFlight = GetComponent<PlayerFlight>();
-        thirdPersonCamera = Camera.main.GetComponentInParent<ThirdPersonCamera>();
+        //thirdPersonCamera = Camera.main.GetComponentInParent<ThirdPersonCamera>();
         stats = charStats.BoardStats;
         ps = GetComponentInChildren<ParticleSystem>();
     }
@@ -100,11 +100,11 @@ public class PlayerMovement : MonoBehaviour
 
         if (grounded)
         {
-            if (charStats.IsPlayer)
+            /*if (charStats.IsPlayer)
             {
                 thirdPersonCamera.enabled = false;
                 thirdPersonCamera.transform.localRotation = new Quaternion(0, 0, 0, thirdPersonCamera.transform.localRotation.w);
-            }
+            }*/
 
             lastGroundedPos = transform.position;
             transform.GetChild(0).localRotation = new Quaternion(0, transform.GetChild(0).localRotation.y, 0, transform.GetChild(0).localRotation.w);
