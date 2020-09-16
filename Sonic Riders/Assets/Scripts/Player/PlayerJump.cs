@@ -59,6 +59,8 @@ public class PlayerJump : MonoBehaviour
                 jumpHeight = startingJumpHeight;
             }
 
+            JumpHold = false;
+
             return;
         }
 
@@ -70,11 +72,6 @@ public class PlayerJump : MonoBehaviour
 
     public void HoldingJump()
     {
-        if (!(mov.Grounded && charStats.Air > 0))
-        {
-            return;
-        }
-
         JumpHold = true;
 
         if (charStats.Air > 0)

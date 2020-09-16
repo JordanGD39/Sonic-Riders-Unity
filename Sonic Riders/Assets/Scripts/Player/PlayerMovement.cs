@@ -36,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
     public float StartingRaycastLength { get { return startingRaycastLength; } }
     [SerializeField] private float extraForceGrounded = 500;
     [SerializeField] private float failVelocityMultiplier = 0.3f;
-    [SerializeField] private float offRoadDeccMultiplier = 2;
+    [SerializeField] private float offRoadDeccMultiplier = 10;
 
     private Vector3 localLandingVelocity = Vector3.zero;
     private Vector3 lastGroundedPos;
@@ -121,11 +121,14 @@ public class PlayerMovement : MonoBehaviour
 
             if (DriftBoost)
             {
-                for (int i = 0; i < 10; i++)
-                {
-                    transform.GetChild(0).Rotate(0, TurnAmount * 0.2f, 0);
-                }
-                
+                Vector3 camLook = transform.GetChild(0).TransformVector(new Vector3(playerDrift.DriftDir * 0.8f, 0, 1));
+
+                Vector3 pos = transform.position + camLook;
+
+                transform.GetChild(0).LookAt(pos);
+
+                transform.GetChild(0).localRotation = new Quaternion(0, transform.GetChild(0).localRotation.y, 0, transform.GetChild(0).localRotation.w);
+
                 DriftBoost = false;
             }
 

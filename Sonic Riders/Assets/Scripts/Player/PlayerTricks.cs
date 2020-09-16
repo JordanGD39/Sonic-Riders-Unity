@@ -95,6 +95,7 @@ public class PlayerTricks : MonoBehaviour
             characterStats.Air += 100;
             CanDoTricks = false;
             transform.GetChild(0).localRotation = new Quaternion(0, transform.GetChild(0).localRotation.y, 0, transform.GetChild(0).localRotation.w);
+            playerAnimation.Anim.SetBool("DoingTricks", false);
             return;
         }
 

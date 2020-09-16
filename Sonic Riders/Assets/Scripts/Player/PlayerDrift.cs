@@ -37,7 +37,7 @@ public class PlayerDrift : MonoBehaviour
         {
             if (DriftPressed)
             {
-                if ((movement.TurnAmount != 0 || driftTimer > 0))
+                if (movement.TurnAmount != 0 || driftTimer > 0)
                 {
                     Drift();
                 }
@@ -60,6 +60,7 @@ public class PlayerDrift : MonoBehaviour
 
         if (!DriftPressed && driftTimer > 1)
         {
+            //charStats.Cam.localRotation = new Quaternion(0, 0, 0, charStats.Cam.localRotation.w);
             driftTimer = 0;
             movement.FallToTheGround = false;
             if (movement.Speed < stats.Boost[charStats.Level])
@@ -107,7 +108,11 @@ public class PlayerDrift : MonoBehaviour
             {
                 DriftDir = -1;
             }
-        }       
+        }
+
+        Vector3 camLook = transform.GetChild(0).TransformVector(new Vector3(DriftDir * 0.8f, 1.5f, 1));
+
+        charStats.Cam.LookAt(transform.GetChild(0).position + camLook);
 
         driftTimer += Time.deltaTime;
         movement.Drifting = true;

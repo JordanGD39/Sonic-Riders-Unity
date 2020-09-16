@@ -31,13 +31,18 @@ public class PlayerAnimationHandler : MonoBehaviour
             return;
         }
 
+        
         float speed = playerMovement.Speed * 0.03f;
         float runSpeed = speed * runSpeedMultiplier;
 
         speed = Mathf.Clamp(speed, 0, 3);
         runSpeed = Mathf.Clamp(runSpeed, -4, 4);
 
-        anim.SetFloat("Speed", speed);
+        if (anim.layerCount > 1)
+        {
+            anim.SetFloat("Speed", speed);
+        }
+
         anim.SetFloat("RunSpeed", runSpeed);
         anim.SetFloat("Direction", playerMovement.TurnAmount);
         anim.SetBool("Grinding", playerGrind.Grinding);

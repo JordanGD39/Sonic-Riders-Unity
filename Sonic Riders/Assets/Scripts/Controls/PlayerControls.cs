@@ -109,6 +109,7 @@ public class PlayerControls : MonoBehaviour
         driftAction.performed += ctx => playerDrift.DriftPressed = true;
         driftAction.canceled += ctx => playerDrift.DriftPressed = true;
         driftAction.canceled += ctx => playerDrift.DriftPressed = false;
+        driftAction.canceled += ctx => charStats.Cam.localRotation = new Quaternion(0, 0, 0, charStats.Cam.localRotation.w);
         playerInput.actions.FindAction(inputMaster.Player.Grind.id).performed += ctx => CheckGrindJump();
         jumpAction.canceled += ctx => playerJump.CheckRelease();
 
@@ -120,6 +121,7 @@ public class PlayerControls : MonoBehaviour
         charStats.Cam = cams[playerInput.playerIndex].transform.parent;
         charStats.CamStartPos = charStats.Cam.localPosition;
         charStats.Cam.GetComponentInChildren<CameraDeath>().GiveCanvasAnim();
+        charStats.Canvas.GetComponent<HUD>().UpdateAirBar(charStats.Air);
 
         GameManager.instance.GetAudioManager.Play("Test");
     }
