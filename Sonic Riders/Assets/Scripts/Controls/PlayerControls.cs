@@ -24,7 +24,7 @@ public class PlayerControls : MonoBehaviour
     private InputAction jumpAction;
 
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
         playerInput = GetComponent<PlayerInput>();
 

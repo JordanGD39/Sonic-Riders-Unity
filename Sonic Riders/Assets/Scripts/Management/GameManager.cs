@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
 
     
     // Start is called before the first frame update
-    void Start()
+    public void GetCameras()
     {
         for (int i = 0; i < playersLeft.Count; i++)
         {
