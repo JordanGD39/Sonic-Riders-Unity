@@ -27,22 +27,26 @@ public class GameManager : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
     }
-
     
-    // Start is called before the first frame update
-    public void GetCameras()
+    public void GetCams()
     {
         for (int i = 0; i < playersLeft.Count; i++)
         {
             cams.Add(playersLeft[i].GetComponentInChildren<Camera>());
         }
-        //audioManager = GetComponent<AudioManager>();
+
+        Transform canvasHolder = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).transform;
+
+        for (int i = 0; i < cams.Count; i++)
+        {
+            canvasHolder.GetChild(i).GetComponent<Canvas>().worldCamera = cams[i];
+            cams[i].GetComponent<AudioListener>().enabled = i == 0;
+        }
+
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).GetComponent<PlayerControls>().enabled = true;
+        }
     }
 
-    /*
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }*/
 }

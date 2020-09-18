@@ -20026,7 +20026,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1673052046700437084}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1, y: 1.5, z: 0}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8027152528939579657}
@@ -20367,7 +20367,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2107236263745050364}
   m_LocalRotation: {x: 0.048674326, y: 0.04892717, z: 0.0197882, w: 0.99741936}
-  m_LocalPosition: {x: -0, y: 0.002460613, z: -5.9604643e-10}
+  m_LocalPosition: {x: -0, y: 0.0024606134, z: -5.9604643e-10}
   m_LocalScale: {x: 1, y: 0.99999994, z: 0.99999994}
   m_Children:
   - {fileID: 5740597749591132706}
@@ -20912,7 +20912,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2864361708590188610}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -20933,7 +20933,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sounds:
   - name: Opening
-    clip: {fileID: 8300000, guid: 9faa447a44fcf83498874a7c4c4a662f, type: 3}
+    clip: {fileID: 8300000, guid: 592a882d47572414ab0596595bc3d0f8, type: 3}
     volume: 1
     pitch: 1
     loop: 0
@@ -20943,7 +20943,7 @@ MonoBehaviour:
     priority: 10
     source: {fileID: 0}
   - name: RampJump
-    clip: {fileID: 8300000, guid: 44f5516ca74c50f4b9ae1bf605e421fd, type: 3}
+    clip: {fileID: 8300000, guid: b5ce14ac0b6f40140b57db41fed0d0c1, type: 3}
     volume: 1
     pitch: 1
     loop: 0
@@ -20953,7 +20953,7 @@ MonoBehaviour:
     priority: 10
     source: {fileID: 0}
   - name: '?'
-    clip: {fileID: 8300000, guid: c5a87ac479805134c8fe8c0383700122, type: 3}
+    clip: {fileID: 8300000, guid: b08eacc0d37aa4a40be92e87fe2dd357, type: 3}
     volume: 1
     pitch: 1
     loop: 0
@@ -20963,7 +20963,7 @@ MonoBehaviour:
     priority: 10
     source: {fileID: 0}
   - name: LandFail
-    clip: {fileID: 8300000, guid: 0a0c284d47bef1a41b6638f090db789c, type: 3}
+    clip: {fileID: 8300000, guid: df5af341d928edd4492820ddea0ee8d3, type: 3}
     volume: 1
     pitch: 1
     loop: 0
@@ -20973,7 +20973,7 @@ MonoBehaviour:
     priority: 10
     source: {fileID: 0}
   - name: DrivePast
-    clip: {fileID: 8300000, guid: f51388f7e4ddf914d9116a43c73cf6b8, type: 3}
+    clip: {fileID: 8300000, guid: 5abfba998d287e7479afedac12be55d3, type: 3}
     volume: 1
     pitch: 1
     loop: 0
@@ -20983,7 +20983,7 @@ MonoBehaviour:
     priority: 10
     source: {fileID: 0}
   - name: Win
-    clip: {fileID: 8300000, guid: 17887abdd5e1c9645af8d094ef890919, type: 3}
+    clip: {fileID: 8300000, guid: a20031ef9a7bf6f4781923d33aab1bda, type: 3}
     volume: 1
     pitch: 1
     loop: 0
@@ -20993,7 +20993,7 @@ MonoBehaviour:
     priority: 10
     source: {fileID: 0}
   - name: Lose
-    clip: {fileID: 8300000, guid: af32cdbce1125c648b7665dc9a81f92a, type: 3}
+    clip: {fileID: 8300000, guid: b14225f8602cbf7449c863f30558004b, type: 3}
     volume: 1
     pitch: 1
     loop: 0
@@ -21003,7 +21003,7 @@ MonoBehaviour:
     priority: 10
     source: {fileID: 0}
   - name: Hit
-    clip: {fileID: 8300000, guid: 43f6487f129f3dd41bf6735a8e42b243, type: 3}
+    clip: {fileID: 8300000, guid: 8c353350866e362449163131e916ce3c, type: 3}
     volume: 1
     pitch: 1
     loop: 0
@@ -21013,7 +21013,7 @@ MonoBehaviour:
     priority: 10
     source: {fileID: 0}
   - name: LandSucces
-    clip: {fileID: 8300000, guid: 6a23a09197e31c042b6ff0e95ef035cb, type: 3}
+    clip: {fileID: 8300000, guid: 21253df2d6a7ce74ba044d49855d777d, type: 3}
     volume: 1
     pitch: 1
     loop: 0
@@ -21023,7 +21023,7 @@ MonoBehaviour:
     priority: 10
     source: {fileID: 0}
   - name: PerfectJump
-    clip: {fileID: 8300000, guid: 1c2e7e824de8ca24a9f38dd226d398c4, type: 3}
+    clip: {fileID: 8300000, guid: 332212fe3922b714288cf7895bcce50a, type: 3}
     volume: 1
     pitch: 1
     loop: 0
@@ -21173,7 +21173,7 @@ GameObject:
   - component: {fileID: 8503871103489338858}
   m_Layer: 0
   m_Name: Camera
-  m_TagString: MainCamera
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -21242,7 +21242,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3043631325586636107}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!114 &147783435035157624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21424,8 +21424,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3312087632677282506}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -13.819735, y: -0.03999999, z: 40.1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8027152530315469990}
@@ -21790,7 +21790,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4260198459403109714}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -22389,7 +22389,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5066681123585051995}
   m_LocalRotation: {x: 0, y: -0.00000004371139, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.00092130003, z: 0}
+  m_LocalPosition: {x: -0, y: 0.0009213, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 9126040653930575992}
@@ -23908,7 +23908,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7924267635344772238}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -24266,7 +24266,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8027152529603828325}
   m_LocalRotation: {x: -0, y: -0.74390334, z: -0, w: 0.6682872}
-  m_LocalPosition: {x: -0.0004884647, y: -0.1319998, z: 0.1156239}
+  m_LocalPosition: {x: 0.014, y: -0.107, z: 0.05}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children:
   - {fileID: 3118098952205387571}
@@ -24450,7 +24450,7 @@ MonoBehaviour:
   extraPower: 2
   extraDash: 0
   extraCornering: 5
-  charType: 0
+  charType: 3
   stats: {fileID: 11400000, guid: cccfd161fcb39714a9103fe27e95fd36, type: 2}
   runSpeed: 33
 --- !u!114 &8027152530899255614
@@ -24531,10 +24531,10 @@ MonoBehaviour:
   path: {fileID: 0}
   grinding: 0
   speed: 40
-  jumpSpeed: 20
-  airGain: 3
+  jumpSpeed: 10
+  airGain: 8
   extraCharHeight: 0.5
-  jumpHeightOfRail: 30
+  jumpHeightOfRail: -5
   velocity: {x: 0, y: 0, z: 0}
 --- !u!114 &8027152530899255609
 MonoBehaviour:
@@ -24543,13 +24543,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8027152530899255587}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 54088058307dc1941a518778846027a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 1101062210}
-  notReady: 1
+  notReady: 0
   runSpeedMultiplier: 2
 --- !u!114 &8002959670789412004
 MonoBehaviour:

@@ -52,6 +52,19 @@ public class PlayerConfigManager : MonoBehaviour
             pi.uiInputModule = eventSystem.GetComponent<InputSystemUIInputModule>();
         }        
     }
+
+    public void SpawnPlayers()
+    {
+        GameManager.instance.PlayersLeft.Clear();
+
+        for (int i = 0; i < playerConfigs.Count; i++)
+        {
+            GameObject character = Instantiate(playerConfigs[i].CharacterPrefab, new Vector3(0, 0.4f, i * 2), Quaternion.identity);
+            GameManager.instance.PlayersLeft.Add(character);
+        }
+
+        GameManager.instance.GetCams();
+    }
 }
 
 public class PlayerConfig

@@ -176,7 +176,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0, g: 0.97092485, b: 1, a: 1}
     m_PressedColor: {r: 0.025631888, g: 0.587903, b: 0.6037736, a: 1}
     m_SelectedColor: {r: 0, g: 0.9725491, b: 1, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0, g: 0, b: 0, a: 0.5372549}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -194,7 +194,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1016995572185548264}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8711083191823377325}
+        m_MethodName: Pressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &3549319342556044451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,6 +234,21 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  - eventID: 10
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8711083191823377325}
+          m_MethodName: Deselected
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &8711083191823377325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,6 +266,9 @@ MonoBehaviour:
   limit: 4
   power: 3
   cornering: 2
+  disabled: {fileID: 3428278619244365955}
+  characterPrefab: {fileID: 2005097834745034059, guid: a3de9f936806e45449e0097b42613fac,
+    type: 3}
 --- !u!1 &5632821464991843950
 GameObject:
   m_ObjectHideFlags: 0

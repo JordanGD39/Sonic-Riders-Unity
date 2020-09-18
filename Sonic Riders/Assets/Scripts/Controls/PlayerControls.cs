@@ -72,9 +72,9 @@ public class PlayerControls : MonoBehaviour
         {
             case 2:
                 cams[0].rect = new Rect(0, 0.5f, 1, 0.5f);
-                scaler.referenceResolution *= 2;
+                scaler.referenceResolution = new Vector2(1600, 1200);
                 cams[1].rect = new Rect(0, 0, 1, 0.5f);
-                scaler1.referenceResolution *= 2;
+                scaler1.referenceResolution = new Vector2(1600, 1200);
                 break;
             case 3:
                 cams[0].rect = new Rect(0, 0.5f, 0.5f, 0.5f);
@@ -123,12 +123,13 @@ public class PlayerControls : MonoBehaviour
         charStats.Cam.GetComponentInChildren<CameraDeath>().GiveCanvasAnim();
         charStats.Canvas.GetComponent<HUD>().UpdateAirBar(charStats.Air);
 
-        GameManager.instance.GetAudioManager.Play("Test");
+        //GameManager.instance.GetAudioManager.Play("Test");
     }
 
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(moveAction.ReadValue<Vector2>());
         OnMove(moveAction.ReadValue<Vector2>());
 
         if (playerMovement.Grounded)

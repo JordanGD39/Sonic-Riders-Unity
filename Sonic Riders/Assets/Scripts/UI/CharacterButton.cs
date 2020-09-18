@@ -14,6 +14,11 @@ public class CharacterButton : MonoBehaviour
     [SerializeField] private int cornering = 2;
 
     private Transform playerSelectParent;
+    [SerializeField] private GameObject disabled;
+    [SerializeField] private GameObject characterPrefab;
+
+    private int eventIndex = 0;
+    private bool alreadyDeselecting = false;
 
     // Start is called before the first frame update
     void Start()
@@ -24,17 +29,15 @@ public class CharacterButton : MonoBehaviour
 
     public void Selected()
     {
-        int index = 0;
-
         for (int i = 0; i < holder.MultiplayerEventSystems.Count; i++)
         {
             if (holder.MultiplayerEventSystems[i].currentSelectedGameObject == gameObject)
             {
-                index = i;
+                eventIndex = i;
             }
         }
 
-        Transform playerSelect = playerSelectParent.GetChild(index);
+        Transform playerSelect = playerSelectParent.GetChild(eventIndex);
 
         if (playerSelect.GetChild(0).gameObject.activeSelf)
         {
@@ -72,9 +75,53 @@ public class CharacterButton : MonoBehaviour
                 break;
         }        
 
-        for (int i = 4; i + 1 > stat; i--)
+        for (int i = 0; i < 5; i++)
         {
-            statTransform.GetChild(i).GetComponent<Image>().enabled = false;
+            statTransform.GetChild(i).GetComponent<Image>().enabled = (i < stat);
         }
+    }
+
+    public void Pressed()
+    {
+        CharacterSelectInput selectInput = GameManager.instance.transform.GetChild(eventIndex).GetComponent<CharacterSelectInput>();
+
+        if (!disabled.activeSelf && selectInput.CanSelect)
+        {
+            holder.MultiplayerEventSystems[eventIndex].SetSelectedGameObject(null);
+            selectInput.ConfirmCharacter(characterPrefab);
+        }
+    }
+
+    public void Deselected()
+    {
+        if (!alreadyDeselecting)
+        {
+            alreadyDeselecting = true;
+            StartCoroutine("DelaySelect");        
+        }
+    }
+
+    private IEnumerator DelaySelect()
+    {
+        yield return null;
+
+        int index = -1;
+
+        for (int i = 0; i < holder.MultiplayerEventSystems.Count; i++)
+        {
+            if (holder.MultiplayerEventSystems[i].currentSelectedGameObject == gameObject)
+            {
+                Debug.Log("Found eventSystem selecting me! " + i);
+                index = i;
+            }
+        }
+
+        if (index > -1)
+        {
+            holder.MultiplayerEventSystems[index].SetSelectedGameObject(null);
+            holder.MultiplayerEventSystems[index].SetSelectedGameObject(gameObject);
+        }
+
+        alreadyDeselecting = false;
     }
 }
