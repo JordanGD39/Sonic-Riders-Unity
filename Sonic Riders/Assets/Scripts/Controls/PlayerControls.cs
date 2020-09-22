@@ -56,12 +56,12 @@ public class PlayerControls : MonoBehaviour
 
         charStats.Canvas = canvasHolder.transform.GetChild(playerInput.playerIndex);
 
-        playerBoost.GiveAnim();
-        playerDrift.GiveAnim();
         playerMovement.GiveCanvasHud();
         playerGrind.GiveCanvasHud();
         playerFlight.GiveCanvasHud();
         charStats.GiveCanvasHud();
+        playerDrift.GiveAnim();
+        playerBoost.GiveAnim();
 
         CanvasScaler scaler = canvasHolder.GetChild(0).GetComponent<CanvasScaler>();
         CanvasScaler scaler1 = canvasHolder.GetChild(1).GetComponent<CanvasScaler>();
@@ -129,7 +129,7 @@ public class PlayerControls : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(moveAction.ReadValue<Vector2>());
+        //Debug.Log(moveAction.ReadValue<Vector2>());
         OnMove(moveAction.ReadValue<Vector2>());
 
         if (playerMovement.Grounded)

@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -27,7 +29,20 @@ public class GameManager : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
     }
-    
+
+    private void Start()
+    {
+        if (SceneManager.GetActiveScene().buildIndex > 0 && playersLeft.Count > 0)
+        {
+            for (int i = 0; i < playersLeft.Count; i++)
+            {
+                playersLeft[i].SetActive(true);
+            }
+
+            GetCams();
+        }
+    }
+
     public void GetCams()
     {
         for (int i = 0; i < playersLeft.Count; i++)
@@ -41,6 +56,12 @@ public class GameManager : MonoBehaviour
         {
             canvasHolder.GetChild(i).GetComponent<Canvas>().worldCamera = cams[i];
             cams[i].GetComponent<AudioListener>().enabled = i == 0;
+            //playersLeft[i].GetComponent<PlayerInput>().camera = cams[i];
+        }
+
+        if (GetComponent<TestHandleJoin>() != null)
+        {
+            return;
         }
 
         for (int i = 0; i < transform.childCount; i++)

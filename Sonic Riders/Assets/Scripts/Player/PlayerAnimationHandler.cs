@@ -11,8 +11,11 @@ public class PlayerAnimationHandler : MonoBehaviour
     private PlayerGrind playerGrind;
     private PlayerJump playerJump;
     private PlayerTricks playerTricks;
+    private PlayerFlight playerFlight;
 
     [SerializeField] private float runSpeedMultiplier = 2f;
+    [SerializeField] private float speedMultiplier = 1;
+    [SerializeField] private bool diffFlyAnim = false;
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +24,7 @@ public class PlayerAnimationHandler : MonoBehaviour
         playerGrind = GetComponent<PlayerGrind>();
         playerJump = GetComponent<PlayerJump>();
         playerTricks = GetComponent<PlayerTricks>();
+        playerFlight = GetComponent<PlayerFlight>();
     }
 
     // Update is called once per frame
@@ -38,29 +42,34 @@ public class PlayerAnimationHandler : MonoBehaviour
         speed = Mathf.Clamp(speed, 0, 3);
         runSpeed = Mathf.Clamp(runSpeed, -4, 4);
 
-        if (anim.layerCount > 1)
+        if (anim.layerCount > 1 || diffFlyAnim)
         {
-            anim.SetFloat("Speed", speed);
+            anim.SetFloat("Speed", speed * speedMultiplier);
         }
 
         anim.SetFloat("RunSpeed", runSpeed);
         anim.SetFloat("Direction", playerMovement.TurnAmount);
         anim.SetBool("Grinding", playerGrind.Grinding);
         anim.SetBool("Grounded", playerMovement.Grounded);
-        anim.SetBool("ChargingJump", playerJump.JumpHold);
-
-        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Falling") && playerTricks.CanDoTricks)
-        {
-            anim.SetBool("DoingTricks", playerTricks.CanDoTricks);
-        }
+        anim.SetBool("ChargingJump", playerJump.JumpHold);        
 
         if (playerTricks.CanDoTricks)
         {
             anim.SetFloat("TrickVerticalDir", playerTricks.TrickDirection.y);
+
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Falling"))
+            {
+                anim.SetBool("DoingTricks", playerTricks.CanDoTricks);
+            }
         }        
         else
         {
             anim.SetFloat("TrickVerticalDir", 0);
+        }
+
+        if (diffFlyAnim)
+        {
+            anim.SetBool("Flying", playerFlight.Flying);
         }
     }
 

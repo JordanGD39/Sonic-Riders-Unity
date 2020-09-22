@@ -7,7 +7,10 @@ public class StartingLevel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameManager.instance.GetComponent<PlayerConfigManager>().SpawnPlayers();
+        if (GameManager.instance.GetComponent<TestHandleJoin>() == null)
+        {
+            GameManager.instance.GetComponent<PlayerConfigManager>().SpawnPlayers();
+        }
     }
     
 }

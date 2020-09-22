@@ -37,7 +37,13 @@ public class PlayerPunchObstacle : MonoBehaviour
 
         //Removing speed loss in formula so that slower characters punch less hard but adding power so that Powerful characters punch harder
         float maxSpeed = charStats.GetCurrentLimit() + (charStats.ExtraPower * extraPowerMultiplier) + charStats.SpeedLoss;
-        float speedPowerCalc = playerMovement.Speed / maxSpeed;
+
+        float speedPowerCalc = maxSpeed;
+
+        if (maxSpeed > playerMovement.Speed)
+        {
+            speedPowerCalc = playerMovement.Speed / maxSpeed;
+        }
 
         if (!CantPunch && charStats.Air > 0)
         {
@@ -54,7 +60,10 @@ public class PlayerPunchObstacle : MonoBehaviour
                 punch = leftPunchAngle;
             }
 
-            obstacleRb.AddForce(punch.forward * (punchPower * speedPowerCalc));
+            float power = punchPower * speedPowerCalc;
+            Debug.Log(power);
+
+            obstacleRb.AddForce(punch.forward * power);
             audioHolder.SfxManager.Play(Constants.SoundEffects.punch);
 
         }

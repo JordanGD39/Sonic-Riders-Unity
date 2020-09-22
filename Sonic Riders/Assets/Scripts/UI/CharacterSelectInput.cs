@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class CharacterSelectInput : MonoBehaviour
 {
@@ -18,6 +19,11 @@ public class CharacterSelectInput : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (SceneManager.GetActiveScene().buildIndex > 0)
+        {
+            return;
+        }
+
         button = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponentInChildren<Button>().gameObject;
         playerConfigManager = GameManager.instance.GetComponent<PlayerConfigManager>();
 

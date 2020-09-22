@@ -86,7 +86,7 @@ public class PlayerBoost : MonoBehaviour
 
         boosting = true;
 
-        if (!playerGrind.Grinding)
+        if (!playerGrind.Grinding && playerAnimation.Anim != null)
         {
             playerAnimation.StartBoostAnimation();
         }
