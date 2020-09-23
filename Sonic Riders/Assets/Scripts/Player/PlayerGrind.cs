@@ -62,7 +62,7 @@ public class PlayerGrind : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Path != null)
+        if (path != null)
         {
             if (grinding)
             {
@@ -120,17 +120,14 @@ public class PlayerGrind : MonoBehaviour
                 {
                     OffRail(false);                    
                 }
-
-                return;
             }                        
         }        
     }
 
     public void CheckGrind()
     {
-        //Debug.Log("wgdwgd");
-
-        if (!movement.Grounded && !grinding && Path != null)
+        //Jumping on Rail
+        if (!movement.Grounded && !grinding && path != null && path.path.GetClosestTimeOnPath(transform.position) < 0.99f)
         {
             if (playerTricks.CanDoTricks)
             {
@@ -154,6 +151,7 @@ public class PlayerGrind : MonoBehaviour
 
     private void OffRail(bool jumpPressed)
     {
+        Debug.Log("OffRail " + jumpPressed);
         grinding = false;
         transform.GetChild(0).localRotation = new Quaternion(0, transform.GetChild(0).localRotation.y, 0, transform.GetChild(0).localRotation.w);
         rb.isKinematic = false;
@@ -166,7 +164,14 @@ public class PlayerGrind : MonoBehaviour
         }
         else
         {
-            rb.velocity = transform.GetChild(0).forward * jumpSpeed;
+            int dir = 1;
+
+            if (speed < 0)
+            {
+                dir = -1;
+            }
+
+            rb.velocity = transform.GetChild(0).forward * (jumpSpeed * dir);
         }
 
         movement.CantMove = false;

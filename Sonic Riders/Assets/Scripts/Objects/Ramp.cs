@@ -8,6 +8,7 @@ public class Ramp : MonoBehaviour
     private float worstPower = 7;
     [SerializeField] private float power = 30;
     [SerializeField] private float multiplier = 0.8f;
+    [SerializeField] private float gravMultipler = 0.5f;
     [SerializeField] private bool flightRamp = false;
 
     public float PerfectJump { get { return perfectJumpRange; } }
@@ -17,6 +18,7 @@ public class Ramp : MonoBehaviour
 
     private void Start()
     {
+        power *= GameManager.instance.GravitityMultiplier * gravMultipler;
         worstPower = power * 0.8f;
     }
 

@@ -3,7 +3,22 @@ guid: 7d171fc5258d0e14ba28912290ac56ce
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gear_Back_light
+    second: {fileID: 2100000, guid: 68f3e7918a7027544b4d2f6f70aa9fb2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gear_tails_color
+    second: {fileID: 2100000, guid: ea69d881c924dd84bbbe8d596e77d683, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gear_tails_light
+    second: {fileID: 2100000, guid: ff1d159be486edf42bc9670979f0e04f, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
@@ -80,7 +95,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.00029999999
+    globalScale: 0.03
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

@@ -8,14 +8,12 @@ public class CharacterButton : MonoBehaviour
     private EventSystemHolder holder;
 
     [SerializeField] private Image sprite;
-    [SerializeField] private int dash = 3;
-    [SerializeField] private int limit = 4;
-    [SerializeField] private int power = 3;
-    [SerializeField] private int cornering = 2;
 
     private Transform playerSelectParent;
     [SerializeField] private GameObject disabled;
     [SerializeField] private GameObject characterPrefab;
+    //private BoardStats boardStats;
+    private CharacterStats stats;
 
     private int eventIndex = 0;
     private bool alreadyDeselecting = false;
@@ -25,6 +23,7 @@ public class CharacterButton : MonoBehaviour
     {
         holder = GetComponentInParent<EventSystemHolder>();
         playerSelectParent = holder.GetComponentInChildren<GridLayoutGroup>().transform;
+        stats = characterPrefab.GetComponent<CharacterStats>();
     }
 
     public void Selected()
@@ -47,38 +46,34 @@ public class CharacterButton : MonoBehaviour
 
         playerSelect.GetChild(1).GetComponentInChildren<Image>().sprite = sprite.sprite;
 
-        Transform statsParent = playerSelect.GetComponentInChildren<HorizontalLayoutGroup>().transform.parent;
+        Transform statsParent = playerSelect.GetChild(1).GetComponentInChildren<Text>().transform.parent;
 
         for (int i = 0; i < statsParent.childCount; i++)
         {
-            RemoveStatSquares(i, statsParent.GetChild(i));
+            DisplayStats(i, statsParent.GetChild(i));
         }
     }
 
-    private void RemoveStatSquares(int index, Transform statTransform)
+    private void DisplayStats(int index, Transform statTransform)
     {
-        int stat = 3;
-
+        float stat = 0.5f;
         switch (index)
         {
             case 0:
-                stat = dash;
+                stat = stats.GetCurrentDash() / 18;
                 break;
             case 1:
-                stat = limit;
+                stat = stats.GetCurrentLimit() / 62.5f;
                 break;
             case 2:
-                stat = power;
+                stat = stats.GetCurrentPower() / 50;
                 break;
             case 3:
-                stat = cornering;
+                stat = stats.GetCurrentCornering() / 90;
                 break;
-        }        
-
-        for (int i = 0; i < 5; i++)
-        {
-            statTransform.GetChild(i).GetComponent<Image>().enabled = (i < stat);
         }
+
+        statTransform.GetChild(0).GetComponent<Image>().fillAmount = stat;
     }
 
     public void Pressed()

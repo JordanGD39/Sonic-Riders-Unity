@@ -7,6 +7,8 @@ public class AudioManager : MonoBehaviour
 {
     public Sound[] sounds;
 
+    public CharacterStats CharStats { get; set; }
+
     [SerializeField] private AudioMixerGroup mixer;
     
     private Sound currSound;
@@ -59,13 +61,18 @@ public class AudioManager : MonoBehaviour
 
     public void Play(string name)
     {
-        Debug.Log("Searching for music " + name);
+        if (CharStats != null && !CharStats.IsPlayer)
+        {
+            return;
+        }
+
+        //Debug.Log("Searching for music " + name);
         FindSound(name);
 
         if (currS.loop)
         {
             currSound = currS;
-            Debug.Log("Playing music " + name);
+            //Debug.Log("Playing music " + name);
         }
 
         if (!currS.source.isPlaying || name != Constants.SoundEffects.grind)

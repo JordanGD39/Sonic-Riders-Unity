@@ -73,7 +73,7 @@ public class PlayerTrigger : MonoBehaviour
 
         playerMovement.CantMove = true;
 
-        Debug.Log(transform.InverseTransformDirection(bounceDir).z);
+        //Debug.Log(transform.InverseTransformDirection(bounceDir).z);
 
         bool hitDirectly = false;
 
@@ -82,6 +82,7 @@ public class PlayerTrigger : MonoBehaviour
             playerMovement.Speed = speed;
             hitDirectly = true;
         }
+
         audioHolder.SfxManager.Play(Constants.SoundEffects.bounceWall);
 
         rb.AddForce(bounceDir * speed, ForceMode.Impulse);

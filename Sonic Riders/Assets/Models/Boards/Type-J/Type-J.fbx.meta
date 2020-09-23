@@ -1,9 +1,24 @@
 fileFormatVersion: 2
-guid: 4e42b907fedce1d47b9d7d9dfb211614
+guid: 0f15c878130061146adf1e016b59369d
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gear_Back_light
+    second: {fileID: 2100000, guid: e6ac255cd7a833249a98ccfffc84a707, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gear_jet
+    second: {fileID: 2100000, guid: 1184e36d2d8605049a2040bdf59d7533, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gear_jet_light
+    second: {fileID: 2100000, guid: 424b0a4345b765b49be7d091fb924920, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
@@ -41,8 +56,8 @@ ModelImporter:
     sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
-    importCameras: 0
-    importLights: 0
+    importCameras: 1
+    importLights: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
@@ -80,7 +95,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.03
+    globalScale: 0.00029999999
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

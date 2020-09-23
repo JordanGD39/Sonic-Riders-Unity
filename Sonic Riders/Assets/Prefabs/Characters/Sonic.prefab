@@ -1640,7 +1640,7 @@ MonoBehaviour:
   extraCornering: 0
   charType: 3
   stats: {fileID: 11400000, guid: cccfd161fcb39714a9103fe27e95fd36, type: 2}
-  runSpeed: 35
+  runSpeed: 37.5
 --- !u!114 &2005097834745034070
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1676,6 +1676,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tricks: 0
+  speedMultiplier: 1.5
   camSpeed: 25
   lowerCamPos: {x: 0, y: -5, z: -4}
   higherCamPos: {x: 0, y: 5, z: -4}
@@ -1755,6 +1756,8 @@ MonoBehaviour:
   anim: {fileID: 1216063454404530330}
   notReady: 0
   runSpeedMultiplier: 2
+  speedMultiplier: 1
+  diffFlyAnim: 0
 --- !u!114 &5215084567931377612
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -292,10 +292,11 @@ public class PlayerMovement : MonoBehaviour
         {
             localVel.y = rb.velocity.y;
             fallToTheGround = true;            
-        }
+        }       
 
         if (grounded && !(fallToTheGround && transform.GetChild(0).forward.y > -0.8f) && !CantMove && !playerJump.DontDragDown)
         {
+            fallToTheGround = false;
             rb.velocity = localVel;
         }
     }
@@ -305,8 +306,9 @@ public class PlayerMovement : MonoBehaviour
         if (charStats.IsPlayer)
         {
             //Debug.Log(ps.isPlaying);
+            Vector3 localVel = transform.GetChild(0).InverseTransformDirection(rb.velocity);
 
-            if (speed >= 50)
+            if (localVel.z >= 50)
             {
                 if (!ps.isPlaying)
                 {
@@ -320,7 +322,7 @@ public class PlayerMovement : MonoBehaviour
                     ps.Stop();
                 }
             }
-        }        
+        }
 
         if (grounded)
         {

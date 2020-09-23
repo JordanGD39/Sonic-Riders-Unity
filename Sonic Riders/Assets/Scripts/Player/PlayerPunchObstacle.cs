@@ -35,15 +35,17 @@ public class PlayerPunchObstacle : MonoBehaviour
     {
         obstacleRb.isKinematic = false;
 
-        //Removing speed loss in formula so that slower characters punch less hard but adding power so that Powerful characters punch harder
-        float maxSpeed = charStats.GetCurrentLimit() + (charStats.ExtraPower * extraPowerMultiplier) + charStats.SpeedLoss;
+        float powerCalc = charStats.ExtraPower * extraPowerMultiplier;
 
-        float speedPowerCalc = maxSpeed;
-
-        if (maxSpeed > playerMovement.Speed)
+        if (powerCalc < 0)
         {
-            speedPowerCalc = playerMovement.Speed / maxSpeed;
+            powerCalc = 0;
         }
+
+        //Removing speed loss in formula so that slower characters punch less hard but adding power so that Powerful characters punch harder
+        float maxSpeed = charStats.GetCurrentLimit() + powerCalc + charStats.SpeedLoss;
+
+        float speedPowerCalc = playerMovement.Speed / maxSpeed;
 
         if (!CantPunch && charStats.Air > 0)
         {

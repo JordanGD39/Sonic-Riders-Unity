@@ -101,8 +101,8 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.29803923, g: 1, b: 0.64705884, a: 1}
-      key1: {r: 0.27058825, g: 1, b: 0.6862745, a: 0.9019608}
+      key0: {r: 1, g: 0.9883041, b: 0, a: 1}
+      key1: {r: 0.96575665, g: 1, b: 0, a: 0.9019608}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -351,9 +351,9 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -6876901256424225430, guid: 7d171fc5258d0e14ba28912290ac56ce, type: 3}
-  - {fileID: -97284395540216728, guid: 7d171fc5258d0e14ba28912290ac56ce, type: 3}
-  - {fileID: 132501766376183042, guid: 7d171fc5258d0e14ba28912290ac56ce, type: 3}
+  - {fileID: 2100000, guid: ea69d881c924dd84bbbe8d596e77d683, type: 2}
+  - {fileID: 2100000, guid: 68f3e7918a7027544b4d2f6f70aa9fb2, type: 2}
+  - {fileID: 2100000, guid: ff1d159be486edf42bc9670979f0e04f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10361,7 +10361,7 @@ MonoBehaviour:
   extraCornering: 7
   charType: 3
   stats: {fileID: 11400000, guid: cccfd161fcb39714a9103fe27e95fd36, type: 2}
-  runSpeed: 31
+  runSpeed: 33
 --- !u!114 &8046198970241570731
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10397,6 +10397,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tricks: 0
+  speedMultiplier: 1.5
   camSpeed: 25
   lowerCamPos: {x: 0, y: -5, z: -4}
   higherCamPos: {x: 0, y: 5, z: -4}

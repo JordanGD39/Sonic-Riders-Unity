@@ -16,6 +16,9 @@ public class GameManager : MonoBehaviour
     private List<Camera> cams = new List<Camera>();
     public List<Camera> Cams { get { return cams; } }
 
+    [SerializeField] private float gravityMultiplier = 1;
+    public float GravitityMultiplier { get { return gravityMultiplier; } }
+
     void Awake()
     {
         if (instance == null)
@@ -32,6 +35,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        Physics.gravity *= gravityMultiplier;
+
         if (SceneManager.GetActiveScene().buildIndex > 0 && playersLeft.Count > 0)
         {
             for (int i = 0; i < playersLeft.Count; i++)

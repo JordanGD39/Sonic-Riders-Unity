@@ -42,6 +42,10 @@ public class PlayerJump : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        float gravMultiplier = GameManager.instance.GravitityMultiplier;
+        startingJumpHeight *= gravMultiplier;
+        jumpHeight *= gravMultiplier;
+        maxJumpHeight *= gravMultiplier;
         rb = GetComponent<Rigidbody>();
         mov = GetComponent<PlayerMovement>();
         playerTricks = GetComponent<PlayerTricks>();
@@ -120,7 +124,7 @@ public class PlayerJump : MonoBehaviour
                     {
                         rampPower = worstRampPower;
                     }
-
+                    
                     audioHolder.VoiceManager.Play(Constants.VoiceSounds.rampJump);
                 }
                 else
@@ -146,10 +150,7 @@ public class PlayerJump : MonoBehaviour
     {
         if (jumpRelease)
         {
-            if (charStats.IsPlayer)
-            {
-                audioHolder.SfxManager.Play(Constants.SoundEffects.jump);
-            }
+            audioHolder.SfxManager.Play(Constants.SoundEffects.jump);
 
             DontDragDown = true;
             mov.RaycastLength = raycastJumpLength;
@@ -213,13 +214,7 @@ public class PlayerJump : MonoBehaviour
 
             jumpRelease = true;
 
-            //For now!!!!!
-            if (charStats.IsPlayer)
-            {
-                audioHolder.VoiceManager.Play(Constants.VoiceSounds.rampJump);
-            }           
-
-            Debug.Log("Fell of ramp");
+            audioHolder.VoiceManager.Play(Constants.VoiceSounds.rampJump);                 
         }
         else
         {

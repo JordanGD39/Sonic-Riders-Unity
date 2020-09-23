@@ -14,6 +14,7 @@ public class PlayerTricks : MonoBehaviour
 
     private float speedReward;
     [SerializeField] private int tricks = 0;
+    [SerializeField] private float speedMultiplier = 1.5f;
     public bool CanLand { get; set; } = false;
     
     [SerializeField] private float camSpeed = 1;
@@ -76,6 +77,10 @@ public class PlayerTricks : MonoBehaviour
         if (speedReward < 0.25f)
         {
             speedReward = 0.25f;
+        }
+        else
+        {
+            speedReward *= speedMultiplier;
         }
 
         if (characterStats.IsPlayer)
