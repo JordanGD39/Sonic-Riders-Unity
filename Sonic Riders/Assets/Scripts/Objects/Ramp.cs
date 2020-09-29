@@ -9,17 +9,19 @@ public class Ramp : MonoBehaviour
     [SerializeField] private float power = 30;
     [SerializeField] private float multiplier = 0.8f;
     [SerializeField] private float gravMultipler = 0.5f;
+    [SerializeField] private float jumpMultiplier = 1;
     [SerializeField] private bool flightRamp = false;
 
     public float PerfectJump { get { return perfectJumpRange; } }
     public float Power { get { return power; } }
     public float WorstPower { get { return worstPower; } }
+    public float JumpMultipler { get { return jumpMultiplier; } }
     public bool Flight { get { return flightRamp; } }
 
     private void Start()
     {
         power *= GameManager.instance.GravitityMultiplier * gravMultipler;
-        worstPower = power * 0.8f;
+        worstPower = power * multiplier;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -49,7 +51,7 @@ public class Ramp : MonoBehaviour
             }
             else
             {
-                other.transform.GetComponentInParent<PlayerJump>().FallingOffRamp(worstPower, perfectJumpRange, power);
+                other.transform.GetComponentInParent<PlayerJump>().FallingOffRamp(worstPower, perfectJumpRange, power, jumpMultiplier);
             }
         }
     }    

@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     [SerializeField] private AudioManager audioManager;
+    [SerializeField] private GameObject campPref;
     public AudioManager GetAudioManager { get { return audioManager; } }
 
     [SerializeField] private List<GameObject> playersLeft = new List<GameObject>();
@@ -53,7 +54,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < playersLeft.Count; i++)
         {
             cams.Add(playersLeft[i].GetComponentInChildren<Camera>());
-        }
+        }       
 
         Transform canvasHolder = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).transform;
 
@@ -61,7 +62,15 @@ public class GameManager : MonoBehaviour
         {
             canvasHolder.GetChild(i).GetComponent<Canvas>().worldCamera = cams[i];
             cams[i].GetComponent<AudioListener>().enabled = i == 0;
+            cams[i].depth = -i;
+            //cams[i].transform.parent.parent = null;
             //playersLeft[i].GetComponent<PlayerInput>().camera = cams[i];
+        }
+
+        if (cams.Count == 3)
+        {
+            GameObject cam = Instantiate(campPref);
+            cams.Add(cam.GetComponent<Camera>());
         }
 
         if (GetComponent<TestHandleJoin>() != null)

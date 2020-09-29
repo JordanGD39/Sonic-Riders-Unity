@@ -35,7 +35,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float startingRaycastLength = 0.8f;
     public float StartingRaycastLength { get { return startingRaycastLength; } }
     [SerializeField] private float extraForceGrounded = 500;
-    [SerializeField] private float failVelocityMultiplier = 0.3f;
     [SerializeField] private float offRoadDeccMultiplier = 10;
 
     private Vector3 localLandingVelocity = Vector3.zero;
@@ -308,7 +307,7 @@ public class PlayerMovement : MonoBehaviour
             //Debug.Log(ps.isPlaying);
             Vector3 localVel = transform.GetChild(0).InverseTransformDirection(rb.velocity);
 
-            if (localVel.z >= 50)
+            if (localVel.z + localVel.x >= 49.5f && localVel.z > localVel.x)
             {
                 if (!ps.isPlaying)
                 {
@@ -349,11 +348,11 @@ public class PlayerMovement : MonoBehaviour
 
                 if (speed > 0)
                 {
-                    speed -= 13 * clampDriveUpSpeed * Time.deltaTime;
+                    speed -= 13 * AnglePercent() * clampDriveUpSpeed * Time.deltaTime;
                 }
                 else if(speed < 0)
                 {
-                    speed += 13 * clampDriveUpSpeed * Time.deltaTime;
+                    speed += 13 * AnglePercent() * clampDriveUpSpeed * Time.deltaTime;
                 }
 
                 if (charStats.IsPlayer)
@@ -418,12 +417,25 @@ public class PlayerMovement : MonoBehaviour
                         {
                             if (transform.GetChild(0).forward.y < -0.5f || playerBoost.Boosting)
                             {
-                                speed += 7 * -transform.GetChild(0).forward.y * Time.deltaTime;
+                                float percent = 1;
+                                float forwardY = 1;
+
+                                if (ridingOnWall)
+                                {
+                                    percent = AnglePercent();
+                                }
+
+                                if (transform.GetChild(0).forward.y < -0.5f)
+                                {
+                                    forwardY = -transform.GetChild(0).forward.y;
+                                }
+
+                                speed += 10 * percent * forwardY * Time.deltaTime;
                             }
-                            else if(speed > charStats.GetCurrentLimit())
+                            else if(speed > charStats.GetCurrentLimit() + 1)
                             {
                                 speed -= 2 * Time.deltaTime;
-                            }                            
+                            }
                         }
                     }
                 }                
@@ -484,6 +496,11 @@ public class PlayerMovement : MonoBehaviour
                 hud.UpdateSpeedText(localLandingVelocity.magnitude);
             }
         }               
+    }
+
+    private float AnglePercent()
+    {
+        return hitAngle / 90;
     }
 
     private bool NotOnSlowdownAngle()

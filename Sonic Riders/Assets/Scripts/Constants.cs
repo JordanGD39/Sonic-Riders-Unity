@@ -13,14 +13,14 @@ public class Constants
     public class VoiceSounds
     {
         public const string opening = "Opening";
-        public const string rampJump = "RampJump";
+        public const string jump = "Jump";
         public const string landFail = "LandFail";
         public const string drivePast = "DrivePast";
         public const string win = "Win";
         public const string lose = "Lose";
         public const string hit = "Hit";
         public const string landSucces = "LandSucces";
-        public const string perfectJump = "PerfectJump";
+        public const string rampJump = "RampJump";
     }
 
     public class SoundEffects

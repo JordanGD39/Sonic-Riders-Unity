@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -596,10 +596,10 @@ RectTransform:
   m_Father: {fileID: 376752696}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -1.7299805}
-  m_SizeDelta: {x: -0.000061035, y: -384.44}
+  m_SizeDelta: {x: 799.99994, y: 65.56}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &493674793
 MonoBehaviour:
@@ -627,7 +627,7 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
-  m_UseSpriteMesh: 0
+  m_UseSpriteMesh: 1
   m_PixelsPerUnitMultiplier: 1
 --- !u!222 &493674794
 CanvasRenderer:
@@ -1279,6 +1279,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 403854650}
     m_Modifications:
+    - target: {fileID: 3428278619244365955, guid: 503ec8678254cbe42924364fe1d8f382,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5632821463940615114, guid: 503ec8678254cbe42924364fe1d8f382,
         type: 3}
       propertyPath: m_Name
@@ -1389,6 +1394,12 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: dfdb1fa6195d5e24e8ea5c5ad219d91b,
+        type: 3}
+    - target: {fileID: 8711083191823377325, guid: 503ec8678254cbe42924364fe1d8f382,
+        type: 3}
+      propertyPath: characterPrefab
+      value: 
+      objectReference: {fileID: 7696655778457604615, guid: 5cac60e0d157fbb458d249508089bac9,
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 503ec8678254cbe42924364fe1d8f382, type: 3}

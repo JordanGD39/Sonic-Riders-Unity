@@ -1077,7 +1077,7 @@ MonoBehaviour:
     maxRange: 100
     priority: 10
     source: {fileID: 0}
-  - name: RampJump
+  - name: Jump
     clip: {fileID: 8300000, guid: 8944a4d0922bfdb47918deb04ec3ab1d, type: 3}
     volume: 1
     pitch: 1
@@ -1157,7 +1157,7 @@ MonoBehaviour:
     maxRange: 100
     priority: 10
     source: {fileID: 0}
-  - name: PerfectJump
+  - name: RampJump
     clip: {fileID: 8300000, guid: e4c6e351e072fbe40a7c04f0784e2a89, type: 3}
     volume: 1
     pitch: 1
@@ -10319,7 +10319,7 @@ Rigidbody:
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 1
 --- !u!114 &8046198970241570729
@@ -10351,7 +10351,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level: 0
-  air: 1
+  air: 100
   maxAir: 100
   rings: 0
   maxRings: 30
@@ -10428,7 +10428,7 @@ MonoBehaviour:
   highestFallSpeed: 0
   layerMask:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 4151
 --- !u!114 &8046198970241570734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10967,13 +10967,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2b04e70db0d5d4419c0f5961a388d88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lockCursor: 1
-  mouseSensitivity: 10
   target: {fileID: 0}
-  dstFromTarget: 0
-  pitchMinMax: {x: -40, y: 85}
-  rotationSmoothTime: 0.12
-  currentRotation: {x: 0, y: 0, z: 0}
+  smoothSpeed: 0.125
+  offset: {x: 0, y: 0, z: 0}
 --- !u!1 &8485469303209169912
 GameObject:
   m_ObjectHideFlags: 0

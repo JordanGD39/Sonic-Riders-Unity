@@ -29,6 +29,7 @@ public class PlayerGrind : MonoBehaviour
     [SerializeField] private float airGain = 0.02f;
     [SerializeField] private float extraCharHeight = 0.2f;
     [SerializeField] private float jumpHeightOfRail = 30;
+    private float distanceMultiplier = 5;
 
     private Vector3 previousPos;
     [SerializeField] private Vector3 velocity;
@@ -69,36 +70,22 @@ public class PlayerGrind : MonoBehaviour
                 audioHolder.SfxManager.Play(Constants.SoundEffects.grind);
                 charStats.Air += airGain * Time.deltaTime;
 
-                velocity = (transform.position - previousPos) / Time.deltaTime;
+                Vector3 distance = transform.position - previousPos;
+
+                velocity = distance / Time.deltaTime;
                 previousPos = transform.position;
 
-                if (velocity.y > 0)
-                {
-                    if (movement.Speed > 0)
-                    {
-                        movement.Speed -= 7 * Time.deltaTime;
-                    }
-                    else
-                    {
-                        movement.Speed += 7 * Time.deltaTime;
-                    }
-                    
-                }
-                else if(velocity.y < 0)
-                {
-                    if (movement.Speed > 0)
-                    {
-                        movement.Speed += 7 * Time.deltaTime;
-                    }
-                    else
-                    {
-                        movement.Speed -= 7 * Time.deltaTime;
-                    }
-                }
+                //distance.y *= distanceMultiplier;
 
-                if (movement.Speed <= 1 && movement.Speed >= 0)
+                //Debug.Log(distance.y);
+
+                //Debug.Log(transform.GetChild(0).localRotation.x);
+
+                movement.Speed += 20 * transform.GetChild(0).localRotation.x * Time.deltaTime;                    
+
+                if (movement.Speed <= 4 && movement.Speed >= 0)
                 {
-                    movement.Speed = -1;
+                    movement.Speed = -4;
                 }
 
                 speed = movement.Speed;

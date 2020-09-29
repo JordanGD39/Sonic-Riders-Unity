@@ -10,7 +10,6 @@ public class ActionOnAnimation : MonoBehaviour
     private PlayerTricks playerTricks;
     private PlayerAnimationHandler playerAnimation;
     private PlayerPunchObstacle playerPunchObstacle;
-    private bool canLand = false;
     
     private void Start()
     {

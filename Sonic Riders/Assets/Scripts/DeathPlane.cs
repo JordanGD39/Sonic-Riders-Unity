@@ -8,11 +8,15 @@ public class DeathPlane : MonoBehaviour
     {
         if (other.gameObject.layer == 8)
         {
-            PlayerMovement mov = other.GetComponentInParent<PlayerMovement>();
+            CharacterStats stats = other.GetComponentInParent<CharacterStats>();
 
-            if (mov.GetComponentInChildren<CameraDeath>() != null)
+            if (stats.GetComponentInChildren<CameraDeath>() != null && stats.IsPlayer)
             {
-                mov.GetComponentInChildren<CameraDeath>().StartFollow();
+                stats.GetComponentInChildren<CameraDeath>().StartFollow();
+            }
+            else
+            {
+                stats.transform.position = new Vector3(0, 0.4f, 0);
             }
         }
     }

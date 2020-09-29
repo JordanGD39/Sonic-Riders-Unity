@@ -1,22 +1,32 @@
-﻿using System.Collections;
+﻿using PathCreation;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerTrigger : MonoBehaviour
 {
     private PlayerMovement playerMovement;
+    private Transform playerTransform;
     private PlayerFlight playerFlight;
     private PlayerPunchObstacle playerPunch;
     private AudioManagerHolder audioHolder;
     private Rigidbody rb;
+    private CharacterStats charStats;
+
     [SerializeField] private float speed = 2;
+    private float closestDistance;
     [SerializeField] private float time = 0.5f;
     private Vector3 bounceDir;
-    private CharacterStats charStats;
+
+    private PathCreator path;
+    private float autoSpeed = 0;
+    private float launchSpeed = 0;
+    private Transform launchForward;
 
     private void Start()
     {
         playerMovement = GetComponentInParent<PlayerMovement>();
+        playerTransform = playerMovement.transform;
         playerFlight = playerMovement.GetComponent<PlayerFlight>();
         playerPunch = playerMovement.GetComponent<PlayerPunchObstacle>();
         charStats = playerMovement.GetComponent<CharacterStats>();
@@ -29,7 +39,10 @@ public class PlayerTrigger : MonoBehaviour
         switch (collision.gameObject.layer)
         {            
             case 0:
-                BounceCol(collision);
+                if (!collision.isTrigger)
+                {
+                    BounceCol(collision);
+                }                
                 break;
             case 10:
                 if (playerFlight.enabled)
@@ -45,7 +58,64 @@ public class PlayerTrigger : MonoBehaviour
                     BounceCol(collision);
                 }
                 break;
+            case 13:
+                if (!collision.isTrigger)
+                {
+                    BounceCol(collision);
+                }
+                break;
+            case 14:
+                if (charStats.Air == 0)
+                {
+                    Transform spring = collision.transform.parent;
+                    path = spring.GetComponentInChildren<PathCreator>();
+
+                    SpringStats springStats = spring.GetComponent<SpringStats>();
+
+                    autoSpeed = springStats.Speed;
+                    launchForward = springStats.Forward;
+                    launchSpeed = springStats.LaunchSpeed;
+
+                    StartCoroutine("FollowPath");
+                }
+                break;
         }       
+    }
+
+    private IEnumerator FollowPath()
+    {
+        if (path != null)
+        {
+            rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+            rb.isKinematic = true;
+            playerMovement.CantMove = true;
+            speed = playerMovement.Speed;
+            closestDistance = path.path.GetClosestDistanceAlongPath(playerTransform.position);
+            //playerTransform.GetChild(0).localRotation = Quaternion.LookRotation(path.path.GetDirectionAtDistance(closestDistance, EndOfPathInstruction.Stop));
+            playerTransform.position = path.path.GetClosestPointOnPath(playerTransform.position);
+
+            while (path.path.GetClosestTimeOnPath(playerTransform.position) < 0.99f)
+            {
+                closestDistance += autoSpeed * Time.deltaTime;
+                Vector3 desiredPos = path.path.GetPointAtDistance(closestDistance, EndOfPathInstruction.Stop);
+                //desiredPos += transform.GetChild(0).TransformDirection(0, extraCharHeight, 0);
+                playerTransform.position = desiredPos;
+                //transform.GetChild(0).localRotation = path.path.GetRotationAtDistance(closestDistance, EndOfPathInstruction.Stop);
+                yield return null;
+            }
+
+            path = null;
+
+            rb.isKinematic = false;
+            rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+
+            playerTransform.GetChild(0).forward = launchForward.forward;
+            playerTransform.GetChild(0).localRotation = new Quaternion(0, playerTransform.GetChild(0).localRotation.y, 0, playerTransform.GetChild(0).localRotation.w);
+
+            rb.velocity = launchForward.forward * launchSpeed;
+
+            playerMovement.CantMove = false;
+        }        
     }
 
     private void BounceCol(Collider collision)

@@ -39,7 +39,10 @@ public class PlayerControls : MonoBehaviour
         {
             for (int i = 0; i < cams.Count; i++)
             {
-                cams[i].GetComponent<CameraCollision>().MaxDistance = 3.5f;
+                if (cams[i].GetComponent<CameraCollision>() != null)
+                {
+                    cams[i].GetComponent<CameraCollision>().MaxDistance = 3.5f;
+                }
             }
         }       
 
@@ -62,39 +65,29 @@ public class PlayerControls : MonoBehaviour
         charStats.GiveCanvasHud();
         playerDrift.GiveAnim();
         playerBoost.GiveAnim();
+        
 
-        CanvasScaler scaler = canvasHolder.GetChild(0).GetComponent<CanvasScaler>();
-        CanvasScaler scaler1 = canvasHolder.GetChild(1).GetComponent<CanvasScaler>();
-        //CanvasScaler scaler2 = canvasHolder.GetChild(2).GetComponent<CanvasScaler>();
-        //CanvasScaler scaler3 = canvasHolder.GetChild(3).GetComponent<CanvasScaler>();
-
-        switch (playerInputManager.playerCount)
+        if (playerInputManager.playerCount > 1)
         {
-            case 2:
+            if (playerInputManager.playerCount == 2)
+            {
                 cams[0].rect = new Rect(0, 0.5f, 1, 0.5f);
-                scaler.referenceResolution = new Vector2(1600, 1200);
                 cams[1].rect = new Rect(0, 0, 1, 0.5f);
-                scaler1.referenceResolution = new Vector2(1600, 1200);
-                break;
-            case 3:
+            }
+            else if (playerInputManager.playerCount > 2)
+            {
                 cams[0].rect = new Rect(0, 0.5f, 0.5f, 0.5f);
-                scaler.referenceResolution = new Vector2(scaler.referenceResolution.x * 2, scaler.referenceResolution.y * 2);
                 cams[1].rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
-                scaler1.referenceResolution = new Vector2(scaler1.referenceResolution.x * 2, scaler1.referenceResolution.y * 2);
                 cams[2].rect = new Rect(0, 0, 0.5f, 0.5f);
-                //scaler2.referenceResolution = new Vector2(scaler2.referenceResolution.x * 2, scaler2.referenceResolution.y * 2);
-                break;
-            case 4:
-                cams[0].rect = new Rect(0, 0.5f, 0.5f, 0.5f);
-                scaler.referenceResolution *= 2;
-                cams[1].rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
-                scaler1.referenceResolution *= 2;
-                cams[2].rect = new Rect(0, 0, 0.5f, 0.5f);
-                //scaler2.referenceResolution = new Vector2(scaler2.referenceResolution.x * 2, scaler2.referenceResolution.y * 2);
-                cams[3].rect = new Rect(0, 0.5f, 0.5f, 0.5f);
-                //scaler3.referenceResolution = new Vector2(scaler3.referenceResolution.x * 2, scaler3.referenceResolution.y * 2);
-                break;
-        }
+                cams[3].rect = new Rect(0.5f, 0, 0.5f, 0.5f);
+            }
+
+            for (int i = 0; i < playerInputManager.playerCount; i++)
+            {
+                CanvasScaler scaler = canvasHolder.GetChild(i).GetComponent<CanvasScaler>();
+                scaler.referenceResolution = new Vector2(1600, 1200);
+            }
+        }        
 
         player.GetComponent<AiControls>().enabled = false;
 
@@ -111,6 +104,8 @@ public class PlayerControls : MonoBehaviour
         driftAction.canceled += ctx => playerDrift.DriftPressed = false;
         driftAction.canceled += ctx => charStats.Cam.localRotation = new Quaternion(0, 0, 0, charStats.Cam.localRotation.w);
         playerInput.actions.FindAction(inputMaster.Player.Grind.id).performed += ctx => CheckGrindJump();
+        jumpAction.performed += ctx => playerJump.JumpHoldControls = true;
+        jumpAction.canceled += ctx => playerJump.JumpHoldControls = false;
         jumpAction.canceled += ctx => playerJump.CheckRelease();
 
         //inputMaster.Player.Enable();
@@ -132,14 +127,14 @@ public class PlayerControls : MonoBehaviour
         //Debug.Log(moveAction.ReadValue<Vector2>());
         OnMove(moveAction.ReadValue<Vector2>());
 
-        if (playerMovement.Grounded)
+        /*if (playerMovement.Grounded)
         {
             playerJump.JumpHoldControls = jumpAction.triggered;
         }
         else
         {
             playerJump.JumpHoldControls = false;
-        }
+        }*/
 
         /*if (inputAction == null)
         {

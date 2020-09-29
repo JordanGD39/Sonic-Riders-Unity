@@ -11,11 +11,11 @@ public class PlayerJump : MonoBehaviour
     [SerializeField] private float maxJumpHeight = 60;
     [SerializeField] private float jumpGain = 1;
     [SerializeField] private float raycastJumpLength = 0.5f;
+    private float jumpMultiplier = 1;
     public float JumpHeight { get { return jumpHeight; } set { jumpHeight = value; } }
     public float GrindJumpHeight { get; set; } = 0;
 
     [SerializeField] private bool jumpRelease = false;
-    [SerializeField] private bool actualJumpRelease = false;
     public bool JumpRelease { get { return jumpRelease; } set { jumpRelease = value; } }
     public bool JumpHold { get; set; } = false;
     public bool JumpHoldControls { get; set; } = false;
@@ -25,7 +25,7 @@ public class PlayerJump : MonoBehaviour
     private PlayerMovement mov;
     private PlayerTricks playerTricks;
     private CharacterStats charStats;
-    [SerializeField] private float timeForLength = 0.5f;
+    //[SerializeField] private float timeForLength = 0.5f;
 
     [SerializeField] private float rampPower;
     public float RampPower { get { return rampPower; } set { rampPower = value; } }
@@ -109,6 +109,7 @@ public class PlayerJump : MonoBehaviour
                 rampPower = CurrRamp.Power;
                 maxRampPower = rampPower;
                 worstRampPower = CurrRamp.WorstPower;
+                jumpMultiplier = CurrRamp.JumpMultipler;
 
                 if (transform.localPosition.z < CurrRamp.PerfectJump)
                 {
@@ -123,16 +124,12 @@ public class PlayerJump : MonoBehaviour
                     else
                     {
                         rampPower = worstRampPower;
-                    }
-                    
-                    audioHolder.VoiceManager.Play(Constants.VoiceSounds.rampJump);
+                    }                    
                 }
-                else
+
+                if (!playerTricks.CanDoTricks)
                 {
-                    if (!playerTricks.CanDoTricks)
-                    {
-                        audioHolder.VoiceManager.Play(Constants.VoiceSounds.perfectJump);
-                    }
+                    audioHolder.VoiceManager.Play(Constants.VoiceSounds.rampJump);
                 }
 
                 Debug.Log("Ramp power " + rampPower);
@@ -150,7 +147,7 @@ public class PlayerJump : MonoBehaviour
     {
         if (jumpRelease)
         {
-            audioHolder.SfxManager.Play(Constants.SoundEffects.jump);
+            audioHolder.SfxManager.Play(Constants.SoundEffects.jump);            
 
             DontDragDown = true;
             mov.RaycastLength = raycastJumpLength;
@@ -159,6 +156,7 @@ public class PlayerJump : MonoBehaviour
             if (rampPower > 0)
             {
                 canClamp = false;
+                transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w);
                 Quaternion rot = transform.GetChild(0).rotation;
                 rot.y = transform.parent.rotation.y;
                 transform.GetChild(0).rotation = rot;
@@ -166,7 +164,7 @@ public class PlayerJump : MonoBehaviour
                 //rb.velocity = transform.GetChild(0).forward * mov.Speed;
 
                 //rb.AddForce(transform.parent.GetChild(0).forward * (jumpHeight + rampPower), ForceMode.Force);
-                rb.velocity = transform.parent.GetChild(0).forward * (jumpHeight + rampPower);
+                rb.velocity = transform.parent.GetChild(0).forward * (jumpHeight * jumpMultiplier + rampPower);
 
                 transform.parent = null;
                 alreadyFell = false;
@@ -174,6 +172,12 @@ public class PlayerJump : MonoBehaviour
             }
             else
             {
+                if (jumpHeight < startingJumpHeight + 1)
+                {
+                    charStats.Air -= 1;
+                }
+                audioHolder.VoiceManager.Play(Constants.VoiceSounds.jump);
+
                 rb.AddForce(transform.up * jumpHeight, ForceMode.VelocityChange);
                 highestYvel = 0;
                 canClamp = true;
@@ -203,7 +207,7 @@ public class PlayerJump : MonoBehaviour
         DontDragDown = false;
     }
 
-    public void FallingOffRamp(float worstPower, float perfectJump, float powerOfRamp)
+    public void FallingOffRamp(float worstPower, float perfectJump, float powerOfRamp, float rampJumpMultiplier)
     {
         if (transform.parent != null && !alreadyFell && transform.localPosition.z > perfectJump && !playerTricks.CanDoTricks)
         {            
@@ -211,6 +215,9 @@ public class PlayerJump : MonoBehaviour
             rampPower = worstPower;
             maxRampPower = powerOfRamp;
             worstRampPower = worstPower;
+            jumpMultiplier = rampJumpMultiplier;
+
+            Debug.Log("Ramp power " + rampPower);
 
             jumpRelease = true;
 

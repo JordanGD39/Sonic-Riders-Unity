@@ -91,7 +91,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perfectJumpRange: 7
   power: 15
-  multiplier: 0.8
+  multiplier: 0.5
+  gravMultipler: 0.55
+  flightRamp: 0
 --- !u!1 &5865904937045197182
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,7 +152,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 65faf642a19502146b25d44fc917bb72, type: 2}
+  - {fileID: 2100000, guid: 3b154a8ccb1a1d5418adb0a300fd7a0e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

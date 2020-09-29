@@ -1,47 +1,19 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class ThirdPersonCamera : MonoBehaviour
 {
-
-    public bool lockCursor;
-    public float mouseSensitivity = 10;
     public Transform target;
-    public float dstFromTarget = 2;
-    public Vector2 pitchMinMax = new Vector2(-40, 85);
 
-    public float rotationSmoothTime = .12f;
-    Vector3 rotationSmoothVelocity;
-    [SerializeField] private Vector3 currentRotation;
+    public float smoothSpeed = 0.125f;
+    public Vector3 offset;
 
-    float yaw;
-    float pitch;
-
-    void Start()
+    void FixedUpdate()
     {
-        if (lockCursor)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
+        Vector3 desiredPosition = target.position + offset;
+        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
+        transform.position = smoothedPosition;
+
+        transform.LookAt(target);
     }
 
-    public void ResetRotation()
-    {
-        currentRotation = Vector3.zero;
-        yaw = 0;
-        pitch = 0;
-    }
-
-    void LateUpdate()
-    {
-        yaw += Input.GetAxis("Mouse X") * mouseSensitivity;
-        pitch -= Input.GetAxis("Mouse Y") * mouseSensitivity;
-        pitch = Mathf.Clamp(pitch, pitchMinMax.x, pitchMinMax.y);
-
-        currentRotation = Vector3.SmoothDamp(currentRotation, new Vector3(pitch, yaw), ref rotationSmoothVelocity, rotationSmoothTime);
-        transform.localRotation = Quaternion.Euler(currentRotation);
-
-        //transform.position = target.position - transform.forward * dstFromTarget;    
-    }
 }

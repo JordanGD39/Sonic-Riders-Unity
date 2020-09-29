@@ -47,6 +47,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioManager: {fileID: 6533027374955564108}
+  campPref: {fileID: 3625939753858747516, guid: 5fa196381b3c5f4499609e7c02ec4cf6,
+    type: 3}
   playersLeft:
   - {fileID: 0}
   - {fileID: 0}
@@ -102,7 +104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_NotificationBehavior: 2
-  m_MaxPlayerCount: 2
+  m_MaxPlayerCount: 4
   m_AllowJoining: 1
   m_JoinBehavior: 0
   m_PlayerJoinedEvent:
