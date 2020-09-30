@@ -36,6 +36,8 @@ public class PlayerTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
+        //Debug.Log(collision.gameObject);
+
         switch (collision.gameObject.layer)
         {            
             case 0:
@@ -43,6 +45,12 @@ public class PlayerTrigger : MonoBehaviour
                 {
                     BounceCol(collision);
                 }                
+                break;
+            case 9:
+                if (collision.gameObject.CompareTag(Constants.Tags.startLine))
+                {
+                    CheckCountdown(collision.gameObject.GetComponent<StartingLevel>());
+                }
                 break;
             case 10:
                 if (playerFlight.enabled)
@@ -80,6 +88,47 @@ public class PlayerTrigger : MonoBehaviour
                 }
                 break;
         }       
+    }
+
+    private void CheckCountdown(StartingLevel startingLevel)
+    {
+        charStats.Air = 100;
+
+        if (startingLevel.Timer > 0)
+        {
+            playerMovement.CantMove = true;
+            playerMovement.Speed = 0;
+            rb.velocity = Vector3.zero;
+            Invoke("CanRun", 2);
+        }
+        else
+        {
+            float timeAfterCrossing = startingLevel.Timer;
+
+            if (timeAfterCrossing <= -1)
+            {
+                return;
+            }
+
+            double timeRounded = System.Math.Round(timeAfterCrossing, 1);
+
+            float timePercent = (float)timeRounded;
+
+            timePercent = -timePercent;
+
+            float percent = 1 - timePercent;
+
+            float extraSpeed = 25 * percent;
+
+            Debug.Log("Extra speed: " + extraSpeed + " time:" + timeRounded);
+
+            playerMovement.Speed += extraSpeed;           
+        }
+    }
+
+    private void CanRun()
+    {
+        playerMovement.CantMove = false;
     }
 
     private IEnumerator FollowPath()

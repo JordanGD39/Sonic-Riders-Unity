@@ -8,6 +8,8 @@ public class Constants
     {
         public const string canvas = "Canvas";
         public const string player = "Player";
+        public const string countdown = "CountdownText";
+        public const string startLine = "StartLine";
     }
 
     public class VoiceSounds

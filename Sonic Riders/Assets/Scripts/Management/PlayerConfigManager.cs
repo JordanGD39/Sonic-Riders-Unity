@@ -53,17 +53,19 @@ public class PlayerConfigManager : MonoBehaviour
         }        
     }
 
-    public void SpawnPlayers()
+    public void SpawnPlayers(StartingLevel startingLevel)
     {
         GameManager.instance.PlayersLeft.Clear();
 
         for (int i = 0; i < playerConfigs.Count; i++)
         {
-            GameObject character = Instantiate(playerConfigs[i].CharacterPrefab, new Vector3(0, 0.4f, i * 2), Quaternion.identity);
+            GameObject character = Instantiate(playerConfigs[i].CharacterPrefab, new Vector3(0, 0.4f, 0), Quaternion.identity);
             GameManager.instance.PlayersLeft.Add(character);
         }
 
         GameManager.instance.GetCams();
+        startingLevel.PlacePlayersInOrder();
+
     }
 }
 

@@ -116,6 +116,12 @@ public class PlayerControls : MonoBehaviour
         charStats.Cam = cams[playerInput.playerIndex].transform.parent;
         charStats.CamStartPos = charStats.Cam.localPosition;
         charStats.Cam.GetComponentInChildren<CameraDeath>().GiveCanvasAnim();
+
+        if (!GameManager.instance.TestAir)
+        {
+            charStats.Air = 0;
+        }
+
         charStats.Canvas.GetComponent<HUD>().UpdateAirBar(charStats.Air);
 
         //GameManager.instance.GetAudioManager.Play("Test");

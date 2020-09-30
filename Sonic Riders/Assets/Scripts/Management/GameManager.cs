@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private float gravityMultiplier = 1;
     public float GravitityMultiplier { get { return gravityMultiplier; } }
+    [SerializeField] private bool testAir = true;
+    public bool TestAir { get { return testAir; } }
 
     void Awake()
     {
