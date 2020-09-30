@@ -12,20 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb6bd540708c2b14ca776d4c5531997c, type: 3}
   m_Name: Standard
   m_EditorClassIdentifier: 
-  dash: 10
+  dash: 13
   limit:
-  - 40.5
-  - 42.75
-  - 45
+  - 54
+  - 57
+  - 60
   power:
-  - 21.5
-  - 23.75
-  - 23.75
-  cornering: 60
+  - 28.75
+  - 31.75
+  - 31.75
+  cornering: 80
   boost:
-  - 50
-  - 57.5
-  - 62.5
+  - 66.5
+  - 76.75
+  - 83.5
   airDepletion: 1.7
   boostDepletion: 15
   boostTime: 5

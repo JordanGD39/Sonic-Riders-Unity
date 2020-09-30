@@ -74,7 +74,7 @@ public class PlayerFlight : MonoBehaviour
 
             transform.GetChild(0).Rotate(vertcialRotAmount, rotationAmount, 0);
 
-            if (playerMovement.Speed < 10 || playerMovement.Grounded && canCheck)
+            if (playerMovement.Speed < 13 || playerMovement.Grounded && canCheck)
             {               
                 Quaternion otherRot = transform.GetChild(0).localRotation;
                 otherRot.x = 0;
@@ -132,7 +132,7 @@ public class PlayerFlight : MonoBehaviour
         flying = true;
         transform.GetChild(0).forward = portal.forward;
 
-        playerMovement.Speed = 50;
+        playerMovement.Speed = 67;
         audioHolder.SfxManager.Play(Constants.SoundEffects.flightRing);
 
         if (charStats.IsPlayer)

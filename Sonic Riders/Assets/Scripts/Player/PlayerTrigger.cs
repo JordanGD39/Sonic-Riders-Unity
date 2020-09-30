@@ -118,7 +118,7 @@ public class PlayerTrigger : MonoBehaviour
 
             float percent = 1 - timePercent;
 
-            float extraSpeed = 25 * percent;
+            float extraSpeed = 33 * percent;
 
             Debug.Log("Extra speed: " + extraSpeed + " time:" + timeRounded);
 

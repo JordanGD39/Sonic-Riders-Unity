@@ -60,16 +60,16 @@ public class CharacterButton : MonoBehaviour
         switch (index)
         {
             case 0:
-                stat = stats.GetCurrentDash() / 18;
+                stat = stats.GetCurrentDash() / 24;
                 break;
             case 1:
-                stat = stats.GetCurrentLimit() / 62.5f;
+                stat = stats.GetCurrentLimit() / 83;
                 break;
             case 2:
-                stat = stats.GetCurrentPower() / 50;
+                stat = stats.GetCurrentPower() / 66.75f;
                 break;
             case 3:
-                stat = stats.GetCurrentCornering() / 90;
+                stat = stats.GetCurrentCornering() / 120;
                 break;
         }
 

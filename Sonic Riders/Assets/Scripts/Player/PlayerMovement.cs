@@ -290,7 +290,7 @@ public class PlayerMovement : MonoBehaviour
             ridingOnWall = true;
         }
 
-        if (ridingOnWall && speed < 10)
+        if (ridingOnWall && speed < 13)
         {
             localVel.y = rb.velocity.y;
             fallToTheGround = true;            
@@ -310,7 +310,7 @@ public class PlayerMovement : MonoBehaviour
             //Debug.Log(ps.isPlaying);
             Vector3 localVel = transform.GetChild(0).InverseTransformDirection(rb.velocity);
 
-            if (localVel.z + localVel.x >= 49.5f && localVel.z > localVel.x)
+            if (localVel.z + localVel.x >= 66 && localVel.z > localVel.x)
             {
                 if (!ps.isPlaying)
                 {
@@ -330,9 +330,9 @@ public class PlayerMovement : MonoBehaviour
         {
             if (playerJump.JumpHold)
             {
-                if (speed > 5)
+                if (speed > 6.5f)
                 {
-                    speed -= 0.2f;
+                    speed -= 0.26f;
                 }
 
                 if (charStats.IsPlayer)
@@ -351,11 +351,11 @@ public class PlayerMovement : MonoBehaviour
 
                 if (speed > 0)
                 {
-                    speed -= 13 * AnglePercent() * clampDriveUpSpeed * Time.deltaTime;
+                    speed -= 17 * AnglePercent() * clampDriveUpSpeed * Time.deltaTime;
                 }
                 else if(speed < 0)
                 {
-                    speed += 13 * AnglePercent() * clampDriveUpSpeed * Time.deltaTime;
+                    speed += 17 * AnglePercent() * clampDriveUpSpeed * Time.deltaTime;
                 }
 
                 if (charStats.IsPlayer)
@@ -412,7 +412,7 @@ public class PlayerMovement : MonoBehaviour
                             deccMultiplier = offRoadDeccMultiplier;
                         }
 
-                        speed -= 2 * deccMultiplier * Time.deltaTime;
+                        speed -= 3 * deccMultiplier * Time.deltaTime;
                     }     
                     else
                     {
@@ -433,11 +433,11 @@ public class PlayerMovement : MonoBehaviour
                                 //    forwardY = ;
                                 //}
 
-                                speed += 10 * AnglePercent() * -transform.GetChild(0).forward.y * Time.deltaTime;
+                                speed += 13 * AnglePercent() * -transform.GetChild(0).forward.y * Time.deltaTime;
                             }
                             else if(speed > charStats.GetCurrentLimit() + 1)
                             {
-                                speed -= 2 * Time.deltaTime;
+                                speed -= 3 * Time.deltaTime;
                             }
                         }
                     }
@@ -449,7 +449,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     if (rb.velocity.y < 0 && brakeMultiplier < 1)
                     {
-                        if (speed < 100)
+                        if (speed < 133)
                         {
                             speed += 3 * Time.deltaTime;
                         }
@@ -461,7 +461,7 @@ public class PlayerMovement : MonoBehaviour
                 }
                 else if (speed < -1)
                 {
-                    speed += 7 * brakeMultiplier * Time.deltaTime;
+                    speed += 9 * brakeMultiplier * Time.deltaTime;
                 }
                 else
                 {
@@ -478,7 +478,7 @@ public class PlayerMovement : MonoBehaviour
                     }
                     else
                     {
-                        speed += 2 * Time.deltaTime;
+                        speed += 3 * Time.deltaTime;
                     }
                 }
             }                      

@@ -47,7 +47,7 @@ public class HUD : MonoBehaviour
     {
         if (timer >= displayDelay)
         {
-            int displaySpeed = Mathf.Abs(Mathf.RoundToInt(speed * 4));
+            int displaySpeed = Mathf.Abs(Mathf.RoundToInt(speed * 3));
             speedText.text = displaySpeed.ToString();
             timer = 0;
         }        
