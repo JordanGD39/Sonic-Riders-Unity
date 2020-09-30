@@ -120,7 +120,7 @@ public class PlayerGrind : MonoBehaviour
             {
                 playerTricks.Landed(false);
             }
-
+            transform.GetChild(0).GetChild(0).localRotation = new Quaternion(0, 0, 0, 0);
             rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
             rb.isKinematic = true;
             movement.CantMove = true;

@@ -24421,6 +24421,7 @@ MonoBehaviour:
   extraPower: 2
   extraDash: 0
   extraCornering: 5
+  lessAirLoss: -0.1
   charType: 3
   stats: {fileID: 11400000, guid: cccfd161fcb39714a9103fe27e95fd36, type: 2}
   runSpeed: 35
@@ -24442,8 +24443,6 @@ MonoBehaviour:
   jumpGain: 5
   raycastJumpLength: 0
   jumpRelease: 0
-  actualJumpRelease: 0
-  timeForLength: 0.5
   rampPower: 0
   highestYvel: 0
 --- !u!114 &8027152530899255610
@@ -24467,7 +24466,6 @@ MonoBehaviour:
   raycastLength: 1
   startingRaycastLength: 2
   extraForceGrounded: 400
-  failVelocityMultiplier: 0.3
   offRoadDeccMultiplier: 10
   hitAngle: 0
   highestFallSpeed: 0

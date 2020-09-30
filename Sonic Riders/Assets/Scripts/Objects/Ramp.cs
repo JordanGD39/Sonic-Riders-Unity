@@ -11,12 +11,16 @@ public class Ramp : MonoBehaviour
     [SerializeField] private float gravMultipler = 0.5f;
     [SerializeField] private float jumpMultiplier = 1;
     [SerializeField] private bool flightRamp = false;
+    [SerializeField] private Transform differentForward;
+    [SerializeField] private float jumpRotationZ = -0.5f;
 
     public float PerfectJump { get { return perfectJumpRange; } }
     public float Power { get { return power; } }
     public float WorstPower { get { return worstPower; } }
-    public float JumpMultipler { get { return jumpMultiplier; } }
+    public float JumpMultiplier { get { return jumpMultiplier; } }
     public bool Flight { get { return flightRamp; } }
+    public Transform DifferentForward { get { return differentForward; } }
+    public float JumpRotationZ { get { return jumpRotationZ; } }
 
     private void Start()
     {
@@ -51,7 +55,7 @@ public class Ramp : MonoBehaviour
             }
             else
             {
-                other.transform.GetComponentInParent<PlayerJump>().FallingOffRamp(worstPower, perfectJumpRange, power, jumpMultiplier);
+                other.transform.GetComponentInParent<PlayerJump>().FallingOffRamp(this);
             }
         }
     }    

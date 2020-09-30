@@ -65,7 +65,7 @@ public class PlayerTrigger : MonoBehaviour
                 }
                 break;
             case 14:
-                if (charStats.Air == 0)
+                if (charStats.Air == 0 && path == null)
                 {
                     Transform spring = collision.transform.parent;
                     path = spring.GetComponentInChildren<PathCreator>();
@@ -91,7 +91,10 @@ public class PlayerTrigger : MonoBehaviour
             playerMovement.CantMove = true;
             speed = playerMovement.Speed;
             closestDistance = path.path.GetClosestDistanceAlongPath(playerTransform.position);
-            //playerTransform.GetChild(0).localRotation = Quaternion.LookRotation(path.path.GetDirectionAtDistance(closestDistance, EndOfPathInstruction.Stop));
+            Quaternion rot = path.path.GetRotationAtDistance(closestDistance, EndOfPathInstruction.Stop);
+            rot.x = 0;
+            rot.z = 0;
+            playerTransform.GetChild(0).localRotation = rot;
             playerTransform.position = path.path.GetClosestPointOnPath(playerTransform.position);
 
             while (path.path.GetClosestTimeOnPath(playerTransform.position) < 0.99f)
@@ -100,7 +103,11 @@ public class PlayerTrigger : MonoBehaviour
                 Vector3 desiredPos = path.path.GetPointAtDistance(closestDistance, EndOfPathInstruction.Stop);
                 //desiredPos += transform.GetChild(0).TransformDirection(0, extraCharHeight, 0);
                 playerTransform.position = desiredPos;
-                //transform.GetChild(0).localRotation = path.path.GetRotationAtDistance(closestDistance, EndOfPathInstruction.Stop);
+
+                Quaternion localRot = path.path.GetRotationAtDistance(closestDistance, EndOfPathInstruction.Stop);
+                localRot.x = 0;
+                localRot.z = 0;
+                playerTransform.GetChild(0).localRotation = localRot;
                 yield return null;
             }
 

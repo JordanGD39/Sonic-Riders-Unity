@@ -137,7 +137,10 @@ public class PlayerMovement : MonoBehaviour
             }  
             else
             {
-                transform.GetChild(0).GetChild(0).localRotation = new Quaternion(0, 0, 0, 0);
+                if (!playerTricks.CanDoTricks)
+                {
+                    transform.GetChild(0).GetChild(0).localRotation = new Quaternion(0, 0, 0, 0);
+                }                
             }
         }
         else
@@ -167,7 +170,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (charStats.Air > 0 && Movement.z != 0 && speed != 0 && grounded)
         {
-            charStats.Air -= stats.AirDepletion * Time.deltaTime;
+            charStats.Air -= charStats.GetCurrentAirLoss() * Time.deltaTime;
         }
     }
 
@@ -218,7 +221,7 @@ public class PlayerMovement : MonoBehaviour
                         tempSpeed = localLandingVelocity.z;
                     }
 
-                    Debug.Log(tempSpeed + " up calc: " + normalCalc);
+                    //Debug.Log(tempSpeed + " up calc: " + normalCalc);
 
                     speed = tempSpeed;
 
@@ -417,20 +420,20 @@ public class PlayerMovement : MonoBehaviour
                         {
                             if (transform.GetChild(0).forward.y < -0.5f || playerBoost.Boosting)
                             {
-                                float percent = 1;
-                                float forwardY = 1;
+                                //float percent = 1;
+                                //float forwardY = 1;
 
-                                if (ridingOnWall)
-                                {
-                                    percent = AnglePercent();
-                                }
+                                //if (ridingOnWall)
+                                //{
+                                //    percent = ;
+                                //}
 
-                                if (transform.GetChild(0).forward.y < -0.5f)
-                                {
-                                    forwardY = -transform.GetChild(0).forward.y;
-                                }
+                                //if (transform.GetChild(0).forward.y < -0.5f)
+                                //{
+                                //    forwardY = ;
+                                //}
 
-                                speed += 10 * percent * forwardY * Time.deltaTime;
+                                speed += 10 * AnglePercent() * -transform.GetChild(0).forward.y * Time.deltaTime;
                             }
                             else if(speed > charStats.GetCurrentLimit() + 1)
                             {

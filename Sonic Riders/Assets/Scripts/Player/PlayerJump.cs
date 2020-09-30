@@ -109,7 +109,7 @@ public class PlayerJump : MonoBehaviour
                 rampPower = CurrRamp.Power;
                 maxRampPower = rampPower;
                 worstRampPower = CurrRamp.WorstPower;
-                jumpMultiplier = CurrRamp.JumpMultipler;
+                jumpMultiplier = CurrRamp.JumpMultiplier;
 
                 if (transform.localPosition.z < CurrRamp.PerfectJump)
                 {
@@ -155,16 +155,43 @@ public class PlayerJump : MonoBehaviour
 
             if (rampPower > 0)
             {
+                Debug.Log("Done");
+
                 canClamp = false;
+
                 transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w);
-                Quaternion rot = transform.GetChild(0).rotation;
-                rot.y = transform.parent.rotation.y;
-                transform.GetChild(0).rotation = rot;
+
+                Vector3 forward = transform.parent.GetChild(0).forward;
+
+                if (CurrRamp.DifferentForward != null)
+                {
+                    Transform angleTransform = transform.parent.GetChild(0);
+
+                    Quaternion oldRot = angleTransform.localRotation;
+
+                    angleTransform.forward = transform.GetChild(0).forward;
+
+                    angleTransform.localRotation = new Quaternion(oldRot.x, angleTransform.localRotation.y, oldRot.z, oldRot.w);
+
+                    transform.GetChild(0).forward = CurrRamp.DifferentForward.forward;
+                    transform.GetChild(0).localRotation = new Quaternion(0, transform.GetChild(0).localRotation.y, 0, transform.GetChild(0).localRotation.w);
+
+                    transform.GetChild(0).GetChild(0).localRotation = new Quaternion(0, 0, CurrRamp.JumpRotationZ, transform.GetChild(0).GetChild(0).localRotation.w);
+
+                    //Debug.Log(transform.GetChild(0).GetChild(0).localRotation);
+                    //transform.up = CurrRamp.DifferentForward.up;
+                } 
+                else
+                {                   
+                    Quaternion rot = transform.GetChild(0).rotation;
+                    rot.y = transform.parent.rotation.y;
+                    transform.GetChild(0).rotation = rot;
+                }                
 
                 //rb.velocity = transform.GetChild(0).forward * mov.Speed;
 
                 //rb.AddForce(transform.parent.GetChild(0).forward * (jumpHeight + rampPower), ForceMode.Force);
-                rb.velocity = transform.parent.GetChild(0).forward * (jumpHeight * jumpMultiplier + rampPower);
+                rb.velocity = forward * (jumpHeight * jumpMultiplier + rampPower);
 
                 transform.parent = null;
                 alreadyFell = false;
@@ -207,15 +234,16 @@ public class PlayerJump : MonoBehaviour
         DontDragDown = false;
     }
 
-    public void FallingOffRamp(float worstPower, float perfectJump, float powerOfRamp, float rampJumpMultiplier)
+    public void FallingOffRamp(Ramp ramp)
     {
-        if (transform.parent != null && !alreadyFell && transform.localPosition.z > perfectJump && !playerTricks.CanDoTricks)
+        if (transform.parent != null && !alreadyFell && transform.localPosition.z > ramp.PerfectJump && !playerTricks.CanDoTricks)
         {            
             alreadyFell = true;
-            rampPower = worstPower;
-            maxRampPower = powerOfRamp;
-            worstRampPower = worstPower;
-            jumpMultiplier = rampJumpMultiplier;
+            CurrRamp = ramp;
+            rampPower = ramp.WorstPower;
+            maxRampPower = ramp.Power;
+            worstRampPower = rampPower;
+            jumpMultiplier = ramp.JumpMultiplier;
 
             Debug.Log("Ramp power " + rampPower);
 

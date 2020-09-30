@@ -133,6 +133,8 @@ public class CharacterStats : MonoBehaviour
     public float ExtraDash { get { return extraDash; } }
     [SerializeField] private float extraCornering = 0;
     public float ExtraCornering { get { return extraCornering; } }
+    [SerializeField] private float lessAirLoss = 0;
+    public float LessAirLoss { get { return lessAirLoss; } }
     [SerializeField] private type charType;
     public type CharType { get { return charType; } }
     [SerializeField] private BoardStats stats;
@@ -205,5 +207,10 @@ public class CharacterStats : MonoBehaviour
     public float GetCurrentCornering()
     {
         return stats.Cornering + extraCornering;
+    }
+
+    public float GetCurrentAirLoss()
+    {
+        return stats.AirDepletion - lessAirLoss;
     }
 }

@@ -24,6 +24,7 @@ public class BoostPad : MonoBehaviour
 
             player.transform.position = transform.position;
             other.transform.parent.forward = transform.forward;
+            other.transform.parent.localRotation = new Quaternion(0, other.transform.parent.localRotation.y, 0, other.transform.parent.localRotation.w);
 
             if (!source.isPlaying)
             {
