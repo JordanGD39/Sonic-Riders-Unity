@@ -182,10 +182,12 @@ public class PlayerJump : MonoBehaviour
                     //transform.up = CurrRamp.DifferentForward.up;
                 } 
                 else
-                {                   
-                    Quaternion rot = transform.GetChild(0).rotation;
-                    rot.y = transform.parent.rotation.y;
-                    transform.GetChild(0).rotation = rot;
+                {
+                    Quaternion rot = new Quaternion(0, 0, 0, 0);
+                    transform.GetChild(0).forward = transform.parent.forward;
+                    rot.y = transform.GetChild(0).localRotation.y;
+                    rot.w = transform.GetChild(0).localRotation.w;
+                    transform.GetChild(0).localRotation = rot;
                 }                
 
                 //rb.velocity = transform.GetChild(0).forward * mov.Speed;

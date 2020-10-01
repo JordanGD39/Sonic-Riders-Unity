@@ -23,6 +23,8 @@ public class PlayerTrigger : MonoBehaviour
     private float launchSpeed = 0;
     private Transform launchForward;
 
+    private bool touchedStartAlready = false;
+
     private void Start()
     {
         playerMovement = GetComponentInParent<PlayerMovement>();
@@ -47,8 +49,9 @@ public class PlayerTrigger : MonoBehaviour
                 }                
                 break;
             case 9:
-                if (collision.gameObject.CompareTag(Constants.Tags.startLine))
+                if (!touchedStartAlready && collision.gameObject.CompareTag(Constants.Tags.startLine))
                 {
+                    touchedStartAlready = true;
                     CheckCountdown(collision.gameObject.GetComponent<StartingLevel>());
                 }
                 break;
@@ -203,11 +206,17 @@ public class PlayerTrigger : MonoBehaviour
 
         bool hitDirectly = false;
 
-        if (Mathf.Abs(transform.InverseTransformDirection(bounceDir).z) > 0.8f)
+        Vector3 localBounce = transform.InverseTransformDirection(bounceDir);
+
+        localBounce.z = -Mathf.Abs(localBounce.z);
+
+        if (localBounce.z < -0.8f)
         {
             playerMovement.Speed = speed;
             hitDirectly = true;
         }
+
+        bounceDir = transform.TransformDirection(localBounce);
 
         audioHolder.SfxManager.Play(Constants.SoundEffects.bounceWall);
 

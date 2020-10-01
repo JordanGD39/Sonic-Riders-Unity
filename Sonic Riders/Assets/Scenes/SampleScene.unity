@@ -2955,6 +2955,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 6955263351292180887, guid: 338f4ceb022945543bd9c13a69bd3a70,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 338f4ceb022945543bd9c13a69bd3a70, type: 3}
 --- !u!224 &504119326 stripped
@@ -20249,6 +20254,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6955263351292180887, guid: 338f4ceb022945543bd9c13a69bd3a70,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 338f4ceb022945543bd9c13a69bd3a70, type: 3}
 --- !u!224 &1388779163 stripped
@@ -24387,11 +24397,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1769155257}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d67faf62b3d93ab41baa141766884804, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  noStart: 1
 --- !u!1 &1777202514
 GameObject:
   m_ObjectHideFlags: 0
@@ -31598,6 +31609,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 897412903113f9c44922a8356cc95aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startingLevel: {fileID: 0}
 --- !u!1001 &1932097053
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31724,6 +31736,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Canvas (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6955263351292180887, guid: 338f4ceb022945543bd9c13a69bd3a70,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 338f4ceb022945543bd9c13a69bd3a70, type: 3}
@@ -33920,6 +33937,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 6955263351292180887, guid: 338f4ceb022945543bd9c13a69bd3a70,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 338f4ceb022945543bd9c13a69bd3a70, type: 3}

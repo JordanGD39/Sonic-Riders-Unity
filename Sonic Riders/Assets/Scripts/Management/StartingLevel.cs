@@ -54,6 +54,7 @@ public class StartingLevel : MonoBehaviour
 
         if (timer < -1)
         {
+            psParent.gameObject.SetActive(false);
             enabled = false;
         }
 
@@ -92,7 +93,15 @@ public class StartingLevel : MonoBehaviour
                 countdownTexts[i].gameObject.SetActive(false);
             }
 
+            for (int i = 0; i < psParent.childCount; i++)
+            {
+                psParent.GetChild(i).GetComponent<ParticleSystem>().Stop();
+            }
+
             psParent.gameObject.SetActive(false);
+
+            timer = -1;
+
             return;
         }
 

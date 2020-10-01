@@ -433,7 +433,7 @@ public class PlayerMovement : MonoBehaviour
                                 //    forwardY = ;
                                 //}
 
-                                speed += 13 * AnglePercent() * -transform.GetChild(0).forward.y * Time.deltaTime;
+                                speed += 20 * AnglePercent() * -transform.GetChild(0).forward.y * Time.deltaTime;
                             }
                             else if(speed > charStats.GetCurrentLimit() + 1)
                             {

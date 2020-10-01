@@ -1470,7 +1470,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0b74b7fb15d69a40afec1e65b4a1fab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  speed: 6.5
   time: 0.25
 --- !u!1 &2326870693556080903
 GameObject:
@@ -10355,14 +10355,15 @@ MonoBehaviour:
   maxAir: 100
   rings: 0
   maxRings: 30
-  speedLoss: 3
-  extraPower: -2
-  extraDash: 1
-  extraCornering: 7
+  startRings: 0
+  speedLoss: 4
+  extraPower: -2.67
+  extraDash: 1.33
+  extraCornering: 9.33
   lessAirLoss: 0.1
   charType: 3
   stats: {fileID: 11400000, guid: cccfd161fcb39714a9103fe27e95fd36, type: 2}
-  runSpeed: 33
+  runSpeed: 44
 --- !u!114 &8046198970241570731
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10420,7 +10421,7 @@ MonoBehaviour:
   slowdownAngle: 50
   raycastLength: 1
   startingRaycastLength: 2
-  extraForceGrounded: 450
+  extraForceGrounded: 600
   offRoadDeccMultiplier: 10
   hitAngle: 0
   highestFallSpeed: 0

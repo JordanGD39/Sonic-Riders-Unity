@@ -9,7 +9,10 @@ public class TestHandleJoin : MonoBehaviour
 
     private void Start()
     {
-        startingLevel.PlacePlayersInOrder();
+        if (startingLevel != null)
+        {
+            startingLevel.PlacePlayersInOrder();
+        }
     }
 
     public void HandlePlayerJoin(PlayerInput pi)

@@ -48,6 +48,7 @@ public class ActionOnAnimation : MonoBehaviour
 
     public void CountTrick()
     {
+        Debug.Log("YESSS");
         playerTricks.TrickCountUp();
         playerTricks.CanLand = true;
     }

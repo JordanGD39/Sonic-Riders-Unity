@@ -9,6 +9,8 @@ public class Capsule : MonoBehaviour
     private AudioSource source;
     [SerializeField] private GameObject model;
     [SerializeField] private float respawnTime = 3;
+    [SerializeField] private int ringCount = 10;
+    [SerializeField] private float air = 15;
 
     private void Start()
     {
@@ -18,7 +20,9 @@ public class Capsule : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         model.SetActive(false);
-        other.GetComponentInParent<CharacterStats>().Rings += 100;
+        CharacterStats characterStats = other.GetComponentInParent<CharacterStats>();
+        characterStats.Rings += ringCount;
+        characterStats.Air += air;
         source.Play();
         Invoke("Respawn", respawnTime);
     }

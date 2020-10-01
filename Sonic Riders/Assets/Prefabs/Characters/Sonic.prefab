@@ -1630,13 +1630,15 @@ MonoBehaviour:
   maxAir: 100
   rings: 0
   maxRings: 30
+  startRings: 0
   speedLoss: 0
   extraPower: 0
   extraDash: 0
   extraCornering: 0
+  lessAirLoss: 0
   charType: 3
   stats: {fileID: 11400000, guid: cccfd161fcb39714a9103fe27e95fd36, type: 2}
-  runSpeed: 37.5
+  runSpeed: 50
 --- !u!114 &2005097834745034070
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1655,8 +1657,6 @@ MonoBehaviour:
   jumpGain: 5
   raycastJumpLength: 0
   jumpRelease: 0
-  actualJumpRelease: 0
-  timeForLength: 0.5
   rampPower: 0
   highestYvel: 0
 --- !u!114 &9060582505029898324
@@ -1696,8 +1696,7 @@ MonoBehaviour:
   slowdownAngle: 50
   raycastLength: 1
   startingRaycastLength: 2
-  extraForceGrounded: 450
-  failVelocityMultiplier: 0.3
+  extraForceGrounded: 600
   offRoadDeccMultiplier: 10
   hitAngle: 0
   highestFallSpeed: 0
@@ -10294,7 +10293,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0b74b7fb15d69a40afec1e65b4a1fab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  speed: 6.5
   time: 0.25
 --- !u!1 &7678431269662618958
 GameObject:

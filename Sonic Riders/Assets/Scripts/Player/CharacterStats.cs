@@ -26,14 +26,17 @@ public class CharacterStats : MonoBehaviour
                     break;
                 case 0:
                     maxRings = 30;
+                    startRings = 0;
                     maxAir = 100;                    
                     break;
                 case 1:
                     maxRings = 60;
+                    startRings = 30;
                     maxAir = 200;
                     break;
                 case 2:
                     maxRings = 100;
+                    startRings = 60;
                     maxAir = 300;
                     break;
             }
@@ -54,6 +57,7 @@ public class CharacterStats : MonoBehaviour
 
     [SerializeField] private int rings = 0;
     [SerializeField] private int maxRings = 30;
+    [SerializeField] private int startRings = 0;
 
     public bool OffRoad { get; set; } = false;
 
@@ -63,25 +67,32 @@ public class CharacterStats : MonoBehaviour
 
         set
         {
-            if (value >= maxRings)
+            if (value < 0)
             {
-                if (maxRings > 60)
-                {
-                    value = maxRings;
-                }
-                else
-                {
-                    value -= maxRings;
+                value = 0;
+            }
+            else if (value > 100)
+            {
+                value = 100;
+            }
 
+            if (value >= maxRings && level < 2)
+            {
+                Level++;
+
+                if (value >= maxRings && level < 2)
+                {
                     Level++;
+                }
+            }
+            else if (value <  startRings)
+            {
+                Level--;
 
-                    if (value >= maxRings)
-                    {
-                        value -= maxRings;
-
-                        Level++;
-                    }
-                }                
+                if (value < startRings)
+                {
+                    Level--;
+                }
             }
 
             rings = value;
