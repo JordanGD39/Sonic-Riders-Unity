@@ -155,8 +155,6 @@ public class PlayerJump : MonoBehaviour
 
             if (rampPower > 0)
             {
-                Debug.Log("Done");
-
                 canClamp = false;
 
                 transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w);

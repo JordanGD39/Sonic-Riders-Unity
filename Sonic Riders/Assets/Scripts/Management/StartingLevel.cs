@@ -26,7 +26,8 @@ public class StartingLevel : MonoBehaviour
 
             for (int i = 0; i < playersInScene.Count; i++)
             {
-                Destroy(playersInScene[i]);
+                playersInScene[i].SetActive(false);
+                playersInScene[i].tag = "Untagged";
             }
 
             GameManager.instance.GetComponent<PlayerConfigManager>().SpawnPlayers(this);
@@ -37,9 +38,21 @@ public class StartingLevel : MonoBehaviour
         List<GameObject> texts = new List<GameObject>();
         texts.AddRange(GameObject.FindGameObjectsWithTag(Constants.Tags.countdown));
 
+        RaceManager raceManager = GameObject.FindGameObjectWithTag(Constants.Tags.raceManager).GetComponent<RaceManager>();
+
+        if (raceManager != null)
+        {
+            raceManager.AddPlayers();
+        }
+
         for (int i = 0; i < texts.Count; i++)
         {
             countdownTexts.Add(texts[i].GetComponent<Text>());
+        }
+
+        for (int i = 0; i < countdownTexts.Count; i++)
+        {
+            countdownTexts[i].gameObject.SetActive(false);
         }
     }
 
@@ -118,6 +131,16 @@ public class StartingLevel : MonoBehaviour
             float x = i * 3;
 
             playersInScene[i].transform.position = new Vector3(x, 0.4f, 0);
+        }
+
+        Invoke("StartCountdown", 0.5f);
+    }
+
+    private void StartCountdown()
+    {
+        for (int i = 0; i < countdownTexts.Count; i++)
+        {
+            countdownTexts[i].gameObject.SetActive(true);
         }
 
         startCountDown = true;

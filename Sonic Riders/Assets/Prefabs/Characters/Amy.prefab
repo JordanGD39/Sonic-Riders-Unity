@@ -24328,6 +24328,7 @@ GameObject:
   - component: {fileID: 8481494378227404814}
   - component: {fileID: 8604640829794261858}
   - component: {fileID: 8745121954287190491}
+  - component: {fileID: 7361974671267610182}
   m_Layer: 8
   m_Name: Amy
   m_TagString: Player
@@ -24423,7 +24424,7 @@ MonoBehaviour:
   extraDash: 0
   extraCornering: 6.67
   lessAirLoss: 0
-  charType: 3
+  charType: 2
   stats: {fileID: 11400000, guid: cccfd161fcb39714a9103fe27e95fd36, type: 2}
   runSpeed: 47
 --- !u!114 &8027152530899255614
@@ -24586,6 +24587,20 @@ MonoBehaviour:
   punchPower: 700
   cantPunchMultiplier: 0.7
   extraPowerMultiplier: 20
+--- !u!114 &7361974671267610182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8027152530899255587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6333b1d09d91ff409a3a63a02a39f8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currCheckpoint: 0
+  lapCount: 0
 --- !u!1 &8051065450385949594
 GameObject:
   m_ObjectHideFlags: 0

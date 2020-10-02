@@ -10,6 +10,8 @@ public class Constants
         public const string player = "Player";
         public const string countdown = "CountdownText";
         public const string startLine = "StartLine";
+        public const string raceManager = "RaceManager";
+        public const string checkpoint = "CheckPoint";
     }
 
     public class VoiceSounds

@@ -33,7 +33,7 @@ public class PlayerConfigManager : MonoBehaviour
         if (playerConfigs.All(p => p.IsReady))
         {
             GetComponent<PlayerInputManager>().DisableJoining();
-            SceneManager.LoadScene("SampleScene");
+            SceneManager.LoadScene("SampleScene 1");
         }
     }
 

@@ -10234,6 +10234,7 @@ GameObject:
   - component: {fileID: 1271466203116689869}
   - component: {fileID: 4463878832063256185}
   - component: {fileID: 3454350923210702079}
+  - component: {fileID: 2157383237562866080}
   m_Layer: 8
   m_Name: Jet
   m_TagString: Player
@@ -10314,7 +10315,7 @@ MonoBehaviour:
   extraDash: 0.33
   extraCornering: 4
   lessAirLoss: 0.7
-  charType: 3
+  charType: 0
   stats: {fileID: 11400000, guid: cccfd161fcb39714a9103fe27e95fd36, type: 2}
   runSpeed: 40
 --- !u!114 &7696655778457604634
@@ -10492,6 +10493,20 @@ MonoBehaviour:
   currWaypoint: 0
   rotateMarker: {fileID: 0}
   distanceTreshold: 5
+--- !u!114 &2157383237562866080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7696655778457604615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6333b1d09d91ff409a3a63a02a39f8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currCheckpoint: 0
+  lapCount: 0
 --- !u!1 &7714252794598006170
 GameObject:
   m_ObjectHideFlags: 0

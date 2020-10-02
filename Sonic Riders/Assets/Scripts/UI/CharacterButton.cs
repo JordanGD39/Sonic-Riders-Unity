@@ -69,7 +69,7 @@ public class CharacterButton : MonoBehaviour
                 stat = stats.GetCurrentPower() / 66.75f;
                 break;
             case 3:
-                stat = stats.GetCurrentCornering() / 120;
+                stat = stats.GetCurrentCornering() / 180;
                 break;
         }
 

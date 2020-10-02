@@ -12,8 +12,14 @@ public class HUD : MonoBehaviour
     [SerializeField] private Text ringsText;
     [SerializeField] private Text maxRingsText;
     [SerializeField] private Text levelText;
+    [SerializeField] private Text lapText;
+    [SerializeField] private Text maxLapText;
+    [SerializeField] private Animator placingAnim;
     private float displayDelay = 0.05f;
     private float timer = 0;
+
+    public RaceManager raceManager { get; set; }
+    public int Place { get; set; } = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +31,16 @@ public class HUD : MonoBehaviour
     private void Update()
     {
         timer += Time.deltaTime;
+    }
+
+    public void GiveRaceManager(RaceManager aRaceManager)
+    {
+        raceManager = aRaceManager;
+    }
+
+    public void ChangePlacing()
+    {
+        placingAnim.Play("ChangePlace");
     }
 
     public void UpdateRings(int rings, int maxRings)
@@ -51,5 +67,11 @@ public class HUD : MonoBehaviour
             speedText.text = displaySpeed.ToString();
             timer = 0;
         }        
+    }
+
+    public void UpdateLap(int lap, int maxLap)
+    {
+        lapText.text = lap.ToString("00") + "/";
+        maxLapText.text = maxLap.ToString("00");
     }
 }

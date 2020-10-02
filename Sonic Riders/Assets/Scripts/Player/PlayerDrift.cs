@@ -91,7 +91,7 @@ public class PlayerDrift : MonoBehaviour
 
     private void Drift()
     {
-        if (movement.Speed <= 0)
+        if (movement.Speed <= 0 || charStats.OffRoad)
         {
             movement.Drifting = false;
             driftTimer = 0;

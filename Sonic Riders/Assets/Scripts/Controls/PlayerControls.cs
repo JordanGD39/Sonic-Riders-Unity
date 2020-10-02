@@ -65,6 +65,7 @@ public class PlayerControls : MonoBehaviour
         charStats.GiveCanvasHud();
         playerDrift.GiveAnim();
         playerBoost.GiveAnim();
+        player.GetComponent<PlayerCheckpoints>().GiveHud(charStats.Canvas.GetComponent<HUD>());
         
 
         if (playerInputManager.playerCount > 1)
@@ -120,6 +121,7 @@ public class PlayerControls : MonoBehaviour
         if (!GameManager.instance.TestAir)
         {
             charStats.Air = 0;
+            charStats.GetComponent<PlayerAnimationHandler>().Anim.Play("Standing");
         }
 
         charStats.Canvas.GetComponent<HUD>().UpdateAirBar(charStats.Air);

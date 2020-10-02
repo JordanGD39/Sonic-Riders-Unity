@@ -10281,6 +10281,7 @@ GameObject:
   - component: {fileID: 1503343787288550524}
   - component: {fileID: 4074410582746633160}
   - component: {fileID: 3065127458575792462}
+  - component: {fileID: 5126207976280028076}
   m_Layer: 8
   m_Name: Tails
   m_TagString: Player
@@ -10361,7 +10362,7 @@ MonoBehaviour:
   extraDash: 1.33
   extraCornering: 9.33
   lessAirLoss: 0.1
-  charType: 3
+  charType: 1
   stats: {fileID: 11400000, guid: cccfd161fcb39714a9103fe27e95fd36, type: 2}
   runSpeed: 44
 --- !u!114 &8046198970241570731
@@ -10539,6 +10540,20 @@ MonoBehaviour:
   currWaypoint: 0
   rotateMarker: {fileID: 0}
   distanceTreshold: 5
+--- !u!114 &5126207976280028076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8046198970241570742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6333b1d09d91ff409a3a63a02a39f8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currCheckpoint: 0
+  lapCount: 0
 --- !u!1 &8046198970590850973
 GameObject:
   m_ObjectHideFlags: 0

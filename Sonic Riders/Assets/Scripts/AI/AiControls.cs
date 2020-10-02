@@ -44,7 +44,10 @@ public class AiControls : MonoBehaviour
     {
         playerMovement.Movement = new Vector3(0, 0, 1);
 
-        rotateMarker.LookAt(waypoints[currWaypoint].position);
+        Vector3 pos = waypoints[currWaypoint].position;
+        pos.y = 0;
+
+        rotateMarker.LookAt(pos);
 
         Quaternion rot = rotateMarker.localRotation;
 

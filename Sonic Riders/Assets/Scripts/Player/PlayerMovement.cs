@@ -472,7 +472,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (grounded)
                 {
-                    if (speed > -5)
+                    if (speed > -6.75f)
                     {
                         speed -= (charStats.GetCurrentDash() * (1 + Mathf.Abs(Movement.z)) * brakeMultiplier) * Time.deltaTime;
                     }

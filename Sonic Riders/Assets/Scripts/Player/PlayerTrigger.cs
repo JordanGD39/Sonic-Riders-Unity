@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerTrigger : MonoBehaviour
 {
     private PlayerMovement playerMovement;
+    private PlayerCheckpoints playerCheckpoints;
     private Transform playerTransform;
     private PlayerFlight playerFlight;
     private PlayerPunchObstacle playerPunch;
@@ -30,6 +31,7 @@ public class PlayerTrigger : MonoBehaviour
         playerMovement = GetComponentInParent<PlayerMovement>();
         playerTransform = playerMovement.transform;
         playerFlight = playerMovement.GetComponent<PlayerFlight>();
+        playerCheckpoints = playerMovement.GetComponent<PlayerCheckpoints>();
         playerPunch = playerMovement.GetComponent<PlayerPunchObstacle>();
         charStats = playerMovement.GetComponent<CharacterStats>();
         audioHolder = playerMovement.GetComponent<AudioManagerHolder>();
@@ -53,6 +55,10 @@ public class PlayerTrigger : MonoBehaviour
                 {
                     touchedStartAlready = true;
                     CheckCountdown(collision.gameObject.GetComponent<StartingLevel>());
+                }
+                else if(collision.gameObject.CompareTag(Constants.Tags.checkpoint))
+                {
+                    playerCheckpoints.CheckCheckpoint(collision.transform);
                 }
                 break;
             case 10:

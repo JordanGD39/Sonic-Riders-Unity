@@ -1556,6 +1556,7 @@ GameObject:
   - component: {fileID: 6964444896306593409}
   - component: {fileID: 5544327344426692917}
   - component: {fileID: 6842053744667499443}
+  - component: {fileID: 579455609024313466}
   m_Layer: 8
   m_Name: Sonic
   m_TagString: Player
@@ -1636,7 +1637,7 @@ MonoBehaviour:
   extraDash: 0
   extraCornering: 0
   lessAirLoss: 0
-  charType: 3
+  charType: 0
   stats: {fileID: 11400000, guid: cccfd161fcb39714a9103fe27e95fd36, type: 2}
   runSpeed: 50
 --- !u!114 &2005097834745034070
@@ -1814,6 +1815,18 @@ MonoBehaviour:
   currWaypoint: 0
   rotateMarker: {fileID: 0}
   distanceTreshold: 5
+--- !u!114 &579455609024313466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005097834745034059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6333b1d09d91ff409a3a63a02a39f8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2124796381605978053
 GameObject:
   m_ObjectHideFlags: 0

@@ -73,7 +73,6 @@ public class HelicopterRelease : MonoBehaviour
 
         for (int i = 0; i < leg.childCount; i++)
         {
-
             PlayerMovement playerMovement = leg.GetChild(i).GetComponentInParent<PlayerMovement>();
             Rigidbody rb = playerMovement.GetComponent<Rigidbody>();
 
