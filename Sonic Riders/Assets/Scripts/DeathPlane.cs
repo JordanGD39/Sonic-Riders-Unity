@@ -6,17 +6,18 @@ public class DeathPlane : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == 8)
-        {
-            CharacterStats stats = other.GetComponentInParent<CharacterStats>();
+        KillPlayer(other.gameObject);
+    }
 
-            if (stats.GetComponentInChildren<CameraDeath>() != null && stats.IsPlayer)
+    private void KillPlayer(GameObject other)
+    {
+        if (other.layer == 8)
+        {
+            Rigidbody rb = other.GetComponentInParent<Rigidbody>();
+
+            if (rb.GetComponentInChildren<CameraDeath>() != null)
             {
-                stats.GetComponentInChildren<CameraDeath>().StartFollow();
-            }
-            else
-            {
-                stats.transform.position = new Vector3(0, 0.4f, 0);
+                rb.GetComponentInChildren<CameraDeath>().StartFollow();
             }
         }
     }

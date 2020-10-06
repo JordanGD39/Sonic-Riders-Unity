@@ -101,7 +101,7 @@ public class PlayerTrigger : MonoBehaviour
 
     private void CheckCountdown(StartingLevel startingLevel)
     {
-        charStats.Air = 100;
+        charStats.Air = charStats.MaxAir;
 
         if (startingLevel.Timer > 0)
         {
@@ -191,7 +191,7 @@ public class PlayerTrigger : MonoBehaviour
 
         if (collision.GetComponent<MeshCollider>() != null)
         {
-            closestPoint = NearestVertexTo(transform.position + transform.TransformPoint(new Vector3(0, 0, -1)), collision.GetComponent<MeshFilter>().mesh);
+            closestPoint = NearestVertexTo(transform.position, collision.GetComponent<MeshFilter>().mesh);
         }
         else
         {

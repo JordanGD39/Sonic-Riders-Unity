@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6617662344294534384}
   - component: {fileID: 6617662344294534391}
   - component: {fileID: 6617662344294534390}
+  - component: {fileID: 995355884994968628}
   m_Layer: 9
   m_Name: Ring
   m_TagString: Untagged
@@ -47,6 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotateSpeed: 60
+  respawnTime: 3
 --- !u!54 &6617662344294534390
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -63,6 +65,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!205 &995355884994968628
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6617662344294534385}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0.000000059604645, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.0061414395
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 6617662344791984185}
+  m_Enabled: 1
 --- !u!1 &6617662344791984180
 GameObject:
   m_ObjectHideFlags: 0

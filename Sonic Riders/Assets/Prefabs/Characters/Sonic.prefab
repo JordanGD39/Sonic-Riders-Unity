@@ -1626,9 +1626,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 829e8a0d0d71f334982cd6d92208aad3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterName: Sonic
+  portrait: {fileID: 21300000, guid: 8bbe715383bde9a449c12602023d6968, type: 3}
+  extraY: 0
   level: 0
-  air: 100
-  maxAir: 100
+  air: 150
+  maxAir: 150
   rings: 0
   maxRings: 30
   startRings: 0
@@ -1827,6 +1830,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6333b1d09d91ff409a3a63a02a39f8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currCheckpoint: 0
+  lapCount: 0
 --- !u!1 &2124796381605978053
 GameObject:
   m_ObjectHideFlags: 0

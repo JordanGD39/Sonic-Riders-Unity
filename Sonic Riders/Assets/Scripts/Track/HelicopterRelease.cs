@@ -76,9 +76,9 @@ public class HelicopterRelease : MonoBehaviour
             PlayerMovement playerMovement = leg.GetChild(i).GetComponentInParent<PlayerMovement>();
             Rigidbody rb = playerMovement.GetComponent<Rigidbody>();
 
-            rb.transform.GetChild(0).forward = transform.forward;
-
             leg.GetChild(i).parent = null;
+
+            rb.transform.GetChild(0).forward = transform.forward;
 
             rb.isKinematic = false;
             rb.collisionDetectionMode = CollisionDetectionMode.Continuous;

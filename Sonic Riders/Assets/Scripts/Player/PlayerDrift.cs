@@ -117,6 +117,6 @@ public class PlayerDrift : MonoBehaviour
         driftTimer += Time.deltaTime;
         movement.Drifting = true;
         movement.Speed -= 4 * Time.deltaTime;
-        charStats.Air -= charStats.GetCurrentAirLoss() * 4 * Time.deltaTime;
+        charStats.Air -= charStats.GetCurrentAirLoss() * 2 * Time.deltaTime;
     }
 }

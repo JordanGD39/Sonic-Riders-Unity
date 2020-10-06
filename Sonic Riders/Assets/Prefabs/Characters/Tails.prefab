@@ -10351,9 +10351,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 829e8a0d0d71f334982cd6d92208aad3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterName: Tails
+  portrait: {fileID: 21300000, guid: ae59c9dbaf60eb7448ebf5e77bd0315b, type: 3}
+  extraY: 20
   level: 0
-  air: 100
-  maxAir: 100
+  air: 150
+  maxAir: 150
   rings: 0
   maxRings: 30
   startRings: 0

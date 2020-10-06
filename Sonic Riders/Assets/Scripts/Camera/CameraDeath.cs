@@ -9,6 +9,7 @@ public class CameraDeath : MonoBehaviour
     private Rigidbody playerRb;
     private Transform prevParent;
     private PlayerMovement playerMovement;
+    private PlayerCheckpoints playerCheckpoints;
     private CharacterStats charStats;
     private Vector3 startPos;
     private Animator canvasAnim;
@@ -18,6 +19,7 @@ public class CameraDeath : MonoBehaviour
     private void Start()
     {
         playerMovement = GetComponentInParent<PlayerMovement>();
+        playerCheckpoints = GetComponentInParent<PlayerCheckpoints>();
         charStats = GetComponentInParent<CharacterStats>();
         player = playerMovement.transform;
         startPos = transform.localPosition;
@@ -56,7 +58,7 @@ public class CameraDeath : MonoBehaviour
         yield return new WaitForSeconds(timeToRespawn);
         canvasAnim.Play("DeathFadeOut");
         followPlayer = false;
-        player.position = playerMovement.LastGroundedPos;
+        player.position = playerCheckpoints.RaceManagerScript.transform.GetChild(playerCheckpoints.CurrCheckpoint).position;
         playerRb.velocity = Vector3.zero;
         transform.parent = prevParent;
         transform.localPosition = startPos;

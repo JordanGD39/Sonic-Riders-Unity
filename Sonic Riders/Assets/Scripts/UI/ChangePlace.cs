@@ -8,24 +8,42 @@ public class ChangePlace : MonoBehaviour
     private HUD hud;
     [SerializeField] private Image numberImage;
     [SerializeField] private Transform afterNumber;
+    [SerializeField] private GameObject glow;
+    private bool updatePlacingBoard = false;
+    private int placeOnBoard = 0;
 
     // Start is called before the first frame update
     void Start()
     {
         hud = GetComponentInParent<HUD>();
+        glow = transform.GetChild(0).gameObject;
+    }
+
+    public void ChangeImageReferences(Image imageNumber, Transform numberAfter, GameObject firstGlow, int placing)
+    {
+        updatePlacingBoard = true;
+        numberImage = imageNumber;
+        afterNumber = numberAfter;
+        glow = firstGlow;
+        placeOnBoard = placing;
     }
 
     public void UpdatePlacing()
     {
         int place = hud.Place;
 
+        if (updatePlacingBoard)
+        {
+            place = placeOnBoard;
+        }
+
         if (place == 0)
         {
-            transform.GetChild(0).gameObject.SetActive(true);
+            glow.SetActive(true);
         }
         else
         {
-            transform.GetChild(0).gameObject.SetActive(false);
+            glow.SetActive(false);
         }
 
         numberImage.sprite = hud.raceManager.NumberSprites[place];

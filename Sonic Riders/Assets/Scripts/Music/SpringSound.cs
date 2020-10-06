@@ -18,7 +18,7 @@ public class SpringSound : MonoBehaviour
         {
             CharacterStats characterStats = other.GetComponentInParent<CharacterStats>();
 
-            if (characterStats.IsPlayer)
+            if (characterStats.IsPlayer && characterStats.Air == 0)
             {
                 audioSource.Play();
             }

@@ -8,9 +8,11 @@ public class CharacterButton : MonoBehaviour
     private EventSystemHolder holder;
 
     [SerializeField] private Image sprite;
+    private Image image;
 
     private Transform playerSelectParent;
     [SerializeField] private GameObject disabled;
+    public GameObject DisabledImage { get { return disabled; } }
     [SerializeField] private GameObject characterPrefab;
     //private BoardStats boardStats;
     private CharacterStats stats;
@@ -24,6 +26,7 @@ public class CharacterButton : MonoBehaviour
         holder = GetComponentInParent<EventSystemHolder>();
         playerSelectParent = holder.GetComponentInChildren<GridLayoutGroup>().transform;
         stats = characterPrefab.GetComponent<CharacterStats>();
+        image = GetComponent<Button>().image;
     }
 
     public void Selected()
@@ -36,8 +39,11 @@ public class CharacterButton : MonoBehaviour
             }
         }
 
+
         Transform playerSelect = playerSelectParent.GetChild(eventIndex);
 
+        image.color = playerSelect.GetChild(0).GetChild(0).GetComponent<Outline>().effectColor;
+            
         if (playerSelect.GetChild(0).gameObject.activeSelf)
         {
             playerSelect.GetChild(0).gameObject.SetActive(false);
@@ -82,6 +88,7 @@ public class CharacterButton : MonoBehaviour
 
         if (!disabled.activeSelf && selectInput.CanSelect)
         {
+            disabled.SetActive(true);
             holder.MultiplayerEventSystems[eventIndex].SetSelectedGameObject(null);
             selectInput.ConfirmCharacter(characterPrefab);
         }
@@ -91,6 +98,7 @@ public class CharacterButton : MonoBehaviour
     {
         if (!alreadyDeselecting)
         {
+            image.color = new Color32(166, 165, 166, 255);
             alreadyDeselecting = true;
             StartCoroutine("DelaySelect");        
         }

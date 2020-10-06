@@ -77,6 +77,26 @@ MonoBehaviour:
     maxRange: 1
     priority: 10
     source: {fileID: 0}
+  - name: DiveIntoGravity
+    clip: {fileID: 8300000, guid: 84f20c81b435f6743a5049e5c6f15c7a, type: 3}
+    volume: 0.7
+    pitch: 1
+    loop: 1
+    spatialBlend: 0
+    minRange: 1
+    maxRange: 1
+    priority: 10
+    source: {fileID: 0}
+  - name: MainMenu
+    clip: {fileID: 8300000, guid: 7185974a10e2ef54898b03466e1e7204, type: 3}
+    volume: 0.7
+    pitch: 1
+    loop: 1
+    spatialBlend: 0
+    minRange: 1
+    maxRange: 1
+    priority: 10
+    source: {fileID: 0}
   mixer: {fileID: 24300002, guid: c76eeab121fcd10499c4f1f0cc727d39, type: 2}
 --- !u!114 &3383933174484632716
 MonoBehaviour:

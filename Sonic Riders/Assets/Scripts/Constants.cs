@@ -12,6 +12,7 @@ public class Constants
         public const string startLine = "StartLine";
         public const string raceManager = "RaceManager";
         public const string checkpoint = "CheckPoint";
+        public const string bigCanvas = "BigCanvas";
     }
 
     public class VoiceSounds

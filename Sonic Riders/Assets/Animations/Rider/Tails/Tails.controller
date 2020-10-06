@@ -610,7 +610,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: TrickDown
-  m_Speed: -1
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 8162485472795855759}
@@ -624,7 +624,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: b07f770b1501bee4e922aa3a4ff966aa, type: 2}
+  m_Motion: {fileID: 7400000, guid: 2ca8a89d924191d42b3e3915ddcf49ea, type: 2}
   m_Tag: 
   m_SpeedParameter: TrickSpeed
   m_MirrorParameter: 

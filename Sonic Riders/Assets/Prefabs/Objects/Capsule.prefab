@@ -141,7 +141,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2725736761143569228}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.125, y: 0.67, z: 0}
+  m_LocalPosition: {x: -0.18, y: 0.67, z: 0}
   m_LocalScale: {x: 0.25, y: 0.25, z: 1}
   m_Children: []
   m_Father: {fileID: 8566936498074884661}
@@ -223,7 +223,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2843298574764835862}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.15, y: 0.67, z: 0}
+  m_LocalPosition: {x: 0.09, y: 0.67, z: 0}
   m_LocalScale: {x: 0.25, y: 0.25, z: 1}
   m_Children: []
   m_Father: {fileID: 8566936498074884661}
@@ -342,9 +342,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 5240007357158737618}
+  hundredMark: {fileID: 2725736761143569228}
+  numberToChange: {fileID: 1358141003882688815}
+  itemToChange: {fileID: 174233242290396325}
   respawnTime: 3
-  ringCount: 100
+  ringCount: 0
   air: 0
+  numbers:
+  - {fileID: 7070295611813835289, guid: 8b2a23a6a7802394d85d5891cce23e23, type: 3}
+  - {fileID: 3964917002191910587, guid: 8b2a23a6a7802394d85d5891cce23e23, type: 3}
+  - {fileID: 6584687075262797463, guid: 8b2a23a6a7802394d85d5891cce23e23, type: 3}
+  - {fileID: -7854242102149648168, guid: 8b2a23a6a7802394d85d5891cce23e23, type: 3}
+  - {fileID: -3035308027047698861, guid: 8b2a23a6a7802394d85d5891cce23e23, type: 3}
+  itemSprites:
+  - {fileID: 9117567263023910212, guid: 8b2a23a6a7802394d85d5891cce23e23, type: 3}
+  - {fileID: -3127560826369239185, guid: 9fb975daccf348b4980c9cc643dbca40, type: 3}
 --- !u!1 &4665581418679460599
 GameObject:
   m_ObjectHideFlags: 0
@@ -385,7 +397,8 @@ AudioSource:
   m_GameObject: {fileID: 4665581418679460599}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 4d6df4263f01c194c86a7a990200a169,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 15ad151c134be6b42a9057b9797becb2, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -498,7 +511,7 @@ Transform:
   m_GameObject: {fileID: 5240007357158737618}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 8566936498074884661}
   - {fileID: 6262194252703305493}
@@ -10394,7 +10407,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7032974903773336716}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.67, z: 0}
+  m_LocalPosition: {x: -0.06, y: 0.67, z: 0}
   m_LocalScale: {x: 0.25, y: 0.25, z: 1}
   m_Children: []
   m_Father: {fileID: 8566936498074884661}

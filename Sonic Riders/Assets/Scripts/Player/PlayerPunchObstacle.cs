@@ -68,6 +68,7 @@ public class PlayerPunchObstacle : MonoBehaviour
             obstacleRb.AddForce(punch.forward * power);
             audioHolder.SfxManager.Play(Constants.SoundEffects.punch);
 
+            charStats.Air += 20;
         }
         else
         {

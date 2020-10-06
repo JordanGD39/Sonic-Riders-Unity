@@ -5,18 +5,23 @@ using UnityEngine;
 
 public class RaceManager : MonoBehaviour
 {
-    private List<CharacterStats> playersStats = new List<CharacterStats>();
-
     [SerializeField] private List<PlayerCheckpoints> playerCheckpoints = new List<PlayerCheckpoints>();
+    private List<PlayerCheckpoints> playersLeft = new List<PlayerCheckpoints>();
     public List<PlayerCheckpoints> PlayerPlacing { get { return playerCheckpoints; } }
 
     [SerializeField] private int laps = 3;
     public int Laps { get { return laps; } }
 
     [SerializeField] private Sprite[] numberSprites;
+    private BigCanvasUI bigCanvasUI;
+
     public Sprite[] NumberSprites { get { return numberSprites; } }
 
-    // Start is called before the first frame update
+    private void Start()
+    {
+        bigCanvasUI = GameObject.FindGameObjectWithTag(Constants.Tags.bigCanvas).GetComponent<BigCanvasUI>();
+    }
+
     public void AddPlayers()
     {
         List<GameObject> playerObjects = new List<GameObject>();
@@ -25,8 +30,13 @@ public class RaceManager : MonoBehaviour
 
         for (int i = 0; i < playerObjects.Count; i++)
         {
-            playersStats.Add(playerObjects[i].GetComponent<CharacterStats>());
-            playerCheckpoints.Add(playerObjects[i].GetComponent<PlayerCheckpoints>());
+            PlayerCheckpoints player = playerObjects[i].GetComponent<PlayerCheckpoints>();
+            playerCheckpoints.Add(player);
+
+            if (playerObjects[i].GetComponent<CharacterStats>().IsPlayer)
+            {
+                playersLeft.Add(player);
+            }
         }
 
         //InvokeRepeating("ManualUpdate", 0.5f, 0.5f);
@@ -36,6 +46,16 @@ public class RaceManager : MonoBehaviour
     void Update()
     {
         playerCheckpoints.Sort(CompareRider);
+    }
+
+    public void CheckRaceEnd(PlayerCheckpoints player)
+    {
+        playersLeft.Remove(player);
+
+        if (playersLeft.Count == 0)
+        {
+            bigCanvasUI.PostPlacings(playerCheckpoints);
+        }
     }
 
     private int CompareRider(PlayerCheckpoints a, PlayerCheckpoints b)

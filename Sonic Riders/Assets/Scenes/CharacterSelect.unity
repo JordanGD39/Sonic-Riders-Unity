@@ -1692,6 +1692,11 @@ PrefabInstance:
       propertyPath: m_Text
       value: P3
       objectReference: {fileID: 0}
+    - target: {fileID: 5103492085877829758, guid: 7e8fc7019b8ba0940a53417c9f7f3cb7,
+        type: 3}
+      propertyPath: m_FontData.m_BestFit
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7504999824468587857, guid: 7e8fc7019b8ba0940a53417c9f7f3cb7,
         type: 3}
       propertyPath: m_Name
@@ -3212,51 +3217,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6533027374955564108, guid: 8cef389c012e8af46be616f52f7da06e,
-        type: 3}
-      propertyPath: sounds.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6533027374955564108, guid: 8cef389c012e8af46be616f52f7da06e,
-        type: 3}
-      propertyPath: sounds.Array.data[1].name
-      value: MainMenu
-      objectReference: {fileID: 0}
-    - target: {fileID: 6533027374955564108, guid: 8cef389c012e8af46be616f52f7da06e,
-        type: 3}
-      propertyPath: sounds.Array.data[1].clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 7185974a10e2ef54898b03466e1e7204, type: 3}
-    - target: {fileID: 6533027374955564108, guid: 8cef389c012e8af46be616f52f7da06e,
-        type: 3}
-      propertyPath: sounds.Array.data[1].volume
-      value: 0.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 6533027374955564108, guid: 8cef389c012e8af46be616f52f7da06e,
-        type: 3}
-      propertyPath: sounds.Array.data[1].pitch
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6533027374955564108, guid: 8cef389c012e8af46be616f52f7da06e,
-        type: 3}
-      propertyPath: sounds.Array.data[1].loop
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6533027374955564108, guid: 8cef389c012e8af46be616f52f7da06e,
-        type: 3}
-      propertyPath: sounds.Array.data[1].minRange
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6533027374955564108, guid: 8cef389c012e8af46be616f52f7da06e,
-        type: 3}
-      propertyPath: sounds.Array.data[1].maxRange
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6533027374955564108, guid: 8cef389c012e8af46be616f52f7da06e,
-        type: 3}
-      propertyPath: sounds.Array.data[1].priority
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 6533027374955564109, guid: 8cef389c012e8af46be616f52f7da06e,
         type: 3}
       propertyPath: m_Name

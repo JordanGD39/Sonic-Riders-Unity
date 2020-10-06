@@ -1405,8 +1405,8 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: TrickUp 0
-  m_Speed: -1
+  m_Name: TrickDown
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -714147480027972912}
@@ -1420,7 +1420,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 185199dab567ba941ac6dd2233f9fbd6, type: 2}
+  m_Motion: {fileID: 7400000, guid: 9e27e091020c14d478ac7831158a9005, type: 2}
   m_Tag: 
   m_SpeedParameter: TrickSpeed
   m_MirrorParameter: 

@@ -104,8 +104,7 @@ public class PlayerMovement : MonoBehaviour
                 thirdPersonCamera.enabled = false;
                 thirdPersonCamera.transform.localRotation = new Quaternion(0, 0, 0, thirdPersonCamera.transform.localRotation.w);
             }*/
-
-            lastGroundedPos = transform.position;
+            
             transform.GetChild(0).localRotation = new Quaternion(0, transform.GetChild(0).localRotation.y, 0, transform.GetChild(0).localRotation.w);
 
             if (!ridingOnWall)

@@ -6,6 +6,15 @@ public enum type { SPEED, FLIGHT, POWER, ALL}
 
 public class CharacterStats : MonoBehaviour
 {
+    [SerializeField] private string characterName = "Sonic";
+    public string CharacterName { get { return characterName; } }
+
+    [SerializeField] private Sprite portrait;
+    public Sprite Portrait { get { return portrait; } }
+
+    [SerializeField] private float extraY = 0;
+    public float ExtraY { get { return extraY; } }
+
     public int PlayerIndex { get; set; } = 0;
     public Transform Cam { get; set; }
     public Transform Canvas { get; set; }
@@ -27,12 +36,12 @@ public class CharacterStats : MonoBehaviour
                 case 0:
                     maxRings = 30;
                     startRings = 0;
-                    maxAir = 100;                    
+                    maxAir = 150;                    
                     break;
                 case 1:
                     maxRings = 60;
                     startRings = 30;
-                    maxAir = 200;
+                    maxAir = 225;
                     break;
                 case 2:
                     maxRings = 100;
@@ -47,7 +56,8 @@ public class CharacterStats : MonoBehaviour
             }
 
             level = value;
-            hud.UpdateLevel(level);
+            if (hud != null)
+                hud.UpdateLevel(level);
         }
     }
     public bool IsPlayer { get; set; } = false;
@@ -96,7 +106,11 @@ public class CharacterStats : MonoBehaviour
             }
 
             rings = value;
-            hud.UpdateRings(rings, maxRings);
+
+            if (hud != null)
+            {
+                hud.UpdateRings(rings, maxRings);
+            }
         }
     }
 
@@ -135,6 +149,8 @@ public class CharacterStats : MonoBehaviour
             }
         }
     }
+
+    public float MaxAir { get { return maxAir; } }
 
     [SerializeField] private float speedLoss = 0;
     public float SpeedLoss { get { return speedLoss; } }

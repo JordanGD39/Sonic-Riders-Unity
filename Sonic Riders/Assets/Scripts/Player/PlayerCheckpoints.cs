@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerCheckpoints : MonoBehaviour
 {
     private RaceManager raceManager;
+    public RaceManager RaceManagerScript { get { return raceManager; } }
+    public CharacterStats CharStats { get; set; }
     private HUD hud;
 
     [SerializeField] private int currCheckpoint = 0;
@@ -20,6 +22,7 @@ public class PlayerCheckpoints : MonoBehaviour
     private void Start()
     {
         raceManager = GameObject.FindGameObjectWithTag(Constants.Tags.raceManager).GetComponent<RaceManager>();
+        CharStats = GetComponent<CharacterStats>();
     }
 
     public void GiveHud(HUD aHud)
@@ -75,7 +78,8 @@ public class PlayerCheckpoints : MonoBehaviour
 
                 if (lapCount >= raceManager.Laps)
                 {
-                    Debug.Log("You completed the race!");
+                    currCheckpoint = 100 - place;
+                    raceManager.CheckRaceEnd(this);
                 }
             }
         }
