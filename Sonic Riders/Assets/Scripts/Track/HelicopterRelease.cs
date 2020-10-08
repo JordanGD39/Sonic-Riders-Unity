@@ -8,6 +8,7 @@ public class HelicopterRelease : MonoBehaviour
     [SerializeField] private Transform[] legsPos;
     [SerializeField] private Transform forward;
     [SerializeField] private float launchSpeed = 66.75f;
+    [SerializeField] private float rotY = -0.5f;
     private Animator anim;
 
     private void Start()
@@ -78,13 +79,14 @@ public class HelicopterRelease : MonoBehaviour
 
             leg.GetChild(i).parent = null;
 
-            rb.transform.GetChild(0).forward = transform.forward;
-
             rb.isKinematic = false;
             rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
             playerMovement.CantMove = false;            
 
             rb.velocity = forward.forward * launchSpeed;
+            Quaternion rot = rb.transform.GetChild(0).localRotation;
+            rot.y = rotY;
+            rb.transform.GetChild(0).localRotation = rot;
 
             rb.GetComponent<PlayerTricks>().CanDoTricks = true;
         }

@@ -105,7 +105,7 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: Victory
     clip: {fileID: 8300000, guid: 8ac5a8c2b678343499c6ff773d9ab749, type: 3}
-    volume: 0.7
+    volume: 0.6
     pitch: 1
     loop: 1
     spatialBlend: 0
@@ -128,6 +128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   eventSystemPref: {fileID: 1830633622757999206, guid: 94a08d882504a0d459249a04cf61b81e,
     type: 3}
+  dontFindCanvas: 1
 --- !u!114 &6533027374955564097
 MonoBehaviour:
   m_ObjectHideFlags: 0

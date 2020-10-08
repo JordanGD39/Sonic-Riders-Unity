@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool testAir = true;
     public bool TestAir { get { return testAir; } }
 
+    private PlayerInputManager playerInputManager;
     private string currScene = "";
     public string CurrScene { get { return currScene; } }
 
@@ -49,6 +50,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        playerInputManager = GetComponent<PlayerInputManager>();
         currScene = SceneManager.GetActiveScene().name;
         //Application.targetFrameRate = 5;
         Physics.gravity *= gravityMultiplier;
@@ -67,24 +69,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void LoadScene(string sceneName, bool destroy)
+    public void LoadScene(string sceneName, bool fadeMusic)
     {
         currScene = sceneName;
         loadingScreen.SetActive(true);
         audioManager.FadeOutRate = 0.01f;
-        audioManager.StartFadeVoid(false);
-        StartCoroutine(LoadSceneAsync(sceneName));
 
-        for (int i = 0; i < playersParent.childCount; i++)
+        if (fadeMusic)
         {
-            if (destroy)
-            {
-                Destroy(playersParent.GetChild(i).gameObject);
-            }
+            audioManager.StartFadeVoid(false);
         }
+
+        StartCoroutine(LoadSceneAsync(sceneName, fadeMusic));
     }
 
-    private IEnumerator LoadSceneAsync(string sceneName)
+    private IEnumerator LoadSceneAsync(string sceneName, bool fadeMusic)
     {
         AsyncOperation ao = SceneManager.LoadSceneAsync(sceneName);
 
@@ -125,7 +124,8 @@ public class GameManager : MonoBehaviour
             loadingScreenAnim.Play("LoadFadeOutNoSonic");
         }
 
-        audioManager.StartFadeVoid(true);
+        if (fadeMusic)
+            audioManager.StartFadeVoid(true);
 
         yield return new WaitForSeconds(1);
 
@@ -133,8 +133,9 @@ public class GameManager : MonoBehaviour
 
         if (sceneName == "CharacterSelect")
         {
-            playerConfigManager.ClearConfigs();
+            playerInputManager.EnableJoining();
             playerConfigManager.FindCanvas();
+            playerConfigManager.ClearConfigs();
 
             for (int i = 0; i < playersParent.childCount; i++)
             {

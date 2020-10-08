@@ -8,6 +8,7 @@ public class PlayerCheckpoints : MonoBehaviour
     public RaceManager RaceManagerScript { get { return raceManager; } }
     public CharacterStats CharStats { get; set; }
     private PlayerMovement playerMovement;
+    private AudioManagerHolder audioHolder;
     private HUD hud;
 
     [SerializeField] private int currCheckpoint = 0;
@@ -25,6 +26,7 @@ public class PlayerCheckpoints : MonoBehaviour
         raceManager = GameObject.FindGameObjectWithTag(Constants.Tags.raceManager).GetComponent<RaceManager>();
         CharStats = GetComponent<CharacterStats>();
         playerMovement = GetComponent<PlayerMovement>();
+        audioHolder = GetComponent<AudioManagerHolder>();
 
         if (aHud == null)
         {
@@ -96,6 +98,18 @@ public class PlayerCheckpoints : MonoBehaviour
 
                 if (lapCount >= raceManager.Laps)
                 {
+                    if (CharStats.IsPlayer)
+                    {
+                        if (place == 0)
+                        {
+                            audioHolder.VoiceManager.Play(Constants.VoiceSounds.win);
+                        }
+                        else
+                        {
+                            audioHolder.VoiceManager.Play(Constants.VoiceSounds.lose);
+                        }
+                    }                    
+
                     currCheckpoint = 100 - place;
                     CharStats.DisableAllFeatures = true;
                     CharStats.StopCounting = true;

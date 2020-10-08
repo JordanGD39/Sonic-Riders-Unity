@@ -130,13 +130,13 @@ public class BigCanvasUI : MonoBehaviour
     public void Restart()
     {
         Time.timeScale = 1;
-        GameManager.instance.LoadScene(GameManager.instance.CurrScene, false);
+        GameManager.instance.LoadScene(GameManager.instance.CurrScene, true);
     }
 
-    public void MainMenu()
+    public void LoadDifferentScene(string scene)
     {
         Time.timeScale = 1;
 
-        GameManager.instance.LoadScene("CharacterSelect", false);
+        GameManager.instance.LoadScene(scene, true);
     }
 }

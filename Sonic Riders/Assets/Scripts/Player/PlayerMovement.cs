@@ -308,7 +308,14 @@ public class PlayerMovement : MonoBehaviour
             //Debug.Log(ps.isPlaying);
             Vector3 localVel = transform.GetChild(0).InverseTransformDirection(rb.velocity);
 
-            if (localVel.z + localVel.x >= 66 && localVel.z > localVel.x)
+            float checkSpeed = localVel.z + localVel.x;
+
+            if (playerTricks.CanDoTricks)
+            {
+                checkSpeed = localVel.z + localVel.x + Mathf.Abs(localVel.y);
+            }
+
+            if (checkSpeed >= 66 && localVel.z > localVel.x)
             {
                 if (!ps.isPlaying)
                 {

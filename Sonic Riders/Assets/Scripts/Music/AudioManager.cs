@@ -82,6 +82,11 @@ public class AudioManager : MonoBehaviour
         //Debug.Log("Searching for music " + name);
         FindSound(name);
 
+        if (currS == null)
+        {
+            return;
+        }
+
         if (currS.loop)
         {
             currSound = currS;

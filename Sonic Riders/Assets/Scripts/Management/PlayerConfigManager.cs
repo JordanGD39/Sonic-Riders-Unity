@@ -14,10 +14,20 @@ public class PlayerConfigManager : MonoBehaviour
     [SerializeField] private GameObject eventSystemPref;
     private GameObject canvas;
     private EventSystemHolder eventSystemHolder;
+    [SerializeField] private bool dontFindCanvas = true;
+    private PlayerInputManager playerInputManager;
 
     private void Start()
     {
-        FindCanvas();
+        playerInputManager = GetComponent<PlayerInputManager>();
+        if (!dontFindCanvas)
+        {
+            FindCanvas();
+        }
+        else
+        {
+            playerInputManager.DisableJoining();
+        }
     }
 
     public void SetPlayerPrefab(int index, GameObject prefab)
@@ -32,7 +42,7 @@ public class PlayerConfigManager : MonoBehaviour
         if (playerConfigs.All(p => p.IsReady))
         {
             GetComponent<PlayerInputManager>().DisableJoining();
-            GameManager.instance.LoadScene("SampleScene 1", false);
+            GameManager.instance.LoadScene("SampleScene 1", true);
         }
     }
 

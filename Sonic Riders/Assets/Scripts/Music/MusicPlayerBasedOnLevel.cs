@@ -9,7 +9,14 @@ public class MusicPlayerBasedOnLevel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (GameManager.instance.GetAudioManager.CurrSound != null)
+        bool soundNotNull = GameManager.instance.GetAudioManager.CurrSound != null;
+
+        if (soundNotNull && GameManager.instance.GetAudioManager.CurrSound.name == musicName)
+        {
+            return;
+        }
+
+        if (soundNotNull)
         {
             GameManager.instance.GetAudioManager.StopPlaying(GameManager.instance.GetAudioManager.CurrSound.name);
         }
