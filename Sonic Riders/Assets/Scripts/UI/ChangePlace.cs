@@ -10,6 +10,7 @@ public class ChangePlace : MonoBehaviour
     [SerializeField] private Transform afterNumber;
     [SerializeField] private GameObject glow;
     private bool updatePlacingBoard = false;
+    public bool CantUpdate { get; set; } = false;
     private int placeOnBoard = 0;
 
     // Start is called before the first frame update
@@ -30,6 +31,11 @@ public class ChangePlace : MonoBehaviour
 
     public void UpdatePlacing()
     {
+        if (CantUpdate)
+        {
+            return;
+        }
+
         int place = hud.Place;
 
         if (updatePlacingBoard)

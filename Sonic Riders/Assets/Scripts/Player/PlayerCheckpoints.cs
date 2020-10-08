@@ -7,6 +7,7 @@ public class PlayerCheckpoints : MonoBehaviour
     private RaceManager raceManager;
     public RaceManager RaceManagerScript { get { return raceManager; } }
     public CharacterStats CharStats { get; set; }
+    private PlayerMovement playerMovement;
     private HUD hud;
 
     [SerializeField] private int currCheckpoint = 0;
@@ -19,14 +20,17 @@ public class PlayerCheckpoints : MonoBehaviour
 
     private int nextCheckpointIndex = 1;
 
-    private void Start()
+    public void GiveHud(HUD aHud)
     {
         raceManager = GameObject.FindGameObjectWithTag(Constants.Tags.raceManager).GetComponent<RaceManager>();
         CharStats = GetComponent<CharacterStats>();
-    }
+        playerMovement = GetComponent<PlayerMovement>();
 
-    public void GiveHud(HUD aHud)
-    {
+        if (aHud == null)
+        {
+            return;
+        }
+
         hud = aHud;
         hud.GiveRaceManager(raceManager);
         hud.UpdateLap(lapCount, raceManager.Laps);
@@ -34,6 +38,11 @@ public class PlayerCheckpoints : MonoBehaviour
 
     private void Update()
     {
+        if (raceManager == null)
+        {
+            return;
+        }
+
         place = raceManager.PlayerPlacing.IndexOf(this);
 
         if (hud != null && hud.Place != place)
@@ -45,6 +54,11 @@ public class PlayerCheckpoints : MonoBehaviour
 
     public Vector3 GetNextCheckpoinDir()
     {
+        if (raceManager == null)
+        {
+            return Vector3.zero;
+        }
+
         Transform nextCheckpoint = raceManager.transform.GetChild(nextCheckpointIndex);
 
         return nextCheckpoint.forward;
@@ -74,11 +88,17 @@ public class PlayerCheckpoints : MonoBehaviour
             if (lastCheckpointReached)
             {
                 lapCount++;
-                hud.UpdateLap(lapCount, raceManager.Laps);
+
+                if (hud != null)
+                {
+                    hud.UpdateLap(lapCount, raceManager.Laps);
+                }
 
                 if (lapCount >= raceManager.Laps)
                 {
                     currCheckpoint = 100 - place;
+                    CharStats.DisableAllFeatures = true;
+                    CharStats.StopCounting = true;
                     raceManager.CheckRaceEnd(this);
                 }
             }

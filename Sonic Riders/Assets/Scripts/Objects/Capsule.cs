@@ -36,7 +36,9 @@ public class Capsule : MonoBehaviour
         CharacterStats characterStats = other.GetComponentInParent<CharacterStats>();
         characterStats.Rings += ringCount;
         characterStats.Air += air;
-        source.Play();
+
+        if(characterStats.IsPlayer)
+            source.Play();
     }
 
     private void Respawn()

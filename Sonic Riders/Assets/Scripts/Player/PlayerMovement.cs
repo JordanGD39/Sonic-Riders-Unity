@@ -57,11 +57,10 @@ public class PlayerMovement : MonoBehaviour
 
     private ParticleSystem ps;
 
-    // Start is called before the first frame update
-    void Start()
+    public void GiveCanvasHud()
     {
         rb = GetComponent<Rigidbody>();
-        charStats = GetComponent<CharacterStats>();               
+        charStats = GetComponent<CharacterStats>();
         playerBoost = GetComponent<PlayerBoost>();
         playerJump = GetComponent<PlayerJump>();
         playerDrift = GetComponent<PlayerDrift>();
@@ -70,11 +69,11 @@ public class PlayerMovement : MonoBehaviour
         //thirdPersonCamera = Camera.main.GetComponentInParent<ThirdPersonCamera>();
         stats = charStats.BoardStats;
         ps = GetComponentInChildren<ParticleSystem>();
-    }
 
-    public void GiveCanvasHud()
-    {
-        hud = charStats.Canvas.GetComponent<HUD>();
+        if (charStats.IsPlayer)
+        {
+            hud = charStats.Canvas.GetComponent<HUD>();
+        }
     }
 
     // Update is called once per frame

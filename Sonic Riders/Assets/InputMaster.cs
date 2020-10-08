@@ -57,6 +57,14 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""114455c3-c897-436d-baa4-f185b44b68df"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -277,6 +285,28 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""GamePad"",
                     ""action"": ""Grind"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3248fa4c-5a61-484e-8c9d-ce26b4898675"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamePad"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bfab5fe7-627c-4740-b8ff-466618a483e6"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -567,6 +597,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
         m_Player_JumpHold = m_Player.FindAction("JumpHold", throwIfNotFound: true);
         m_Player_Drift = m_Player.FindAction("Drift", throwIfNotFound: true);
         m_Player_Grind = m_Player.FindAction("Grind", throwIfNotFound: true);
+        m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Select = m_UI.FindAction("Select", throwIfNotFound: true);
@@ -626,6 +657,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_JumpHold;
     private readonly InputAction m_Player_Drift;
     private readonly InputAction m_Player_Grind;
+    private readonly InputAction m_Player_Pause;
     public struct PlayerActions
     {
         private @InputMaster m_Wrapper;
@@ -635,6 +667,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
         public InputAction @JumpHold => m_Wrapper.m_Player_JumpHold;
         public InputAction @Drift => m_Wrapper.m_Player_Drift;
         public InputAction @Grind => m_Wrapper.m_Player_Grind;
+        public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -659,6 +692,9 @@ public class @InputMaster : IInputActionCollection, IDisposable
                 @Grind.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnGrind;
                 @Grind.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnGrind;
                 @Grind.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnGrind;
+                @Pause.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @Pause.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @Pause.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -678,6 +714,9 @@ public class @InputMaster : IInputActionCollection, IDisposable
                 @Grind.started += instance.OnGrind;
                 @Grind.performed += instance.OnGrind;
                 @Grind.canceled += instance.OnGrind;
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
             }
         }
     }
@@ -756,6 +795,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
         void OnJumpHold(InputAction.CallbackContext context);
         void OnDrift(InputAction.CallbackContext context);
         void OnGrind(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

@@ -30,6 +30,20 @@ public class AiControls : MonoBehaviour
         //playerBoost = GetComponent<PlayerBoost>();
         playerDrift = GetComponent<PlayerDrift>();
         //playerGrind = GetComponent<PlayerGrind>();
+        PlayerBoost playerBoost = GetComponent<PlayerBoost>();
+        PlayerGrind playerGrind = GetComponent<PlayerGrind>();
+        PlayerJump playerJump = GetComponent<PlayerJump>();
+        PlayerTricks playerTricks = GetComponent<PlayerTricks>();
+        PlayerFlight playerFlight = GetComponent<PlayerFlight>();
+        CharacterStats charStats = GetComponent<CharacterStats>();
+
+        playerMovement.GiveCanvasHud();
+        playerGrind.GiveCanvasHud();
+        playerFlight.GiveCanvasHud();
+        charStats.GiveCanvasHud();
+        playerDrift.GiveAnim();
+        playerBoost.GiveAnim();
+        GetComponent<PlayerCheckpoints>().GiveHud(null);
 
         Transform waypointTransform = GameObject.FindGameObjectWithTag("Waypoints").transform;
 

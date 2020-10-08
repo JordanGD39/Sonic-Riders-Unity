@@ -19,7 +19,13 @@ public class CharacterSelectInput : MonoBehaviour
     private Text playerText;
 
     // Start is called before the first frame update
-    void Start()
+
+    private void Start()
+    {
+        StartFunctions();
+    }
+
+    public void StartFunctions()
     {
         if (SceneManager.GetActiveScene().buildIndex > 0)
         {

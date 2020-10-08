@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,6 +11,13 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private AudioManager audioManager;
     [SerializeField] private GameObject campPref;
+    [SerializeField] private GameObject playerInputPref;
+    [SerializeField] private Transform playersParent;
+    [SerializeField] private GameObject loadingScreen;
+    [SerializeField] private Animator loadingScreenAnim;
+    private PlayerConfigManager playerConfigManager;
+    [SerializeField] private Image trail;
+
     public AudioManager GetAudioManager { get { return audioManager; } }
 
     [SerializeField] private List<GameObject> playersLeft = new List<GameObject>();
@@ -21,6 +29,9 @@ public class GameManager : MonoBehaviour
     public float GravitityMultiplier { get { return gravityMultiplier; } }
     [SerializeField] private bool testAir = true;
     public bool TestAir { get { return testAir; } }
+
+    private string currScene = "";
+    public string CurrScene { get { return currScene; } }
 
     void Awake()
     {
@@ -38,9 +49,14 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        currScene = SceneManager.GetActiveScene().name;
+        //Application.targetFrameRate = 5;
         Physics.gravity *= gravityMultiplier;
+        loadingScreen.SetActive(false);
+        loadingScreenAnim = loadingScreen.GetComponent<Animator>();
+        playerConfigManager = GetComponent<PlayerConfigManager>();
 
-        if (SceneManager.GetActiveScene().buildIndex > 0 && playersLeft.Count > 0)
+        if (playersLeft.Count > 0)
         {
             for (int i = 0; i < playersLeft.Count; i++)
             {
@@ -51,8 +67,87 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void LoadScene(string sceneName, bool destroy)
+    {
+        currScene = sceneName;
+        loadingScreen.SetActive(true);
+        audioManager.FadeOutRate = 0.01f;
+        audioManager.StartFadeVoid(false);
+        StartCoroutine(LoadSceneAsync(sceneName));
+
+        for (int i = 0; i < playersParent.childCount; i++)
+        {
+            if (destroy)
+            {
+                Destroy(playersParent.GetChild(i).gameObject);
+            }
+        }
+    }
+
+    private IEnumerator LoadSceneAsync(string sceneName)
+    {
+        AsyncOperation ao = SceneManager.LoadSceneAsync(sceneName);
+
+        float prevProgress = 0;
+        bool sonicOnScreen = false;
+        //ao.allowSceneActivation = false;
+        //loadingScreenAnim.Play("SonicFadeIn");
+
+        while (!ao.isDone)
+        {
+            float progress = Mathf.Clamp01(ao.progress / 0.9f);
+
+            float diff = progress - prevProgress;
+            Debug.Log(diff);
+
+            if (sonicOnScreen)
+            {
+                loadingScreenAnim.SetFloat("Speed", diff);
+                trail.fillAmount = progress;
+            }
+            else if(diff < 0.016f && diff > 0)
+            {
+                loadingScreenAnim.Play("SonicFadeIn");
+                sonicOnScreen = true;
+            }
+
+            prevProgress = progress;
+            
+            yield return null;
+        }
+
+        if (sonicOnScreen)
+        {
+            loadingScreenAnim.Play("LoadFadeOut");
+        }
+        else
+        {
+            loadingScreenAnim.Play("LoadFadeOutNoSonic");
+        }
+
+        audioManager.StartFadeVoid(true);
+
+        yield return new WaitForSeconds(1);
+
+        loadingScreen.SetActive(false);
+
+        if (sceneName == "CharacterSelect")
+        {
+            playerConfigManager.ClearConfigs();
+            playerConfigManager.FindCanvas();
+
+            for (int i = 0; i < playersParent.childCount; i++)
+            {
+                playerConfigManager.CreateEventSystem(playersParent.GetChild(i).GetComponent<PlayerInput>());
+                playersParent.GetChild(i).GetComponent<CharacterSelectInput>().StartFunctions();
+            }
+        }
+    }
+
     public void GetCams()
     {
+        cams.Clear();
+
         for (int i = 0; i < playersLeft.Count; i++)
         {
             cams.Add(playersLeft[i].GetComponentInChildren<Camera>());
@@ -78,11 +173,12 @@ public class GameManager : MonoBehaviour
         if (GetComponent<TestHandleJoin>() != null)
         {
             return;
-        }
+        }       
 
-        for (int i = 0; i < transform.childCount; i++)
+        for (int i = 0; i < playersParent.childCount; i++)
         {
-            transform.GetChild(i).GetComponent<PlayerControls>().enabled = true;
+            PlayerControls controls = playersParent.GetChild(i).GetComponent<PlayerControls>();
+            controls.FindPlayer();            
         }
     }
 

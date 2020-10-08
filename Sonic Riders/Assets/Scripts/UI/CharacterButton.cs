@@ -84,7 +84,7 @@ public class CharacterButton : MonoBehaviour
 
     public void Pressed()
     {
-        CharacterSelectInput selectInput = GameManager.instance.transform.GetChild(eventIndex).GetComponent<CharacterSelectInput>();
+        CharacterSelectInput selectInput = GameManager.instance.transform.transform.GetChild(0).GetChild(eventIndex).GetComponent<CharacterSelectInput>();
 
         if (!disabled.activeSelf && selectInput.CanSelect)
         {

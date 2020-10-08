@@ -17,7 +17,7 @@ public class AudioManager : MonoBehaviour
 
     public Sound CurrSound { get { return currSound; } }
 
-    public bool FadeOut { get; set; } = false;
+    private bool fadeIn = false;
 
     public float FadeOutRate { get; set; } = 0.001f;
 
@@ -39,23 +39,36 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public IEnumerator StartFadeOut()
+    public void StartFadeVoid(bool aFadeIn)
+    {
+        fadeIn = aFadeIn;
+        StopCoroutine("StartFade");
+        StartCoroutine("StartFade");
+    }
+
+    private IEnumerator StartFade()
     {
         if (currSound != null)
         {
-            FadeOut = true;
-
-            while (currSound.volume > 0 && FadeOut)
+            if (!fadeIn)
             {
-                currSound.source.volume -= FadeOutRate;
-                yield return null;
-            }
+                while (currSound.source.volume > 0)
+                {
+                    currSound.source.volume -= FadeOutRate;
+                    yield return null;
+                }
 
-            if (FadeOut)
-            {
                 currSound.source.Stop();
-                FadeOut = false;
-            }            
+            }
+            else
+            {
+                currSound.source.Play();
+                while (currSound.source.volume < currSound.volume)
+                {
+                    currSound.source.volume += FadeOutRate;
+                    yield return null;
+                }
+            }                   
         }
     }
 
@@ -84,6 +97,11 @@ public class AudioManager : MonoBehaviour
     public void StopPlaying(string sound)
     {
         FindSound(sound);
+        if (currS == null)
+        {
+            return;
+        }
+
         currS.source.Stop();
     }
 

@@ -10412,9 +10412,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   path: {fileID: 0}
   grinding: 0
-  speed: 40
+  speed: 52
   jumpSpeed: 10
-  airGain: 8
+  airGain: 21
   extraCharHeight: 0.5
   jumpHeightOfRail: -5
   velocity: {x: 0, y: 0, z: 0}
@@ -10494,7 +10494,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currWaypoint: 0
-  rotateMarker: {fileID: 0}
+  rotateMarker: {fileID: 5069738565866421791}
   distanceTreshold: 5
 --- !u!114 &2157383237562866080
 MonoBehaviour:

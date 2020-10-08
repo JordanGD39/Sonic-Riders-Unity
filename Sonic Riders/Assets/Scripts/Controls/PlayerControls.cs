@@ -17,18 +17,32 @@ public class PlayerControls : MonoBehaviour
     private PlayerJump playerJump;
     private PlayerTricks playerTricks;
     private PlayerFlight playerFlight;
+    private CharacterStats charStats;
     private PlayerGrind playerGrind;
-    private CharacterStats characterStats;
 
     private InputAction moveAction;
     private InputAction jumpAction;
+    private BigCanvasUI bigCanvasUI;
+    private InputAction pauseAction;
 
-    // Start is called before the first frame update
-    void Start()
+    private bool restartedScene = false;
+
+    private void Start()
+    {
+        if (GameManager.instance.GetComponent<TestHandleJoin>() != null)
+        {
+            FindPlayer();
+        }
+    }
+
+    public void FindPlayer()
     {
         playerInput = GetComponent<PlayerInput>();
 
         player = GameManager.instance.PlayersLeft[0];
+
+        player.GetComponent<AiControls>().enabled = false;
+
         GameManager.instance.PlayersLeft.Remove(player);
 
         playerInputManager = GameManager.instance.GetComponent<PlayerInputManager>();
@@ -44,7 +58,9 @@ public class PlayerControls : MonoBehaviour
                     cams[i].GetComponent<CameraCollision>().MaxDistance = 3.5f;
                 }
             }
-        }       
+        }
+
+        bigCanvasUI = GameObject.FindGameObjectWithTag(Constants.Tags.bigCanvas).GetComponent<BigCanvasUI>();
 
         playerMovement = player.GetComponent<PlayerMovement>();
         playerBoost = player.GetComponent<PlayerBoost>();
@@ -53,7 +69,9 @@ public class PlayerControls : MonoBehaviour
         playerJump = player.GetComponent<PlayerJump>();
         playerTricks = player.GetComponent<PlayerTricks>();
         playerFlight = player.GetComponent<PlayerFlight>();
-        CharacterStats charStats = player.GetComponent<CharacterStats>();
+        charStats = player.GetComponent<CharacterStats>();
+
+        charStats.IsPlayer = true;
 
         Transform canvasHolder = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).transform;
 
@@ -88,30 +106,16 @@ public class PlayerControls : MonoBehaviour
                 CanvasScaler scaler = canvasHolder.GetChild(i).GetComponent<CanvasScaler>();
                 scaler.referenceResolution = new Vector2(1600, 1200);
             }
-        }        
+        }       
 
-        player.GetComponent<AiControls>().enabled = false;
+        if (!restartedScene)
+        {
+            AddActions();
+        }
 
-        inputMaster = new InputMaster();
-        
-        playerInput.actions.FindAction(inputMaster.Player.Boost.id).performed += ctx => playerBoost.CheckBoost();
-
-        InputAction driftAction = playerInput.actions.FindAction(inputMaster.Player.Drift.id);
-        moveAction = playerInput.actions.FindAction(inputMaster.Player.Movement.id);
-        jumpAction = playerInput.actions.FindAction(inputMaster.Player.JumpHold.id);
-
-        driftAction.performed += ctx => playerDrift.DriftPressed = true;
-        driftAction.canceled += ctx => playerDrift.DriftPressed = true;
-        driftAction.canceled += ctx => playerDrift.DriftPressed = false;
-        driftAction.canceled += ctx => charStats.Cam.localRotation = new Quaternion(0, 0, 0, charStats.Cam.localRotation.w);
-        playerInput.actions.FindAction(inputMaster.Player.Grind.id).performed += ctx => CheckGrindJump();
-        jumpAction.performed += ctx => playerJump.JumpHoldControls = true;
-        jumpAction.canceled += ctx => playerJump.JumpHoldControls = false;
-        jumpAction.canceled += ctx => playerJump.CheckRelease();
-
+        restartedScene = true;
         //inputMaster.Player.Enable();
-
-        charStats.IsPlayer = true;
+        
         charStats.PlayerIndex = playerInput.playerIndex;
         
         charStats.Cam = cams[playerInput.playerIndex].transform.parent;
@@ -129,11 +133,47 @@ public class PlayerControls : MonoBehaviour
         //GameManager.instance.GetAudioManager.Play("Test");
     }
 
+    private void AddActions()
+    {
+        inputMaster = new InputMaster();
+
+        playerInput.actions.FindAction(inputMaster.Player.Boost.id).performed += ctx => playerBoost.CheckBoost();
+
+        InputAction driftAction = playerInput.actions.FindAction(inputMaster.Player.Drift.id);
+        moveAction = playerInput.actions.FindAction(inputMaster.Player.Movement.id);
+        jumpAction = playerInput.actions.FindAction(inputMaster.Player.JumpHold.id);
+
+        driftAction.performed += ctx => playerDrift.DriftPressed = true;
+        driftAction.canceled += ctx => playerDrift.DriftPressed = true;
+        driftAction.canceled += ctx => playerDrift.DriftPressed = false;
+        driftAction.canceled += ctx => charStats.Cam.localRotation = new Quaternion(0, 0, 0, charStats.Cam.localRotation.w);
+        playerInput.actions.FindAction(inputMaster.Player.Grind.id).performed += ctx => CheckGrindJump();
+        jumpAction.performed += ctx => playerJump.JumpHoldControls = true;
+        jumpAction.canceled += ctx => playerJump.JumpHoldControls = false;
+        jumpAction.canceled += ctx => playerJump.CheckRelease();       
+
+        pauseAction = playerInput.actions.FindAction(inputMaster.Player.Pause.id);
+
+        pauseAction.performed += ctx => bigCanvasUI.PauseToggle();
+    }
+
     // Update is called once per frame
     void Update()
     {
+        if (moveAction == null || charStats == null)
+        {
+            return;
+        }
         //Debug.Log(moveAction.ReadValue<Vector2>());
-        OnMove(moveAction.ReadValue<Vector2>());
+
+        if (!charStats.DisableAllFeatures)
+        {
+            OnMove(moveAction.ReadValue<Vector2>());
+        }
+        else
+        {
+            OnMove(new Vector2(0, 0));
+        }
 
         /*if (playerMovement.Grounded)
         {

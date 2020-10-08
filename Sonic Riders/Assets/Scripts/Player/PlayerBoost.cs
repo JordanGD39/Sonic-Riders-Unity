@@ -24,8 +24,7 @@ public class PlayerBoost : MonoBehaviour
 
     private ParticleSystem ps;
 
-    // Start is called before the first frame update
-    void Start()
+    public void GiveAnim()
     {
         playerMovement = GetComponent<PlayerMovement>();
         playerGrind = GetComponent<PlayerGrind>();
@@ -33,11 +32,8 @@ public class PlayerBoost : MonoBehaviour
         charStats = GetComponent<CharacterStats>();
         stats = charStats.BoardStats;
         audioHolder = GetComponent<AudioManagerHolder>();
-    }
-
-    public void GiveAnim()
-    {
-        canvasAnim = charStats.Canvas.GetComponent<Animator>();
+        if (charStats.IsPlayer)
+            canvasAnim = charStats.Canvas.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -79,7 +75,7 @@ public class PlayerBoost : MonoBehaviour
 
     public void CheckBoost()
     {
-        if (!((playerMovement.Grounded || playerGrind.Grinding) && !boosting && charStats.Air > stats.BoostDepletion))
+        if (charStats.DisableAllFeatures || !((playerMovement.Grounded || playerGrind.Grinding) && !boosting && charStats.Air > stats.BoostDepletion))
         {
             return;
         }

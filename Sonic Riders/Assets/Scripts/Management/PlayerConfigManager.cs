@@ -17,8 +17,7 @@ public class PlayerConfigManager : MonoBehaviour
 
     private void Start()
     {
-        canvas = GameObject.FindGameObjectWithTag(Constants.Tags.canvas);
-        eventSystemHolder = canvas.GetComponent<EventSystemHolder>();
+        FindCanvas();
     }
 
     public void SetPlayerPrefab(int index, GameObject prefab)
@@ -33,7 +32,7 @@ public class PlayerConfigManager : MonoBehaviour
         if (playerConfigs.All(p => p.IsReady))
         {
             GetComponent<PlayerInputManager>().DisableJoining();
-            SceneManager.LoadScene("SampleScene 1");
+            GameManager.instance.LoadScene("SampleScene 1", false);
         }
     }
 
@@ -43,14 +42,30 @@ public class PlayerConfigManager : MonoBehaviour
 
         if (!playerConfigs.Any(p => p.PlayerIndex == pi.playerIndex))
         {
-            pi.transform.parent = transform;
+            pi.transform.parent = transform.GetChild(0);
             playerConfigs.Add(new PlayerConfig(pi));
-            GameObject eventSystem = Instantiate(eventSystemPref);
-            MultiplayerEventSystem multiplayerEventSystem = eventSystem.GetComponent<MultiplayerEventSystem>();
-            multiplayerEventSystem.SetSelectedGameObject(canvas.GetComponentInChildren<Button>().gameObject);
-            eventSystemHolder.MultiplayerEventSystems.Add(multiplayerEventSystem);
-            pi.uiInputModule = eventSystem.GetComponent<InputSystemUIInputModule>();
+            CreateEventSystem(pi);
         }        
+    }
+
+    public void FindCanvas()
+    {
+        canvas = GameObject.FindGameObjectWithTag(Constants.Tags.canvas);
+        eventSystemHolder = canvas.GetComponent<EventSystemHolder>();
+    }
+
+    public void CreateEventSystem(PlayerInput pi)
+    {
+        GameObject eventSystem = Instantiate(eventSystemPref);
+        MultiplayerEventSystem multiplayerEventSystem = eventSystem.GetComponent<MultiplayerEventSystem>();
+        multiplayerEventSystem.SetSelectedGameObject(canvas.GetComponentInChildren<Button>().gameObject);
+        eventSystemHolder.MultiplayerEventSystems.Add(multiplayerEventSystem);
+        pi.uiInputModule = eventSystem.GetComponent<InputSystemUIInputModule>();
+    }
+
+    public void ClearConfigs()
+    {
+        eventSystemHolder.MultiplayerEventSystems.Clear();
     }
 
     public void SpawnPlayers(StartingLevel startingLevel)
@@ -65,7 +80,6 @@ public class PlayerConfigManager : MonoBehaviour
 
         GameManager.instance.GetCams();
         startingLevel.PlacePlayersInOrder();
-
     }
 }
 

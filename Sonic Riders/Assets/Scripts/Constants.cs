@@ -13,6 +13,7 @@ public class Constants
         public const string raceManager = "RaceManager";
         public const string checkpoint = "CheckPoint";
         public const string bigCanvas = "BigCanvas";
+        public const string loadingScreen = "LoadingScreen";
     }
 
     public class VoiceSounds

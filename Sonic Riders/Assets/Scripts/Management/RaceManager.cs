@@ -17,6 +17,8 @@ public class RaceManager : MonoBehaviour
 
     public Sprite[] NumberSprites { get { return numberSprites; } }
 
+    private bool playingVictory = false;
+
     private void Start()
     {
         bigCanvasUI = GameObject.FindGameObjectWithTag(Constants.Tags.bigCanvas).GetComponent<BigCanvasUI>();
@@ -50,6 +52,13 @@ public class RaceManager : MonoBehaviour
 
     public void CheckRaceEnd(PlayerCheckpoints player)
     {
+        if (!playingVictory)
+        {
+            playingVictory = true;
+            GameManager.instance.GetAudioManager.StopPlaying(GameManager.instance.GetAudioManager.CurrSound.name);
+            GameManager.instance.GetAudioManager.Play("Victory");
+        }
+
         playersLeft.Remove(player);
 
         if (playersLeft.Count == 0)

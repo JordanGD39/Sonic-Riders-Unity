@@ -24,8 +24,7 @@ public class PlayerFlight : MonoBehaviour
     [SerializeField] private float airGain = 0.02f;
     private float flightSpeed = 0;
 
-    // Start is called before the first frame update
-    void Start()
+    public void GiveCanvasHud()
     {
         charStats = GetComponent<CharacterStats>();
 
@@ -38,14 +37,14 @@ public class PlayerFlight : MonoBehaviour
         playerTricks = GetComponent<PlayerTricks>();
         rb = GetComponent<Rigidbody>();
         cornering = charStats.BoardStats.Cornering * turnMultiplier;
-        
-        audioHolder = GetComponent<AudioManagerHolder>();
-    }
 
-    public void GiveCanvasHud()
-    {
-        hud = charStats.Canvas.GetComponent<HUD>();
-        canvasAnim = hud.GetComponent<Animator>();
+        audioHolder = GetComponent<AudioManagerHolder>();
+
+        if (charStats.IsPlayer)
+        {
+            hud = charStats.Canvas.GetComponent<HUD>();
+            canvasAnim = hud.GetComponent<Animator>();
+        }       
     }
     
     // Update is called once per frame

@@ -56,7 +56,7 @@ public class PlayerJump : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!mov.Grounded || charStats.Air <= 0)
+        if (!mov.Grounded || charStats.Air <= 0 || charStats.DisableAllFeatures)
         {
             if (jumpHeight != startingJumpHeight)
             {
@@ -91,7 +91,7 @@ public class PlayerJump : MonoBehaviour
 
     public void CheckRelease()
     {
-        if (mov.Grounded && charStats.Air > 0)
+        if (mov.Grounded && charStats.Air > 0 && !charStats.DisableAllFeatures)
         {
             JumpHold = false;
 

@@ -15,25 +15,26 @@ public class PlayerDrift : MonoBehaviour
     private float driftTimer = 0;
     [SerializeField] private float brakePower = 30;
 
-    // Start is called before the first frame update
-    void Start()
+    public void GiveAnim()
     {
         movement = GetComponent<PlayerMovement>();
         charStats = GetComponent<CharacterStats>();
 
         stats = charStats.BoardStats;
         audioHolder = GetComponent<AudioManagerHolder>();
-    }
-
-    public void GiveAnim()
-    {
-        canvasAnim = charStats.Canvas.GetComponent<Animator>();
+        if (charStats.IsPlayer)
+            canvasAnim = charStats.Canvas.GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (movement.Grounded && charStats.Air > 0)
+        if (movement == null)
+        {
+            return;
+        }
+
+        if (movement.Grounded && charStats.Air > 0 && !charStats.DisableAllFeatures)
         {
             if (DriftPressed)
             {

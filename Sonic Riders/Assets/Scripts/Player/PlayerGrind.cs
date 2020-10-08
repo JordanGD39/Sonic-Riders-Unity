@@ -36,8 +36,7 @@ public class PlayerGrind : MonoBehaviour
 
     private HUD hud;
 
-    // Start is called before the first frame update
-    void Start()
+    public void GiveCanvasHud()
     {
         charStats = GetComponent<CharacterStats>();
 
@@ -53,11 +52,8 @@ public class PlayerGrind : MonoBehaviour
         stats = charStats.BoardStats;
         //hud = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponent<HUD>();
         audioHolder = GetComponent<AudioManagerHolder>();
-    }
-
-    public void GiveCanvasHud()
-    {
-        hud = charStats.Canvas.GetComponent<HUD>();
+        if (charStats.IsPlayer)
+            hud = charStats.Canvas.GetComponent<HUD>();
     }
 
     // Update is called once per frame

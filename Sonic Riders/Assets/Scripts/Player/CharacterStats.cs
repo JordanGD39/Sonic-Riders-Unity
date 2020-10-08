@@ -61,6 +61,7 @@ public class CharacterStats : MonoBehaviour
         }
     }
     public bool IsPlayer { get; set; } = false;
+    public bool DisableAllFeatures { get; set; } = false;
 
     [SerializeField] private float air = 100;
     [SerializeField] private int maxAir = 100;
@@ -145,6 +146,11 @@ public class CharacterStats : MonoBehaviour
 
             if (IsPlayer)
             {
+                if (hud == null)
+                {
+                    return;
+                }
+
                 hud.UpdateAirBar(air);
             }
         }
@@ -171,20 +177,32 @@ public class CharacterStats : MonoBehaviour
 
     private bool alreadyRunning = false;
 
-    // Start is called before the first frame update
-    void Start()
+    private float timer = 0;
+    public float Timer { get { return timer; } }
+
+    public bool StopCounting { get; set; } = false;
+
+    private void Update()
     {
-        //hud = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponent<HUD>();
-        playerAnimation = GetComponent<PlayerAnimationHandler>();
+        if (!StopCounting)
+        {
+            timer += Time.deltaTime;
+        }        
     }
 
     public void GiveCanvasHud()
     {
-        hud = Canvas.GetComponent<HUD>();
+        if (IsPlayer)
+            hud = Canvas.GetComponent<HUD>();
     }
 
     private void RunOnFoot()
     {
+        if (playerAnimation == null)
+        {
+            playerAnimation = GetComponent<PlayerAnimationHandler>();
+        }
+
         alreadyRunning = true;
         playerAnimation.RunningState(true);
         Debug.Log("Run on foot");
