@@ -14,7 +14,7 @@ public class PlayerCheckpoints : MonoBehaviour
     [SerializeField] private int currCheckpoint = 0;
     public int CurrCheckpoint { get { return currCheckpoint; } set { currCheckpoint = value; } }
 
-    [SerializeField] private int lapCount = 0;
+    [SerializeField] private int lapCount = 1;
     public int LapCount { get { return lapCount; } set { lapCount = value; } }
 
     private int place = 0;
@@ -96,7 +96,7 @@ public class PlayerCheckpoints : MonoBehaviour
                     hud.UpdateLap(lapCount, raceManager.Laps);
                 }
 
-                if (lapCount >= raceManager.Laps)
+                if (lapCount > raceManager.Laps)
                 {
                     if (CharStats.IsPlayer)
                     {

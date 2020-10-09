@@ -128,7 +128,7 @@ public class PlayerControls : MonoBehaviour
             charStats.GetComponent<PlayerAnimationHandler>().Anim.Play("Standing");
         }
 
-        charStats.Canvas.GetComponent<HUD>().UpdateAirBar(charStats.Air);
+        charStats.Canvas.GetComponent<HUD>().UpdateAirBar(charStats.Air, charStats.MaxAir);
 
         //GameManager.instance.GetAudioManager.Play("Test");
     }

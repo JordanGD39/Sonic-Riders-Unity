@@ -7,6 +7,8 @@ public class HUD : MonoBehaviour
 {
     [SerializeField] private Text speedText;
     [SerializeField] private Image airBar;
+    [SerializeField] private Image underAir;
+    [SerializeField] private Image maxAirBar;
     [SerializeField] private Image deathPanel;
     public Image DeathPanel { get { return deathPanel; } } 
     [SerializeField] private Text ringsText;
@@ -18,6 +20,8 @@ public class HUD : MonoBehaviour
     private float displayDelay = 0.05f;
     private float timer = 0;
 
+    [SerializeField] private Sprite[] airSprites;
+
     public RaceManager raceManager { get; set; }
     public int Place { get; set; } = 0;
 
@@ -25,7 +29,7 @@ public class HUD : MonoBehaviour
     void Start()
     {
         Transform airBarParent = transform.GetChild(0);
-        UpdateAirBar(100);
+        UpdateAirBar(200, 200);
     }
 
     private void Update()
@@ -54,9 +58,32 @@ public class HUD : MonoBehaviour
         levelText.text = (level + 1).ToString();
     }
 
-    public void UpdateAirBar(float air)
+    public void UpdateAirBar(float air, float maxAir)
     {
         airBar.fillAmount = air / 300;
+        maxAirBar.fillAmount = maxAir / 300;
+
+        if (airBar.fillAmount < 0.5f)
+        {
+            airBar.sprite = airSprites[1];
+
+            if (airBar.fillAmount < 0.25f)
+            {
+                airBar.color = Color.red;
+                underAir.color = Color.red;
+            }
+            else
+            {
+                airBar.color = Color.white;
+                underAir.color = new Color32(255, 145, 0, 255);
+            }
+        }
+        else
+        {
+            airBar.sprite = airSprites[0];
+            airBar.color = Color.white;
+            underAir.color = new Color32(0, 229, 247, 255);
+        }
     }
 
     public void UpdateSpeedText(float speed)

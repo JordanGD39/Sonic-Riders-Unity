@@ -27,7 +27,7 @@ public class CharacterSelectInput : MonoBehaviour
 
     public void StartFunctions()
     {
-        if (SceneManager.GetActiveScene().buildIndex > 0)
+        if (SceneManager.GetActiveScene().buildIndex > 1)
         {
             enabled = false;
             return;

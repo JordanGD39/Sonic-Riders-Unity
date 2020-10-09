@@ -2433,8 +2433,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
-  m_RenderPostProcessing: 0
-  m_Antialiasing: 0
+  m_RenderPostProcessing: 1
+  m_Antialiasing: 2
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
@@ -10308,8 +10308,8 @@ MonoBehaviour:
   portrait: {fileID: 21300000, guid: dfdb1fa6195d5e24e8ea5c5ad219d91b, type: 3}
   extraY: 0
   level: 0
-  air: 150
-  maxAir: 150
+  air: 200
+  maxAir: 200
   rings: 0
   maxRings: 30
   startRings: 0
@@ -10509,7 +10509,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currCheckpoint: 0
-  lapCount: 0
+  lapCount: 1
 --- !u!1 &7714252794598006170
 GameObject:
   m_ObjectHideFlags: 0

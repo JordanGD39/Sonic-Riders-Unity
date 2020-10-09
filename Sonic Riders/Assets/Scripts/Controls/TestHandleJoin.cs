@@ -17,6 +17,7 @@ public class TestHandleJoin : MonoBehaviour
 
     public void HandlePlayerJoin(PlayerInput pi)
     {
+        GetComponent<PlayerInputManager>().EnableJoining();
         pi.GetComponent<PlayerControls>().enabled = true;
     }
 }

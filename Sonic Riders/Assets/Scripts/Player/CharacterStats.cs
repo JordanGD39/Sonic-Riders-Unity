@@ -36,12 +36,12 @@ public class CharacterStats : MonoBehaviour
                 case 0:
                     maxRings = 30;
                     startRings = 0;
-                    maxAir = 150;                    
+                    maxAir = 200;                    
                     break;
                 case 1:
                     maxRings = 60;
                     startRings = 30;
-                    maxAir = 225;
+                    maxAir = 250;
                     break;
                 case 2:
                     maxRings = 100;
@@ -151,7 +151,7 @@ public class CharacterStats : MonoBehaviour
                     return;
                 }
 
-                hud.UpdateAirBar(air);
+                hud.UpdateAirBar(air, maxAir);
             }
         }
     }
