@@ -89,12 +89,7 @@ public class PlayerCheckpoints : MonoBehaviour
 
             if (lastCheckpointReached)
             {
-                lapCount++;
-
-                if (hud != null)
-                {
-                    hud.UpdateLap(lapCount, raceManager.Laps);
-                }
+                lapCount++;               
 
                 if (lapCount > raceManager.Laps)
                 {
@@ -114,6 +109,12 @@ public class PlayerCheckpoints : MonoBehaviour
                     CharStats.DisableAllFeatures = true;
                     CharStats.StopCounting = true;
                     raceManager.CheckRaceEnd(this);
+                    lapCount = raceManager.Laps;
+                }
+
+                if (hud != null)
+                {
+                    hud.UpdateLap(lapCount, raceManager.Laps);
                 }
             }
         }

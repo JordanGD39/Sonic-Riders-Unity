@@ -20,8 +20,6 @@ public class HUD : MonoBehaviour
     private float displayDelay = 0.05f;
     private float timer = 0;
 
-    [SerializeField] private Sprite[] airSprites;
-
     public RaceManager raceManager { get; set; }
     public int Place { get; set; } = 0;
 
@@ -65,24 +63,35 @@ public class HUD : MonoBehaviour
 
         if (airBar.fillAmount < 0.5f)
         {
-            airBar.sprite = airSprites[1];
-
             if (airBar.fillAmount < 0.25f)
             {
-                airBar.color = Color.red;
-                underAir.color = Color.red;
+                float fill = airBar.fillAmount;
+
+                Color finalColor = new Color(1, fill + 0.75f, 0.25f);
+
+                airBar.color = finalColor;
+                underAir.color = new Color(1, fill + 0.75f, 0.25f, fill / 0.25f);
             }
             else
             {
-                airBar.color = Color.white;
-                underAir.color = new Color32(255, 145, 0, 255);
+                float fill = airBar.fillAmount;
+
+                Color finalColor = new Color(1, 1, fill);
+
+                airBar.color = finalColor;
+                underAir.color = finalColor;
             }
         }
         else
         {
-            airBar.sprite = airSprites[0];
-            airBar.color = Color.white;
-            underAir.color = new Color32(0, 229, 247, 255);
+            float fill = airBar.fillAmount;
+            float red = (fill - 0.5f) / 0.5f;
+            red -= 1;
+
+            Color finalColor = new Color(-red, 1, 0.5f);
+
+            airBar.color = finalColor;
+            underAir.color = finalColor;
         }
     }
 
