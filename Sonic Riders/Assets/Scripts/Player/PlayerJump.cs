@@ -108,24 +108,7 @@ public class PlayerJump : MonoBehaviour
 
                 rampPower = CurrRamp.Power;
                 maxRampPower = rampPower;
-                worstRampPower = CurrRamp.WorstPower;
                 jumpMultiplier = CurrRamp.JumpMultiplier;
-
-                if (transform.localPosition.z < CurrRamp.PerfectJump)
-                {
-                    if (transform.localPosition.z > -CurrRamp.PerfectJump)
-                    {
-                        float powerDiff = rampPower - worstRampPower;
-                        float diffPos = transform.localPosition.z + CurrRamp.PerfectJump;
-                        float percent = diffPos / (CurrRamp.PerfectJump * 2);
-                        rampPower = worstRampPower + powerDiff * percent;
-                        Debug.Log("Diff: " + diffPos + " Percent: " + percent + " power: " + rampPower);
-                    }
-                    else
-                    {
-                        rampPower = worstRampPower;
-                    }                    
-                }
 
                 if (!playerTricks.CanDoTricks)
                 {

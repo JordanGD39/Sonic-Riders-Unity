@@ -72,11 +72,13 @@ public class BigCanvasUI : MonoBehaviour
     {
         tutorialAnim.Play("PopupAway");
 
-        Invoke("DisablePopup", 0.5f);
+        StartCoroutine("DisablePopup");
     }
 
-    private void DisablePopup()
+    private IEnumerator DisablePopup()
     {
+        yield return new WaitForSecondsRealtime(0.5f);
+
         tutorialPanel.SetActive(false);
     }
 

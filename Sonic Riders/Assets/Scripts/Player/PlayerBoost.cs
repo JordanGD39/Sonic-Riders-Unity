@@ -40,6 +40,11 @@ public class PlayerBoost : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (charStats == null)
+        {
+            return;
+        }
+
         if (charStats.OffRoad)
         {
             offroadTimer -= Time.deltaTime;

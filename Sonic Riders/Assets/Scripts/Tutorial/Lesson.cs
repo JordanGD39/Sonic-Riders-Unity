@@ -9,14 +9,6 @@ public class Lesson : ScriptableObject
     [SerializeField] [TextArea] private string inputField;
     public string TextField { get { return inputField; } }
 
-    public enum advancements { CONFIRM, ACTION, DESTINATION, FALLING, NONE }
-
-    [SerializeField] private advancements advancement = advancements.CONFIRM;
-    [SerializeField] private advancements secondAdvancement = advancements.NONE;
-
-    public advancements Advancement { get { return advancement; } }
-    public advancements SecondAdvancement { get { return secondAdvancement; } }
-
     [SerializeField] private InputActionReference inputAction;
     public InputAction Action { get { return inputAction; } }
 
@@ -29,6 +21,12 @@ public class Lesson : ScriptableObject
     [SerializeField] private bool freezeTime = false;
     public bool FreezeTime { get { return freezeTime; } }
 
+    [SerializeField] private bool jumpingOfRamp = false;
+    public bool JumpingOfRamp { get { return jumpingOfRamp; } }
+
     [SerializeField] private int indexSkip = 0;
     public int IndexSkip { get { return indexSkip; } }
+
+    [SerializeField] private bool startCountdown = false;
+    public bool StartCountdown { get { return startCountdown; } }
 }

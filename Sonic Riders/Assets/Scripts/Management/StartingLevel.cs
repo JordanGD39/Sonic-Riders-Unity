@@ -9,13 +9,14 @@ public class StartingLevel : MonoBehaviour
     private List<Text> countdownTexts = new List<Text>();
 
     [SerializeField] private bool noStart = false;
-    [SerializeField] private bool tutorial = false;
 
     private bool startCountDown = false;
     private float timer = 5;
     public float Timer { get { return timer; } }
 
     private bool doneCounting = false;
+
+    [SerializeField] private TutorialManager tutorialManager;
 
     // Start is called before the first frame update
     void Start()
@@ -134,9 +135,14 @@ public class StartingLevel : MonoBehaviour
             playersInScene[i].transform.position = new Vector3(x, 0.4f, 0);
         }
 
-        if (!tutorial)
+        if (tutorialManager == null)
         {
             Invoke("StartCountdown", 0.5f);
+        }
+        else
+        {
+            tutorialManager.StartLevel = this;
+            tutorialManager.GivePlayerComponents(playersInScene[0].GetComponent<PlayerMovement>());
         }
     }
 

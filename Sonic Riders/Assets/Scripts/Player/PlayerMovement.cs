@@ -81,7 +81,7 @@ public class PlayerMovement : MonoBehaviour
     {
         //Movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
-        if (!playerJump.DontDragDown)
+        if (playerJump == null || !playerJump.DontDragDown)
         {
             grounded = GetAlignment();
         }
@@ -223,7 +223,7 @@ public class PlayerMovement : MonoBehaviour
 
                     speed = tempSpeed;
 
-                    if (playerTricks.CanDoTricks)
+                    if (playerTricks != null && playerTricks.CanDoTricks)
                     {
                         playerTricks.Landed(true);
                     }                    
@@ -525,16 +525,18 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
+        if (charStats == null)
+        {
+            return;
+        }
+
         if (!playerJump.DontDragDown && !grounded && !Bouncing)
         {
             highestFallSpeed = 0;
             raycastLength = startingRaycastLength;
         }
 
-        if (charStats != null)
-        {
-            //Off road layer
-            charStats.OffRoad = collision.gameObject.layer == 12;
-        }        
+        //Off road layer
+        charStats.OffRoad = collision.gameObject.layer == 12;     
     }
 }

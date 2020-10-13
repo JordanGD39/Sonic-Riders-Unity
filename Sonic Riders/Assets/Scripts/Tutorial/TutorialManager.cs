@@ -6,25 +6,50 @@ using UnityEngine.InputSystem;
 public class TutorialManager : MonoBehaviour
 {
     [SerializeField] private Lesson[] lessons;
-    private int lessonIndex = 0;
+    [SerializeField] private int lessonIndex = 0;
 
     private PlayerMovement player;
+    private PlayerTricks playerTricks;
     public PlayerMovement Player { set { player = value; } }
+
+    public StartingLevel StartLevel { get; set; }
 
     private BigCanvasUI bigCanvasUI;
 
     private InputAction prevInputAction;
-    private Vector3 destination;
+    private bool alreadyIncrementing = false;
+    private Vector3 destination = Vector3.zero;
+
+    [SerializeField] private Transform destinationAura;
+    private ParticleSystem destinationPs;
+
+    [SerializeField] private GameObject invisibleWall;
+    [SerializeField] private int removeWall = 8;
+
+    private System.Action<InputAction.CallbackContext> handler;
 
     // Start is called before the first frame update
     void Start()
     {
+        destinationPs = destinationAura.GetComponentInChildren<ParticleSystem>();
+        destinationPs.Stop();
+
         bigCanvasUI = GameObject.FindGameObjectWithTag(Constants.Tags.bigCanvas).GetComponent<BigCanvasUI>();
+
+        handler = (InputAction.CallbackContext ctx) => LessonDone();
         AddActionPerformed();
+    }
+
+    public void GivePlayerComponents(PlayerMovement movement)
+    {
+        player = movement;
+        playerTricks = player.GetComponent<PlayerTricks>();
     }
 
     private void AddActionPerformed()
     {
+        alreadyIncrementing = false;
+       
         prevInputAction = null;
         destination = Vector3.zero;
 
@@ -34,40 +59,92 @@ public class TutorialManager : MonoBehaviour
 
         if (action != null)
         {
-            action.performed += ctx => LessonDone();
             prevInputAction = action;
+            
+            prevInputAction.performed += handler;
         }
 
         destination = currLesson.Destination;
+
+        if (destination != Vector3.zero)
+        {
+            destinationAura.position = destination;
+            destinationPs.Play();
+        }
+
+        Time.timeScale = currLesson.FreezeTime ? 0 : 1;
 
         bigCanvasUI.ShowTutorialText(currLesson.TextField);
     }
 
     private void LessonDone()
     {
-        if (prevInputAction != null)
+        if (alreadyIncrementing)
         {
-            prevInputAction.performed -= ctx => LessonDone();
+            return;
+        }
+        
+        alreadyIncrementing = true;
+
+        destinationPs.Stop();
+
+        if (prevInputAction != null)
+        {            
+            prevInputAction.performed -= handler;
         }
 
         bigCanvasUI.RemovePopup();
 
-        lessonIndex++;
+        if (lessons[lessonIndex].StartCountdown)
+        {
+            StartLevel.StartCountDownTutorial();
+        }
 
-        if (lessonIndex >= lessons.Length)
+        if (lessonIndex >= lessons.Length - 1)
         {
             return;
         }
 
-        Invoke("AddActionPerformed", 0.5f);
+        lessonIndex++;
+
+        if (lessonIndex == removeWall)
+        {
+            invisibleWall.SetActive(false);
+        }       
+
+        Time.timeScale = lessons[lessonIndex].FreezeTime ? 0 : 1;
+
+        StartCoroutine("DelayNewLesson");
+    }
+
+    private IEnumerator DelayNewLesson()
+    {
+        yield return new WaitForSecondsRealtime(0.55f);
+
+        AddActionPerformed();
     }
 
     // Update is called once per frame
     void Update()
     {
-        /*if (lessons[lessonIndex].Falling && !player.Grounded)
+        if (lessonIndex >= lessons.Length)
+        {
+            return;
+        }
+
+        if (lessons[lessonIndex].Falling && !player.Grounded)
         {
             LessonDone();
-        }*/
+        }
+
+        if (destination != Vector3.zero && (destination - player.transform.position).sqrMagnitude < 6)
+        {
+            LessonDone();
+        }
+
+        if (lessons[lessonIndex].JumpingOfRamp && playerTricks.CanDoTricks)
+        {
+            LessonDone();
+        }
     }
 }

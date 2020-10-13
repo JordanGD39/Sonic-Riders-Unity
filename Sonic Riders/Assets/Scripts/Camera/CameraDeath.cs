@@ -53,7 +53,7 @@ public class CameraDeath : MonoBehaviour
         yield return new WaitForSeconds(timeToRespawn);
         canvasAnim.Play("DeathFadeOut");
         followPlayer = false;
-        player.position = playerCheckpoints.RaceManagerScript.transform.GetChild(playerCheckpoints.CurrCheckpoint).position;
+        player.position = playerCheckpoints.RaceManagerScript.transform.GetChild(playerCheckpoints.CurrCheckpoint).GetChild(0).position;
         playerRb.velocity = Vector3.zero;
         transform.parent = prevParent;
         transform.localPosition = startPos;

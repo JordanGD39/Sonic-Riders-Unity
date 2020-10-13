@@ -106,9 +106,17 @@ public class PlayerTrigger : MonoBehaviour
         if (startingLevel.Timer > 0)
         {
             playerMovement.CantMove = true;
+            charStats.DisableAllFeatures = true;
             playerMovement.Speed = 0;
             rb.velocity = Vector3.zero;
-            Invoke("CanRun", 2);
+            float waitTime = 2;
+
+            if (startingLevel.Timer > 2)
+            {
+                waitTime = startingLevel.Timer;
+            }
+
+            Invoke("CanRun", waitTime);
         }
         else
         {
@@ -138,6 +146,7 @@ public class PlayerTrigger : MonoBehaviour
     private void CanRun()
     {
         playerMovement.CantMove = false;
+        charStats.DisableAllFeatures = false;
     }
 
     private IEnumerator FollowPath()

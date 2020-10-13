@@ -63,16 +63,12 @@ public class PlayerTricks : MonoBehaviour
     public void ChangeTrickSpeed(float rampPower, float maxRampPower, float worstPower, float jumpHeight, float startingJumpHeight, float maxJumpHeight)
     {
         CanDoTricks = true;
-
-        float rampDiff = maxRampPower - worstPower;
+        
         float jumpDiff = maxJumpHeight - startingJumpHeight;
+        
+        float jumpCharge = (jumpHeight - startingJumpHeight) / jumpDiff;
 
-        float rampTiming = (rampPower - worstPower) / rampDiff;
-        float jumpCharge = (jumpHeight - startingJumpHeight)/ jumpDiff;
-        rampTiming *= 0.6f;
-        jumpCharge *= 0.4f;
-
-        speedReward = rampTiming + jumpCharge;
+        speedReward = jumpCharge;
 
         if (speedReward < 0.25f)
         {
