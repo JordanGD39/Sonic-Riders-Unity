@@ -19,6 +19,7 @@ public class HUD : MonoBehaviour
     [SerializeField] private Animator placingAnim;
     private float displayDelay = 0.05f;
     private float timer = 0;
+    public float LevelThreeMaxAir { get; set; } = 200;
 
     public RaceManager raceManager { get; set; }
     public int Place { get; set; } = 0;
@@ -58,8 +59,8 @@ public class HUD : MonoBehaviour
 
     public void UpdateAirBar(float air, float maxAir)
     {
-        airBar.fillAmount = air / 300;
-        maxAirBar.fillAmount = maxAir / 300;
+        airBar.fillAmount = air / LevelThreeMaxAir;
+        maxAirBar.fillAmount = maxAir / LevelThreeMaxAir;
 
         if (airBar.fillAmount < 0.5f)
         {
@@ -107,6 +108,11 @@ public class HUD : MonoBehaviour
 
     public void UpdateLap(int lap, int maxLap)
     {
+        if (lap > maxLap)
+        {
+            lap = maxLap;
+        }
+
         lapText.text = lap.ToString("00") + "/";
         maxLapText.text = maxLap.ToString("00");
     }

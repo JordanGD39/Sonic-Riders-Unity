@@ -15,12 +15,14 @@ public class BoardStats : ScriptableObject
     public float Cornering { get { return cornering; } }
     [SerializeField] private float[] boost = { 50, 57.5f, 62.5f };
     public float[] Boost { get { return boost; } }
+    [SerializeField] private int[] maxAir = { 100, 150, 200 };
+    public int[] MaxAir { get { return maxAir; } }
     [SerializeField] private float airDepletion = 0.017f;
     public float AirDepletion { get { return airDepletion; } }
-    [SerializeField] private float boostDepletion = 15;
-    public float BoostDepletion { get { return boostDepletion; } }
-    [SerializeField] private float boostTime = 5;
-    public float BoostTime { get { return boostTime; } }
+    [SerializeField] private float[] boostDepletion = {25, 30, 40 };
+    public float[] BoostDepletion { get { return boostDepletion; } }
+    [SerializeField] private float[] driftDepletion = {166, 250, 333 };
+    public float[] DriftDepletion { get { return driftDepletion; } }    
     [SerializeField] private type boardType;
     public type BoardType { get { return boardType; } }
     [SerializeField] private bool standard = false;

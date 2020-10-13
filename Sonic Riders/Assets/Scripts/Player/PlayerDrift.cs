@@ -64,9 +64,9 @@ public class PlayerDrift : MonoBehaviour
             //charStats.Cam.localRotation = new Quaternion(0, 0, 0, charStats.Cam.localRotation.w);
             driftTimer = 0;
             movement.FallToTheGround = false;
-            if (movement.Speed < stats.Boost[charStats.Level])
+            if (movement.Speed < charStats.GetCurrentBoost())
             {
-                movement.Speed = stats.Boost[charStats.Level];
+                movement.Speed = charStats.GetCurrentBoost();
             }
             else
             {
@@ -118,6 +118,6 @@ public class PlayerDrift : MonoBehaviour
         driftTimer += Time.deltaTime;
         movement.Drifting = true;
         movement.Speed -= 4 * Time.deltaTime;
-        charStats.Air -= charStats.GetCurrentAirLoss() * 2 * Time.deltaTime;
+        charStats.Air -= charStats.GetCurrentDriftDepletion() * Time.deltaTime;
     }
 }

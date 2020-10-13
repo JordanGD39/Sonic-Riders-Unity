@@ -18,6 +18,7 @@ public class PlayerBoost : MonoBehaviour
     [SerializeField] private Vector3 camPos;
     [SerializeField] private float camSpeedBoost = 5;
     [SerializeField] private float camSpeedStopBoosting = 2;
+    private float offroadTimer = 1;
 
     private bool startCameraPos = false;
     private bool startPuttingBackCameraPos = false;
@@ -39,7 +40,16 @@ public class PlayerBoost : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (boosting && (!playerMovement.Grounded || charStats.OffRoad))
+        if (charStats.OffRoad)
+        {
+            offroadTimer -= Time.deltaTime;
+        }
+        else
+        {
+            offroadTimer = 1;
+        }
+
+        if (boosting && (!playerMovement.Grounded || offroadTimer <= 0))
         {
             boosting = false;
 
@@ -75,7 +85,7 @@ public class PlayerBoost : MonoBehaviour
 
     public void CheckBoost()
     {
-        if (charStats.DisableAllFeatures || !((playerMovement.Grounded || playerGrind.Grinding) && !boosting && charStats.Air > stats.BoostDepletion))
+        if (charStats.DisableAllFeatures || !((playerMovement.Grounded || playerGrind.Grinding) && !boosting && charStats.Air > charStats.GetCurrentBoostDepletion()))
         {
             return;
         }
@@ -100,7 +110,7 @@ public class PlayerBoost : MonoBehaviour
         }
         
         playerMovement.FallToTheGround = false;
-        charStats.Air -= stats.BoostDepletion;
+        charStats.Air -= charStats.GetCurrentBoostDepletion();
 
         StopCoroutine("BoostCooldown");
         StartCoroutine("BoostCooldown");     
@@ -124,7 +134,7 @@ public class PlayerBoost : MonoBehaviour
 
     private IEnumerator BoostCooldown()
     {
-        yield return new WaitForSeconds(stats.BoostTime);
+        yield return new WaitForSeconds(charStats.GetCurrentBoostTime());
 
         boosting = false;
 

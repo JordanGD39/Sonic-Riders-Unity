@@ -49,11 +49,7 @@ public class Capsule : MonoBehaviour
 
     private void RandomizeContents()
     {
-        int randAmount = Random.Range(1, 3);
-
-        int item = Random.Range(0, 4);
-
-        numberToChange.sprite = numbers[randAmount - 1];
+        int item = Random.Range(0, 4);       
 
         ringCount = 0;
         air = 0;
@@ -72,11 +68,16 @@ public class Capsule : MonoBehaviour
 
         if (item < 1)
         {
+            int randAmount = Random.Range(1, 3);
+            numberToChange.sprite = numbers[randAmount - 1];
+
             ringCount = randAmount * 10;
             itemToChange.sprite = itemSprites[0];
         }
         else
         {
+            int randAmount = Random.Range(1, 6);
+            numberToChange.sprite = numbers[randAmount - 1];
             air = randAmount * 10;
             itemToChange.sprite = itemSprites[1];
         }

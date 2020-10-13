@@ -129,7 +129,7 @@ public class PlayerMovement : MonoBehaviour
                 DriftBoost = false;
             }
 
-            if (playerDrift.DriftPressed && charStats.Air > 0)
+            if (Drifting && charStats.Air > 0)
             {
                 transform.GetChild(0).GetChild(0).localRotation = new Quaternion(0, TurnAmount * 0.1f, 0, transform.GetChild(0).GetChild(0).localRotation.w);
             }  

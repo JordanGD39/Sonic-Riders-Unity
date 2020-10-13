@@ -9,6 +9,7 @@ public class StartingLevel : MonoBehaviour
     private List<Text> countdownTexts = new List<Text>();
 
     [SerializeField] private bool noStart = false;
+    [SerializeField] private bool tutorial = false;
 
     private bool startCountDown = false;
     private float timer = 5;
@@ -133,6 +134,14 @@ public class StartingLevel : MonoBehaviour
             playersInScene[i].transform.position = new Vector3(x, 0.4f, 0);
         }
 
+        if (!tutorial)
+        {
+            Invoke("StartCountdown", 0.5f);
+        }
+    }
+
+    public void StartCountDownTutorial()
+    {
         Invoke("StartCountdown", 0.5f);
     }
 

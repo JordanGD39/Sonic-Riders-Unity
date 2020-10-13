@@ -63,19 +63,31 @@ public class CharacterButton : MonoBehaviour
     private void DisplayStats(int index, Transform statTransform)
     {
         float stat = 0.5f;
+        float minValue = 0;
         switch (index)
         {
             case 0:
-                stat = stats.GetCurrentDash() / 24;
+                minValue = 7;
+                stat = (stats.GetCurrentDash() - minValue) / 20;
                 break;
             case 1:
-                stat = stats.GetCurrentLimit() / 83;
+                minValue = 25;
+                stat = (stats.GetCurrentLimit() - minValue) / 60;
                 break;
             case 2:
-                stat = stats.GetCurrentPower() / 66.75f;
+                minValue = 15;
+                stat = (stats.GetCurrentPower() - minValue) / 46.75f;
                 break;
             case 3:
-                stat = stats.GetCurrentCornering() / 180;
+                minValue = 40;
+                stat = (stats.GetCurrentCornering() - minValue) / 160;
+                break;
+            case 4:
+                stat = stats.GetCurrentAirLoss() / 5;
+                break;
+            case 5:
+                minValue = 30;
+                stat = (stats.RunSpeed - minValue) / 20;
                 break;
         }
 

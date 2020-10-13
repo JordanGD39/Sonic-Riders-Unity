@@ -111,11 +111,11 @@ public class PlayerTricks : MonoBehaviour
             audioHolder.VoiceManager.Play(Constants.VoiceSounds.landFail);
             playerMovement.Speed *= 0.1f;
             Debug.Log("Trick speed loss!!!");
-            characterStats.Air += 20;
+            characterStats.Air += 25;
         }
         else
         {
-            characterStats.Air += tricks * 20 + 20;
+            characterStats.Air += tricks * 25 + 25;
 
             if (tricks >= 1)
             {

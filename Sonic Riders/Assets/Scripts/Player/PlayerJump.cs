@@ -80,7 +80,7 @@ public class PlayerJump : MonoBehaviour
 
         if (charStats.Air > 0)
         {
-            charStats.Air -= charStats.GetCurrentAirLoss() * 2 * Time.deltaTime;
+            charStats.Air -= charStats.GetCurrentAirLoss() * 4 * Time.deltaTime;
         }
 
         if (jumpHeight < maxJumpHeight)

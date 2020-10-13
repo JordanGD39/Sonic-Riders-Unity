@@ -13,6 +13,9 @@ public class BigCanvasUI : MonoBehaviour
     [SerializeField] private GameObject continueButton;
     [SerializeField] private GameObject restartButton;
     [SerializeField] private Text timeText;
+    [SerializeField] private GameObject tutorialPanel;
+    [SerializeField] private Animator tutorialAnim;
+    [SerializeField] private Text tutorialText;
     private float timer = 0;
     private bool stopCounting = false;
 
@@ -23,6 +26,7 @@ public class BigCanvasUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        tutorialPanel.SetActive(false);
         changePlace = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponentInChildren<ChangePlace>();
         characterPlaceParent.gameObject.SetActive(false);
         pausePanel.SetActive(false);
@@ -56,6 +60,24 @@ public class BigCanvasUI : MonoBehaviour
         centiseconds = centiseconds % 100;
 
         return minutes + "'" + seconds + "''" + centiseconds.ToString("00");
+    }
+
+    public void ShowTutorialText(string text)
+    {        
+        tutorialPanel.SetActive(true);
+        tutorialText.text = text;
+    }
+
+    public void RemovePopup()
+    {
+        tutorialAnim.Play("PopupAway");
+
+        Invoke("DisablePopup", 0.5f);
+    }
+
+    private void DisablePopup()
+    {
+        tutorialPanel.SetActive(false);
     }
 
     public void PostPlacings(List<PlayerCheckpoints> players)

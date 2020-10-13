@@ -259,14 +259,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 415530792904052540}
-  m_LocalRotation: {x: -0.26189053, y: -0.04314342, z: -0.066155545, w: 0.9618604}
+  m_LocalRotation: {x: -0.26999736, y: -0.04258354, z: -0.06651673, w: 0.95961636}
   m_LocalPosition: {x: -5.7186752e-11, y: 0.0007379476, z: 6.557744e-10}
   m_LocalScale: {x: 1, y: 0.9999999, z: 0.99999994}
   m_Children:
   - {fileID: 3862822931598337894}
   m_Father: {fileID: 4196719263834251314}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -30.631, y: -3.2210002, z: -6.9870005}
+  m_LocalEulerAnglesHint: {x: -31.591002, y: -3.0830002, z: -7.0580006}
 --- !u!1 &455956976183884741
 GameObject:
   m_ObjectHideFlags: 0
@@ -587,6 +587,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -979,7 +980,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1474488505404119072}
-  m_LocalRotation: {x: -0.86102635, y: 0.0000028193617, z: -0.000053131243, w: 0.50856036}
+  m_LocalRotation: {x: -0.86102635, y: 0.0000028193647, z: -0.000053131243, w: 0.50856036}
   m_LocalPosition: {x: 0.00000025519523, y: 0.0017467394, z: -0.0017185862}
   m_LocalScale: {x: 1, y: 0.9999998, z: 0.99999976}
   m_Children:
@@ -1444,6 +1445,7 @@ TrailRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1630,8 +1632,8 @@ MonoBehaviour:
   portrait: {fileID: 21300000, guid: 8bbe715383bde9a449c12602023d6968, type: 3}
   extraY: 0
   level: 0
-  air: 200
-  maxAir: 200
+  air: 100
+  maxAir: 100
   rings: 0
   maxRings: 30
   startRings: 0
@@ -1642,6 +1644,10 @@ MonoBehaviour:
   lessAirLoss: 0
   charType: 0
   stats: {fileID: 11400000, guid: cccfd161fcb39714a9103fe27e95fd36, type: 2}
+  boostTime:
+  - 2
+  - 3.5
+  - 4
   runSpeed: 50
 --- !u!114 &2005097834745034070
 MonoBehaviour:
@@ -1786,8 +1792,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 840e4809a02c5fb4c85310a5a3364bff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flightSpeedLoss: 5
-  turnMultiplier: 0.5
+  flightSpeedLoss: 6.5
+  turnMultiplier: 0.65
   airGain: 8
 --- !u!114 &5544327344426692917
 MonoBehaviour:
@@ -1810,7 +1816,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2005097834745034059}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e619251501375749812a350a479aa18, type: 3}
   m_Name: 
@@ -2122,6 +2128,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2429,14 +2436,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3189203136981892181}
-  m_LocalRotation: {x: -0.1659394, y: -0.12175208, z: -0.029276937, w: 0.97815305}
+  m_LocalRotation: {x: -0.17418773, y: -0.12150084, z: -0.030303406, w: 0.97671795}
   m_LocalPosition: {x: 1.5726755e-10, y: 0.00074266753, z: 4.5529708e-10}
   m_LocalScale: {x: 0.99999994, y: 1, z: 1}
   m_Children:
   - {fileID: 2384845833756575718}
   m_Father: {fileID: 4895820797558290538}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -19.375, y: -14.015, z: -1.0250001}
+  m_LocalEulerAnglesHint: {x: -20.342001, y: -13.997001, z: -1.031}
 --- !u!1 &3414450707334507454
 GameObject:
   m_ObjectHideFlags: 0
@@ -2521,14 +2528,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3483409737876797757}
-  m_LocalRotation: {x: -0.23208207, y: -0.059851907, z: -0.060485363, w: 0.96896714}
+  m_LocalRotation: {x: -0.24025023, y: -0.059339426, z: -0.06098847, w: 0.96697426}
   m_LocalPosition: {x: -8.5885854e-11, y: 0.00081343274, z: 5.7790556e-10}
   m_LocalScale: {x: 0.99999994, y: 1, z: 0.9999999}
   m_Children:
   - {fileID: 8601511109156488357}
   m_Father: {fileID: 2337517046310389429}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -27.194002, y: -5.6720004, z: -5.7710004}
+  m_LocalEulerAnglesHint: {x: -28.156002, y: -5.5620003, z: -5.8220005}
 --- !u!1 &3529592049142665299
 GameObject:
   m_ObjectHideFlags: 0
@@ -2669,6 +2676,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3336,7 +3344,6 @@ MonoBehaviour:
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
-  m_CameraOutput: 0
   m_Cameras: []
   m_RendererIndex: -1
   m_VolumeLayerMask:
@@ -3348,6 +3355,7 @@ MonoBehaviour:
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
+  m_ClearDepth: 1
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
@@ -6162,6 +6170,62 @@ ParticleSystem:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
+  LifetimeByEmitterSpeedModule:
+    enabled: 0
+    m_Curve:
+      serializedVersion: 2
+      minMaxState: 1
+      scalar: 1
+      minScalar: 1
+      maxCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: -0.8
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 0.2
+          inSlope: -0.8
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      minCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+    m_Range: {x: 0, y: 1}
   ForceModule:
     enabled: 0
     x:
@@ -8743,6 +8807,7 @@ ParticleSystemRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -8785,6 +8850,8 @@ ParticleSystemRenderer:
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 1
   m_AllowRoll: 1
+  m_FreeformStretching: 0
+  m_RotateWithStretchDirection: 1
   m_VertexStreams: 00010304
   m_Mesh: {fileID: 0}
   m_Mesh1: {fileID: 0}
@@ -10036,6 +10103,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -10427,14 +10495,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7829957687408488055}
-  m_LocalRotation: {x: -0.2502006, y: -0.101575546, z: -0.065576516, w: 0.96061534}
+  m_LocalRotation: {x: -0.25829732, y: -0.10101822, z: -0.06643141, w: 0.9584699}
   m_LocalPosition: {x: 7.304379e-12, y: 0.0008547689, z: 0.0000000014813273}
   m_LocalScale: {x: 0.9999998, y: 0.99999994, z: 1}
   m_Children:
   - {fileID: 8959089580388605302}
   m_Father: {fileID: 2920207018771072716}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -29.605001, y: -10.761001, z: -4.959}
+  m_LocalEulerAnglesHint: {x: -30.568, y: -10.6640005, z: -5.0080004}
 --- !u!1 &7915800252191837879
 GameObject:
   m_ObjectHideFlags: 0
@@ -10850,6 +10918,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

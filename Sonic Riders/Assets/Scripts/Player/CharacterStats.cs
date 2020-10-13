@@ -35,20 +35,19 @@ public class CharacterStats : MonoBehaviour
                     break;
                 case 0:
                     maxRings = 30;
-                    startRings = 0;
-                    maxAir = 200;                    
+                    startRings = 0;              
                     break;
                 case 1:
                     maxRings = 60;
                     startRings = 30;
-                    maxAir = 250;
                     break;
                 case 2:
                     maxRings = 100;
                     startRings = 60;
-                    maxAir = 300;
                     break;
             }
+
+            maxAir = stats.MaxAir[value];
 
             if (value > level || air > maxAir)
             {
@@ -173,7 +172,10 @@ public class CharacterStats : MonoBehaviour
     [SerializeField] private BoardStats stats;
     public BoardStats BoardStats { get { return stats; } }
 
+    [SerializeField] private float[] boostTime = { 2, 3.5f, 4f };
+
     [SerializeField] private float runSpeed = 30;
+    public float RunSpeed { get { return runSpeed; } }
 
     private bool alreadyRunning = false;
 
@@ -193,7 +195,10 @@ public class CharacterStats : MonoBehaviour
     public void GiveCanvasHud()
     {
         if (IsPlayer)
+        {
             hud = Canvas.GetComponent<HUD>();
+            hud.LevelThreeMaxAir = stats.MaxAir[2];
+        }
     }
 
     private void RunOnFoot()
@@ -237,6 +242,21 @@ public class CharacterStats : MonoBehaviour
     public float GetCurrentBoost()
     {
         return stats.Boost[level];
+    }
+
+    public float GetCurrentBoostDepletion()
+    {
+        return stats.BoostDepletion[level];
+    }
+
+    public float GetCurrentDriftDepletion()
+    {
+        return stats.DriftDepletion[level];
+    }
+
+    public float GetCurrentBoostTime()
+    {
+        return boostTime[level];
     }
 
     public float GetCurrentPower()
