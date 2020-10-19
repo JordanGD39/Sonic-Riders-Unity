@@ -154,7 +154,15 @@ public class PlayerControls : MonoBehaviour
 
         pauseAction = playerInput.actions.FindAction(inputMaster.Player.Pause.id);
 
-        pauseAction.performed += ctx => bigCanvasUI.PauseToggle();
+        pauseAction.performed += ctx => CheckBigCanvas();
+    }
+
+    private void CheckBigCanvas()
+    {
+        if (bigCanvasUI != null)
+        {
+            bigCanvasUI.PauseToggle();
+        }
     }
 
     // Update is called once per frame

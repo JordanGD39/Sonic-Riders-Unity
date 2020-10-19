@@ -21,6 +21,7 @@ public class RaceManager : MonoBehaviour
 
     private void Start()
     {
+        playingVictory = false;
         bigCanvasUI = GameObject.FindGameObjectWithTag(Constants.Tags.bigCanvas).GetComponent<BigCanvasUI>();
     }
 

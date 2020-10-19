@@ -224,7 +224,14 @@ public class CharacterStats : MonoBehaviour
 
         if (OffRoad)
         {
-            return speed = stats.Power[level] + extraPower;
+            speed = stats.Power[level] + extraPower;
+
+            if (speed > runSpeed)
+            {
+                speed = runSpeed;
+            }
+
+            return speed;
         }
 
         if (air <= 0)

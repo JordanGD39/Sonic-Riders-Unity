@@ -16,8 +16,7 @@ public class CharacterButton : MonoBehaviour
     [SerializeField] private GameObject characterPrefab;
     //private BoardStats boardStats;
     private CharacterStats stats;
-
-    private int eventIndex = 0;
+    
     private bool alreadyDeselecting = false;
 
     // Start is called before the first frame update
@@ -31,19 +30,28 @@ public class CharacterButton : MonoBehaviour
 
     public void Selected()
     {
+        List<int> indexes = new List<int>();
+
         for (int i = 0; i < holder.MultiplayerEventSystems.Count; i++)
         {
             if (holder.MultiplayerEventSystems[i].currentSelectedGameObject == gameObject)
             {
-                eventIndex = i;
+                indexes.Add(i);
             }
         }
 
+        for (int i = 0; i < indexes.Count; i++)
+        {
+            ShowSelectedCharacter(indexes[i]);
+        }
+    }
 
-        Transform playerSelect = playerSelectParent.GetChild(eventIndex);
+    private void ShowSelectedCharacter(int index)
+    {
+        Transform playerSelect = playerSelectParent.GetChild(index);
 
         image.color = playerSelect.GetChild(0).GetChild(0).GetComponent<Outline>().effectColor;
-            
+
         if (playerSelect.GetChild(0).gameObject.activeSelf)
         {
             playerSelect.GetChild(0).gameObject.SetActive(false);
@@ -96,12 +104,24 @@ public class CharacterButton : MonoBehaviour
 
     public void Pressed()
     {
-        CharacterSelectInput selectInput = GameManager.instance.transform.transform.GetChild(0).GetChild(eventIndex).GetComponent<CharacterSelectInput>();
+        Transform selectTransform = GameManager.instance.transform.transform.GetChild(0);
 
-        if (!disabled.activeSelf && selectInput.CanSelect)
+        int pressedIndex = 0;
+
+        for (int i = 0; i < holder.MultiplayerEventSystems.Count; i++)
         {
-            disabled.SetActive(true);
-            holder.MultiplayerEventSystems[eventIndex].SetSelectedGameObject(null);
+            if (holder.MultiplayerEventSystems[i].currentSelectedGameObject == gameObject && selectTransform.GetChild(i).GetComponent<CharacterSelectInput>().PressedButton)
+            {
+                Debug.Log(pressedIndex);
+                pressedIndex = i;
+            }
+        }
+
+        CharacterSelectInput selectInput = selectTransform.GetChild(pressedIndex).GetComponent<CharacterSelectInput>();
+
+        if (selectInput.CanSelect)
+        {
+            holder.MultiplayerEventSystems[pressedIndex].SetSelectedGameObject(null);
             selectInput.ConfirmCharacter(characterPrefab);
         }
     }

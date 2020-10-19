@@ -43,13 +43,24 @@ public class HUD : MonoBehaviour
 
     public void ChangePlacing()
     {
-        placingAnim.Play("ChangePlace");
+        placingAnim.SetTrigger("UpdatePlacing");
     }
 
     public void UpdateRings(int rings, int maxRings)
     {
-        ringsText.text = rings.ToString("000") + "/";
-        maxRingsText.text = maxRings.ToString("000");
+        string slash = "";
+
+        if (rings < 60)
+        {
+            slash = "/";
+            maxRingsText.text = maxRings.ToString("000");
+        }
+        else
+        {
+            maxRingsText.text = "";
+        }
+
+        ringsText.text = rings.ToString("000") + slash;   
     }
 
     public void UpdateLevel(int level)

@@ -8,6 +8,7 @@ public class PlayerAnimationHandler : MonoBehaviour
     [SerializeField] private bool notReady = false;
     public Animator Anim { get { return anim; } }
     private PlayerMovement playerMovement;
+    private PlayerBoost playerBoost;
     private PlayerGrind playerGrind;
     private PlayerJump playerJump;
     private PlayerTricks playerTricks;
@@ -16,15 +17,26 @@ public class PlayerAnimationHandler : MonoBehaviour
     [SerializeField] private float runSpeedMultiplier = 2f;
     [SerializeField] private float speedMultiplier = 1;
     [SerializeField] private bool diffFlyAnim = false;
+    [SerializeField] private bool moveTails = false;
+    [SerializeField] private bool changeBoostSpeed = false;
+
+    public bool AlreadySettingAttack { get; set; } = false; 
+
+    private bool boosting = true;
+
+    private bool updateBoost = false;
 
     // Start is called before the first frame update
     void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
+        playerBoost = GetComponent<PlayerBoost>();
         playerGrind = GetComponent<PlayerGrind>();
         playerJump = GetComponent<PlayerJump>();
         playerTricks = GetComponent<PlayerTricks>();
         playerFlight = GetComponent<PlayerFlight>();
+
+        playerBoost.AttackCol.SetActive(false);
     }
 
     // Update is called once per frame
@@ -34,10 +46,10 @@ public class PlayerAnimationHandler : MonoBehaviour
         {
             return;
         }
-
         
         float speed = playerMovement.Speed * 0.03f;
         float runSpeed = speed * runSpeedMultiplier;
+        float boostSpeed = playerMovement.Speed / 66.67f;
 
         speed = Mathf.Clamp(speed, 0, 3);
         runSpeed = Mathf.Clamp(runSpeed, -4, 4);
@@ -48,10 +60,29 @@ public class PlayerAnimationHandler : MonoBehaviour
         }
 
         anim.SetFloat("RunSpeed", runSpeed);
+
+        if (changeBoostSpeed)
+        {
+            anim.SetFloat("BoostSpeed", boostSpeed);
+        }
         anim.SetFloat("Direction", playerMovement.TurnAmount);
         anim.SetBool("Grinding", playerGrind.Grinding);
         anim.SetBool("Grounded", playerMovement.Grounded);
-        anim.SetBool("ChargingJump", playerJump.JumpHold);        
+        anim.SetBool("ChargingJump", playerJump.JumpHold);
+        anim.SetBool("Boosting", playerBoost.Attacking);
+
+
+        if (playerBoost.Attacking && !AlreadySettingAttack)
+        {
+            if (playerJump.JumpHold || anim.GetBool("Punching"))
+            {
+                playerBoost.AttackCol.SetActive(false);
+            }
+            else
+            {
+                playerBoost.AttackCol.SetActive(true);
+            }
+        }
 
         if (playerTricks.CanDoTricks)
         {
@@ -80,6 +111,12 @@ public class PlayerAnimationHandler : MonoBehaviour
 
     public void StartBoostAnimation()
     {
+        updateBoost = false;
         anim.SetTrigger("Boost");
+
+        if (moveTails)
+        {
+            anim.SetTrigger("TailsStop");
+        }
     }
 }

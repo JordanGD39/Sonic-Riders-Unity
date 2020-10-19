@@ -79,7 +79,6 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        //Debug.Log("Searching for music " + name);
         FindSound(name);
 
         if (currS == null)

@@ -14,6 +14,7 @@ public class PlayerBoost : MonoBehaviour
     private Animator canvasAnim;
     [SerializeField] private bool boosting = false;
     public bool Boosting { get { return boosting; } set { boosting = value; } }
+    public bool Attacking { get; set; } = false;
 
     [SerializeField] private Vector3 camPos;
     [SerializeField] private float camSpeedBoost = 5;
@@ -24,6 +25,10 @@ public class PlayerBoost : MonoBehaviour
     private bool startPuttingBackCameraPos = false;
 
     private ParticleSystem ps;
+    [SerializeField] private GameObject attackCol;
+    [SerializeField] private GameObject attackColShow;
+    public GameObject AttackCol { get { return attackCol; } }
+    [SerializeField] private float attackDelay = 0.25f;
 
     public void GiveAnim()
     {
@@ -45,18 +50,11 @@ public class PlayerBoost : MonoBehaviour
             return;
         }
 
-        if (charStats.OffRoad)
-        {
-            offroadTimer -= Time.deltaTime;
-        }
-        else
-        {
-            offroadTimer = 1;
-        }
-
-        if (boosting && (!playerMovement.Grounded || offroadTimer <= 0))
+        if (boosting && (!playerMovement.Grounded || charStats.OffRoad))
         {
             boosting = false;
+            Attacking = false;
+            attackCol.SetActive(false);
 
             if (charStats.IsPlayer)
             {
@@ -90,7 +88,7 @@ public class PlayerBoost : MonoBehaviour
 
     public void CheckBoost()
     {
-        if (charStats.DisableAllFeatures || !((playerMovement.Grounded || playerGrind.Grinding) && !boosting && charStats.Air > charStats.GetCurrentBoostDepletion()))
+        if (charStats.DisableAllFeatures || (!playerMovement.Grounded && !playerGrind.Grinding) || boosting || charStats.Air < charStats.GetCurrentBoostDepletion())
         {
             return;
         }
@@ -113,7 +111,18 @@ public class PlayerBoost : MonoBehaviour
         {
             startCameraPos = true;
         }
+
+        playerAnimation.AlreadySettingAttack = true;
+
+        Attacking = true;
+        if (attackColShow != null)
+        {
+            attackColShow.SetActive(false);
+            Invoke("ShowAttackTrigger", attackDelay);
+        }
         
+        attackCol.SetActive(true);        
+
         playerMovement.FallToTheGround = false;
         charStats.Air -= charStats.GetCurrentBoostDepletion();
 
@@ -137,11 +146,19 @@ public class PlayerBoost : MonoBehaviour
         }
     }
 
+    private void ShowAttackTrigger()
+    {
+        attackColShow.SetActive(true);
+        playerAnimation.AlreadySettingAttack = false;
+    }
+
     private IEnumerator BoostCooldown()
     {
         yield return new WaitForSeconds(charStats.GetCurrentBoostTime());
 
+        Attacking = false;
         boosting = false;
+        attackCol.SetActive(false);
 
         if (charStats.IsPlayer)
         {

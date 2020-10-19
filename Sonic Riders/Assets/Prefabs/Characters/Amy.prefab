@@ -21730,6 +21730,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 6.5
   time: 0.25
+  attackKnockbackHeight: 10
+  attackCol: {fileID: 8493011638865100709}
 --- !u!1 &3334787512168075275
 GameObject:
   m_ObjectHideFlags: 0
@@ -24784,6 +24786,8 @@ MonoBehaviour:
   camPos: {x: 0, y: 1.5, z: -1}
   camSpeedBoost: 5
   camSpeedStopBoosting: 2
+  attackCol: {fileID: 2681358208550663500}
+  attackDelay: 0.25
 --- !u!114 &8027152530899255615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24806,10 +24810,10 @@ MonoBehaviour:
   maxRings: 30
   startRings: 0
   speedLoss: 1.33
-  extraPower: 2.67
+  extraPower: 7
   extraDash: 0
   extraCornering: 6.67
-  lessAirLoss: 0
+  lessAirLoss: -0.1
   charType: 2
   stats: {fileID: 11400000, guid: cccfd161fcb39714a9103fe27e95fd36, type: 2}
   boostTime:
@@ -24914,6 +24918,7 @@ MonoBehaviour:
   runSpeedMultiplier: 2
   speedMultiplier: 1
   diffFlyAnim: 0
+  changeBoostSpeed: 0
 --- !u!114 &8002959670789412004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25342,7 +25347,8 @@ GameObject:
   - component: {fileID: 4133838750219552933}
   - component: {fileID: 8569057116324414247}
   - component: {fileID: 3268094212202348208}
-  m_Layer: 0
+  - component: {fileID: 8493011638865100709}
+  m_Layer: 8
   m_Name: Object06
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25412,6 +25418,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &8493011638865100709
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8741161230202456739}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.45943508, y: 0.5463461, z: 0.44724444}
+  m_Center: {x: 0.052236006, y: 0.13135561, z: 0.7472422}
 --- !u!1 &8755007608883628318
 GameObject:
   m_ObjectHideFlags: 0

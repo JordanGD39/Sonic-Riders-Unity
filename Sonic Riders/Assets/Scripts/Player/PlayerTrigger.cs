@@ -9,6 +9,8 @@ public class PlayerTrigger : MonoBehaviour
     private PlayerCheckpoints playerCheckpoints;
     private Transform playerTransform;
     private PlayerFlight playerFlight;
+    private PlayerAnimationHandler playerAnimation;
+    private PlayerBoost playerBoost;
     private PlayerPunchObstacle playerPunch;
     private AudioManagerHolder audioHolder;
     private Rigidbody rb;
@@ -25,12 +27,20 @@ public class PlayerTrigger : MonoBehaviour
     private Transform launchForward;
 
     private bool touchedStartAlready = false;
+    private bool alreadyAttacked = false;
+    private float otherPlayerForce = 0;
+    private float attackKnockbackMultiplier = 1f;
+    [SerializeField] private float attackKnockbackHeight = 10;
+
+    [SerializeField] private Collider attackCol;
 
     private void Start()
     {
         playerMovement = GetComponentInParent<PlayerMovement>();
         playerTransform = playerMovement.transform;
         playerFlight = playerMovement.GetComponent<PlayerFlight>();
+        playerAnimation = playerMovement.GetComponent<PlayerAnimationHandler>();
+        playerBoost = playerMovement.GetComponent<PlayerBoost>();
         playerCheckpoints = playerMovement.GetComponent<PlayerCheckpoints>();
         playerPunch = playerMovement.GetComponent<PlayerPunchObstacle>();
         charStats = playerMovement.GetComponent<CharacterStats>();
@@ -49,6 +59,12 @@ public class PlayerTrigger : MonoBehaviour
                 {
                     BounceCol(collision);
                 }                
+                break;
+            case 8:
+                if (playerBoost.Attacking && collision.isTrigger)
+                {
+                    AttackPlayer(collision);
+                }
                 break;
             case 9:
                 if (!touchedStartAlready && collision.gameObject.CompareTag(Constants.Tags.startLine))
@@ -99,6 +115,11 @@ public class PlayerTrigger : MonoBehaviour
         }       
     }
 
+    private void AttackPlayer(Collider collision)
+    {
+        collision.GetComponent<PlayerTrigger>().BounceCol(attackCol);
+    }
+
     private void CheckCountdown(StartingLevel startingLevel)
     {
         charStats.Air = charStats.MaxAir;
@@ -106,6 +127,7 @@ public class PlayerTrigger : MonoBehaviour
         if (startingLevel.Timer > 0)
         {
             playerMovement.CantMove = true;
+            playerAnimation.Anim.SetBool("Electrocuted", true);
             charStats.DisableAllFeatures = true;
             playerMovement.Speed = 0;
             rb.velocity = Vector3.zero;
@@ -145,6 +167,7 @@ public class PlayerTrigger : MonoBehaviour
 
     private void CanRun()
     {
+        playerAnimation.Anim.SetBool("Electrocuted", false);
         playerMovement.CantMove = false;
         charStats.DisableAllFeatures = false;
     }
@@ -192,8 +215,22 @@ public class PlayerTrigger : MonoBehaviour
         }        
     }
 
-    private void BounceCol(Collider collision)
+    public void BounceCol(Collider collision)
     {
+        if (collision.gameObject.layer == 8)
+        {
+            if (!alreadyAttacked)
+            {
+                otherPlayerForce = collision.GetComponentInParent<PlayerMovement>().Speed * attackKnockbackMultiplier;
+                charStats.Rings -= 20;
+                alreadyAttacked = true;
+            }
+            else
+            {
+                return;
+            }
+        }        
+
         playerMovement.Bouncing = true;
 
         Vector3 closestPoint = Vector3.zero;
@@ -213,8 +250,6 @@ public class PlayerTrigger : MonoBehaviour
 
     private IEnumerator Bounce()
     {
-        bool wasGrounded = playerMovement.Grounded;
-
         playerMovement.CantMove = true;
 
         //Debug.Log(transform.InverseTransformDirection(bounceDir).z);
@@ -231,17 +266,28 @@ public class PlayerTrigger : MonoBehaviour
             hitDirectly = true;
         }
 
+        float knockback = speed;
+
         bounceDir = transform.TransformDirection(localBounce);
 
-        audioHolder.SfxManager.Play(Constants.SoundEffects.bounceWall);
+        if (otherPlayerForce > 0)
+        {
+            rb.AddForce(transform.up * attackKnockbackHeight, ForceMode.Impulse);
+            knockback = otherPlayerForce;
+        }
+        else
+        {
+            audioHolder.SfxManager.Play(Constants.SoundEffects.bounceWall);
+        }
 
-        rb.AddForce(bounceDir * speed, ForceMode.Impulse);
+        rb.AddForce(bounceDir * knockback, ForceMode.Impulse);
         yield return new WaitForSeconds(time / 2);
         playerMovement.Bouncing = false;
         yield return new WaitForSeconds(time / 2);
         playerMovement.CantMove = false;
+        alreadyAttacked = false;
 
-        if (hitDirectly && wasGrounded)
+        if (hitDirectly && playerMovement.Grounded)
         {
             playerMovement.Speed = 0;
             rb.velocity = Vector3.zero;

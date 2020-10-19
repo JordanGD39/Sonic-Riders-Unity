@@ -16,6 +16,7 @@ public class PlayerConfigManager : MonoBehaviour
     private EventSystemHolder eventSystemHolder;
     [SerializeField] private bool dontFindCanvas = true;
     private PlayerInputManager playerInputManager;
+    public int MaxPlayers { get; set; } = 4;
 
     private void Start()
     {
@@ -35,6 +36,14 @@ public class PlayerConfigManager : MonoBehaviour
         playerConfigs[index].CharacterPrefab = prefab;
     }
 
+    private void UnreadyPlayers()
+    {
+        for (int i = 0; i < playerConfigs.Count; i++)
+        {
+            playerConfigs[i].IsReady = false;
+        }
+    }
+
     public void PlayerReady(int index, bool ready)
     {
         playerConfigs[index].IsReady = ready;
@@ -42,13 +51,18 @@ public class PlayerConfigManager : MonoBehaviour
         if (playerConfigs.All(p => p.IsReady))
         {
             GetComponent<PlayerInputManager>().DisableJoining();
-            GameManager.instance.LoadScene("SampleScene 1", true);
+            GameManager.instance.LoadScene(GameManager.instance.TrackToLoad, true);
         }
     }
 
     public void HandlePlayerJoin(PlayerInput pi)
     {
         Debug.Log("Player " + pi.playerIndex + " joined!");
+
+        if (playerInputManager.playerCount >= MaxPlayers)
+        {
+            playerInputManager.DisableJoining();
+        }
 
         if (!playerConfigs.Any(p => p.PlayerIndex == pi.playerIndex))
         {
@@ -68,13 +82,14 @@ public class PlayerConfigManager : MonoBehaviour
     {
         GameObject eventSystem = Instantiate(eventSystemPref);
         MultiplayerEventSystem multiplayerEventSystem = eventSystem.GetComponent<MultiplayerEventSystem>();
-        multiplayerEventSystem.SetSelectedGameObject(canvas.GetComponentInChildren<Button>().gameObject);
         eventSystemHolder.MultiplayerEventSystems.Add(multiplayerEventSystem);
         pi.uiInputModule = eventSystem.GetComponent<InputSystemUIInputModule>();
+        multiplayerEventSystem.SetSelectedGameObject(canvas.GetComponentInChildren<Button>().gameObject);
     }
 
-    public void ClearConfigs()
+    public void ClearEventSystems()
     {
+        UnreadyPlayers();
         eventSystemHolder.MultiplayerEventSystems.Clear();
     }
 

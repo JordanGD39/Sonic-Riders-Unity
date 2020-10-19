@@ -11,6 +11,8 @@ public class CharacterSelectInput : MonoBehaviour
     private bool canSelect = false;
     public bool CanSelect { get { return canSelect; } }
 
+    public bool PressedButton { get; set; } = false;
+
     private PlayerInput playerInput;
     private PlayerConfigManager playerConfigManager;
     private MultiplayerEventSystem eventSystem;
@@ -41,6 +43,7 @@ public class CharacterSelectInput : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         eventSystem = playerInput.uiInputModule.GetComponent<MultiplayerEventSystem>();
         playerInput.actions.FindAction(inputMaster.UI.Cancel.id).performed += ctx => CancelSelection();
+        playerInput.actions.FindAction(inputMaster.UI.Select.id).performed += ctx => SelectButton();
 
         GameObject textPlayer = Instantiate(playerTextPref, button.transform, false);
 
@@ -73,12 +76,26 @@ public class CharacterSelectInput : MonoBehaviour
         Invoke("CanSelectInput", 0.25f);
     }
 
+    private void SelectButton()
+    {
+        if (canSelect)
+        {
+            PressedButton = true;
+        }
+    }
+
     private void Update()
     {
         if (eventSystem != null && eventSystem.currentSelectedGameObject != null)
         {            
             playerText.transform.SetParent(eventSystem.currentSelectedGameObject.transform, false);
             playerText.transform.localPosition = new Vector3(0, 22, 0);
+
+            if (eventSystem.currentSelectedGameObject != prevButton)
+            {
+                PressedButton = false;
+            }
+
             prevButton = eventSystem.currentSelectedGameObject;
         }        
     }

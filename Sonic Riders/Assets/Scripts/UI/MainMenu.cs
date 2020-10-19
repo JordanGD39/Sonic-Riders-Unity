@@ -24,7 +24,7 @@ public class MainMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.anyKeyDown && !alreadyStarted)
+        if (Input.GetButtonDown("Submit") && !alreadyStarted)
         {
             alreadyStarted = true;
             sound.Pressed();
@@ -32,12 +32,19 @@ public class MainMenu : MonoBehaviour
             Invoke("RemoveMainMenuPanel", 0.5f);
         }
 
-        if (alreadyStarted && Input.GetButtonDown("Cancel"))
+        if (Input.GetButtonDown("Cancel"))
         {
-            alreadyStarted = false;
-            sound.Cancel();
-            anim.Play("FadeIn");
-            Invoke("RemoveSelectPanel", 0.5f);
+            if (alreadyStarted)
+            {
+                alreadyStarted = false;
+                sound.Cancel();
+                anim.Play("FadeIn");
+                Invoke("RemoveSelectPanel", 0.5f);
+            }
+            else
+            {
+                Application.Quit();
+            }            
         }
     }
 
@@ -55,8 +62,25 @@ public class MainMenu : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(null);
     }
 
-    public void LoadCharacterSelect()
+    public void LoadCharacterSelect(int mode)
     {
+        GameManager.instance.GameMode = (GameManager.gamemode)mode;
+
+        switch ((GameManager.gamemode)mode)
+        {
+            case GameManager.gamemode.RACE:
+                GameManager.instance.TrackToLoad = "SampleScene 1";
+                break;
+            case GameManager.gamemode.SURVIVAL:
+                GameManager.instance.TrackToLoad = "SampleScene 1";
+                break;
+            case GameManager.gamemode.TUTORIAL:
+                GameManager.instance.TrackToLoad = "Tutorial";
+                break;
+            default:
+                break;
+        }
+
         GameManager.instance.LoadScene("CharacterSelect", false);
     }
 }

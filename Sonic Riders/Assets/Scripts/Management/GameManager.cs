@@ -34,6 +34,10 @@ public class GameManager : MonoBehaviour
     private string currScene = "";
     public string CurrScene { get { return currScene; } }
 
+    public string TrackToLoad { get; set; } = "SampleScene 1";
+    public enum gamemode {RACE, SURVIVAL, TUTORIAL};
+    public gamemode GameMode = gamemode.RACE;
+
     void Awake()
     {
         if (instance == null)
@@ -133,9 +137,18 @@ public class GameManager : MonoBehaviour
 
         if (sceneName == "CharacterSelect")
         {
+            if (GameMode == gamemode.TUTORIAL)
+            {
+                playerConfigManager.MaxPlayers = 1;
+            }
+            else
+            {
+                playerConfigManager.MaxPlayers = 4;
+            }
+
             playerInputManager.EnableJoining();
             playerConfigManager.FindCanvas();
-            playerConfigManager.ClearConfigs();
+            playerConfigManager.ClearEventSystems();
 
             for (int i = 0; i < playersParent.childCount; i++)
             {

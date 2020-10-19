@@ -33,8 +33,6 @@ public class PlayerPunchObstacle : MonoBehaviour
 
     public void Punch(Rigidbody obstacleRb)
     {
-        obstacleRb.isKinematic = false;
-
         float powerCalc = charStats.ExtraPower * extraPowerMultiplier;
 
         if (powerCalc < 0)
@@ -66,6 +64,7 @@ public class PlayerPunchObstacle : MonoBehaviour
             Debug.Log(power);
 
             obstacleRb.AddForce(punch.forward * power);
+            
             audioHolder.SfxManager.Play(Constants.SoundEffects.punch);
 
             charStats.Air += 20;
@@ -75,5 +74,7 @@ public class PlayerPunchObstacle : MonoBehaviour
             audioHolder.SfxManager.Play(Constants.SoundEffects.bounceWall);
             obstacleRb.AddForce((obstacleRb.transform.position - transform.position).normalized * (punchPower * cantPunchMultiplier * speedPowerCalc));
         }
+
+        obstacleRb.GetComponent<RespawnObstacle>().Punched();
     }
 }

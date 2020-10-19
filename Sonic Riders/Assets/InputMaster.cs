@@ -318,7 +318,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
             ""actions"": [
                 {
                     ""name"": ""Select"",
-                    ""type"": ""Button"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""47a4082b-59dc-4341-b0c3-ab17bf6ee4c3"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
@@ -326,7 +326,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""Cancel"",
-                    ""type"": ""Button"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""6389fb17-20da-4533-953a-98cd54a6c942"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
