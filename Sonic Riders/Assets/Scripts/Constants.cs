@@ -14,6 +14,9 @@ public class Constants
         public const string checkpoint = "CheckPoint";
         public const string bigCanvas = "BigCanvas";
         public const string loadingScreen = "LoadingScreen";
+        public const string survivalManager = "SurvivalManager";
+        public const string scoreRing = "ScoreRing";
+        public const string chaosEmerald = "ChaosEmerald";
     }
 
     public class VoiceSounds

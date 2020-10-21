@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class BigCanvasUI : MonoBehaviour
+public class BigCanvasUI : SurvivalFunctionsUI
 {
     [SerializeField] private GameObject characterPlacePref;
     [SerializeField] private Transform characterPlaceParent;
@@ -14,6 +14,8 @@ public class BigCanvasUI : MonoBehaviour
     [SerializeField] private GameObject restartButton;
     [SerializeField] private Text timeText;
     [SerializeField] private GameObject tutorialPanel;
+    [SerializeField] private GameObject distanceRadar;
+    public GameObject DistanceRadar { get { return distanceRadar; } }
     [SerializeField] private Animator tutorialAnim;
     [SerializeField] private Text tutorialText;
     private float timer = 0;
@@ -24,8 +26,10 @@ public class BigCanvasUI : MonoBehaviour
     private ChangePlace changePlace;
 
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
+        base.Start();
+
         tutorialPanel.SetActive(false);
         changePlace = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponentInChildren<ChangePlace>();
         characterPlaceParent.gameObject.SetActive(false);

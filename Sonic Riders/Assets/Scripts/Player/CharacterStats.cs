@@ -12,10 +12,16 @@ public class CharacterStats : MonoBehaviour
     [SerializeField] private Sprite portrait;
     public Sprite Portrait { get { return portrait; } }
 
+    [SerializeField] private Sprite icon;
+    public Sprite Icon { get { return icon; } }
+
+    [SerializeField] private Color color = Color.blue;
+    public Color CharColor { get { return color; } }
+
     [SerializeField] private float extraY = 0;
     public float ExtraY { get { return extraY; } }
 
-    public int PlayerIndex { get; set; } = 0;
+    public int PlayerIndex { get; set; } = 4;
     public Transform Cam { get; set; }
     public Transform Canvas { get; set; }
     public Vector3 CamStartPos { get; set; }
@@ -28,6 +34,11 @@ public class CharacterStats : MonoBehaviour
         get { return level; }
         set
         {
+            if (survivalManager != null)
+            {
+                return;
+            }
+
             switch (value)
             {
                 case -1:
@@ -77,6 +88,11 @@ public class CharacterStats : MonoBehaviour
 
         set
         {
+            if (survivalManager != null)
+            {
+                return;
+            }
+
             if (value < 0)
             {
                 value = 0;
@@ -184,6 +200,19 @@ public class CharacterStats : MonoBehaviour
 
     public bool StopCounting { get; set; } = false;
 
+    private SurvivalManager survivalManager;
+
+    public bool SurvivalLeader { get; set; } = false;
+    public int SurvivalScore { get; set; } = 0; 
+
+    private void Start()
+    {
+        if (GameManager.instance.GameMode == GameManager.gamemode.SURVIVAL)
+        {
+            survivalManager = FindObjectOfType<SurvivalManager>();            
+        }        
+    }
+
     private void Update()
     {
         if (!StopCounting)
@@ -198,6 +227,20 @@ public class CharacterStats : MonoBehaviour
         {
             hud = Canvas.GetComponent<HUD>();
             hud.LevelThreeMaxAir = stats.MaxAir[2];
+
+            if (GameManager.instance.GameMode == GameManager.gamemode.SURVIVAL)
+            {
+                level = 2;
+                rings = 100;
+                maxRings = 100;
+                maxAir = 200;
+
+                if (hud != null)
+                {
+                    hud.UpdateRings(rings, maxRings);
+                    hud.UpdateLevel(level);
+                }
+            }
         }
     }
 
@@ -211,6 +254,11 @@ public class CharacterStats : MonoBehaviour
         alreadyRunning = true;
         playerAnimation.RunningState(true);
         Debug.Log("Run on foot");
+
+        if (survivalManager != null)
+        {
+            survivalManager.MoveChaosEmerald(gameObject);
+        }
     }
 
     public bool TypeCheck(type aType)
@@ -221,6 +269,13 @@ public class CharacterStats : MonoBehaviour
     public float GetCurrentLimit()
     {
         float speed = 0;
+
+        float multiplier = 1;
+
+        if (survivalManager)
+        {
+            multiplier = SurvivalLeader ? 0.8f : 1.2f;
+        }
 
         if (OffRoad)
         {
@@ -243,22 +298,52 @@ public class CharacterStats : MonoBehaviour
             speed = stats.Limit[level] - speedLoss;
         }
 
-        return speed;
+        return speed * multiplier;
     }
 
     public float GetCurrentBoost()
     {
-        return stats.Boost[level];
+        float multiplier = 1;
+
+        if (survivalManager)
+        {
+            if (SurvivalLeader)
+            {
+                multiplier = 0.8f;
+            }
+        }
+
+        return stats.Boost[level] * multiplier;
     }
 
     public float GetCurrentBoostDepletion()
     {
-        return stats.BoostDepletion[level];
+        float multiplier = 1;
+
+        if (survivalManager)
+        {
+            if (!SurvivalLeader)
+            {
+                multiplier = 0.5f;
+            }
+        }
+
+        return stats.BoostDepletion[level] * multiplier;
     }
 
     public float GetCurrentDriftDepletion()
     {
-        return stats.DriftDepletion[level];
+        float multiplier = 1;
+
+        if (survivalManager)
+        {
+            if (!SurvivalLeader)
+            {
+                multiplier = 0.5f;
+            }
+        }
+
+        return stats.DriftDepletion[level] * multiplier;
     }
 
     public float GetCurrentBoostTime()
@@ -283,6 +368,16 @@ public class CharacterStats : MonoBehaviour
 
     public float GetCurrentAirLoss()
     {
-        return stats.AirDepletion - lessAirLoss;
+        float multiplier = 1;
+
+        if (survivalManager)
+        {
+            if (SurvivalLeader)
+            {
+                multiplier = 8;
+            }
+        }
+
+        return (stats.AirDepletion - lessAirLoss) * multiplier;
     }
 }

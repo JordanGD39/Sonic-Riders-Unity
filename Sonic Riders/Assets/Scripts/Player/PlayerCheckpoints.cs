@@ -10,6 +10,7 @@ public class PlayerCheckpoints : MonoBehaviour
     private PlayerMovement playerMovement;
     private AudioManagerHolder audioHolder;
     private HUD hud;
+    private SurvivalManager survivalManager;
 
     [SerializeField] private int currCheckpoint = 0;
     public int CurrCheckpoint { get { return currCheckpoint; } set { currCheckpoint = value; } }
@@ -27,6 +28,18 @@ public class PlayerCheckpoints : MonoBehaviour
         CharStats = GetComponent<CharacterStats>();
         playerMovement = GetComponent<PlayerMovement>();
         audioHolder = GetComponent<AudioManagerHolder>();
+
+        if (GameManager.instance.GameMode != GameManager.gamemode.RACE)
+        {
+            aHud.PlacingUI.SetActive(false);
+            survivalManager = FindObjectOfType<SurvivalManager>();
+            enabled = false;
+            return;
+        }
+        else
+        {
+            aHud.PlacingUI.SetActive(true);
+        }
 
         if (aHud == null)
         {
@@ -66,14 +79,16 @@ public class PlayerCheckpoints : MonoBehaviour
         return nextCheckpoint.forward;
     }
 
-    private void CalcNextCheckpoint()
+    public int CalcNextCheckpoint(int skipIndex)
     {
-        nextCheckpointIndex = currCheckpoint + 1;
+        int nextIndex = currCheckpoint + skipIndex;
 
-        if (nextCheckpointIndex >= raceManager.transform.childCount)
+        if (nextIndex >= raceManager.transform.childCount)
         {
-            nextCheckpointIndex = 0;
+            nextIndex -= raceManager.transform.childCount;
         }
+
+        return nextIndex;
     }
 
     public void CheckCheckpoint(Transform checkpoint)
@@ -85,10 +100,16 @@ public class PlayerCheckpoints : MonoBehaviour
         if (checkpointIndex == currCheckpoint + 1 || lastCheckpointReached)
         {
             currCheckpoint = checkpointIndex;
-            CalcNextCheckpoint();
+            nextCheckpointIndex = CalcNextCheckpoint(1);
 
             if (lastCheckpointReached)
             {
+                if (GameManager.instance.GameMode == GameManager.gamemode.SURVIVAL)
+                {
+                    survivalManager.CheckLeaderLap(gameObject);
+                    return;
+                }
+
                 lapCount++;
 
                 if (lapCount > raceManager.Laps)

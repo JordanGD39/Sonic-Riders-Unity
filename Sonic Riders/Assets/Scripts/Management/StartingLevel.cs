@@ -17,10 +17,16 @@ public class StartingLevel : MonoBehaviour
     private bool doneCounting = false;
 
     [SerializeField] private TutorialManager tutorialManager;
+    private SurvivalManager survivalManager;
 
     // Start is called before the first frame update
     void Start()
     {
+        if (GameManager.instance.GameMode == GameManager.gamemode.SURVIVAL)
+        {
+            survivalManager = FindObjectOfType<SurvivalManager>();
+        }
+
         if (GameManager.instance.GetComponent<TestHandleJoin>() == null)
         {
             List<GameObject> playersInScene = new List<GameObject>();
@@ -33,7 +39,7 @@ public class StartingLevel : MonoBehaviour
             }
 
             GameManager.instance.GetComponent<PlayerConfigManager>().SpawnPlayers(this);
-        }
+        }       
 
         psParent = GetComponentInChildren<ParticleSystem>().transform.parent;
 
@@ -133,6 +139,11 @@ public class StartingLevel : MonoBehaviour
             float x = i * 3;
 
             playersInScene[i].transform.position = new Vector3(x, 0.4f, 0);
+        }
+
+        if (survivalManager != null)
+        {
+            survivalManager.GetPlayers(playersInScene);
         }
 
         if (tutorialManager == null)

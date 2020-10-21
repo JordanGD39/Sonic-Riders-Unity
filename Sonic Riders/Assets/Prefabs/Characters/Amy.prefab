@@ -21732,6 +21732,7 @@ MonoBehaviour:
   time: 0.25
   attackKnockbackHeight: 10
   attackCol: {fileID: 8493011638865100709}
+  emeraldHolder: {fileID: 4245264719199655247}
 --- !u!1 &3334787512168075275
 GameObject:
   m_ObjectHideFlags: 0
@@ -24595,6 +24596,7 @@ Transform:
   - {fileID: 6009547886965408195}
   - {fileID: 3779908506636155478}
   - {fileID: 7944071243995242796}
+  - {fileID: 4245264719199655247}
   m_Father: {fileID: 8027152530899255584}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -24787,6 +24789,7 @@ MonoBehaviour:
   camSpeedBoost: 5
   camSpeedStopBoosting: 2
   attackCol: {fileID: 2681358208550663500}
+  attackColShow: {fileID: 0}
   attackDelay: 0.25
 --- !u!114 &8027152530899255615
 MonoBehaviour:
@@ -24802,6 +24805,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: Amy
   portrait: {fileID: 21300000, guid: 2b6b171d7d025954c90da461f774b3cb, type: 3}
+  icon: {fileID: -4342421620948611445, guid: 94c01ff7ffdaeec45a27b211c4c07a6a, type: 3}
+  color: {r: 1, g: 0.37169808, b: 0.7096206, a: 0.39215687}
   extraY: 0
   level: 0
   air: 100
@@ -24918,6 +24923,7 @@ MonoBehaviour:
   runSpeedMultiplier: 2
   speedMultiplier: 1
   diffFlyAnim: 0
+  moveTails: 0
   changeBoostSpeed: 0
 --- !u!114 &8002959670789412004
 MonoBehaviour:
@@ -25304,6 +25310,36 @@ Transform:
   - {fileID: 7432412252401021479}
   m_Father: {fileID: 2290714422261144652}
   m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8607976593617032328
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4245264719199655247}
+  m_Layer: 8
+  m_Name: Chaos Emerald
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4245264719199655247
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8607976593617032328}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8027152528939579657}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8636117361160199743
 GameObject:

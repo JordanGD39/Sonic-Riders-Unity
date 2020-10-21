@@ -23,6 +23,11 @@ public class RaceManager : MonoBehaviour
     {
         playingVictory = false;
         bigCanvasUI = GameObject.FindGameObjectWithTag(Constants.Tags.bigCanvas).GetComponent<BigCanvasUI>();
+
+        if (GameManager.instance.GameMode != GameManager.gamemode.RACE)
+        {
+            enabled = false;
+        }
     }
 
     public void AddPlayers()

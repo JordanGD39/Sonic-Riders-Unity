@@ -54,6 +54,7 @@ public class PlayerBoost : MonoBehaviour
         {
             boosting = false;
             Attacking = false;
+            playerAnimation.Anim.SetBool("Boosting", false);
             attackCol.SetActive(false);
 
             if (charStats.IsPlayer)
@@ -97,7 +98,7 @@ public class PlayerBoost : MonoBehaviour
 
         if (!playerGrind.Grinding && playerAnimation.Anim != null)
         {
-            playerAnimation.StartBoostAnimation();
+            playerAnimation.StartBoostAnimation(!charStats.SurvivalLeader);
         }
         else
         {
@@ -112,16 +113,20 @@ public class PlayerBoost : MonoBehaviour
             startCameraPos = true;
         }
 
-        playerAnimation.AlreadySettingAttack = true;
-
-        Attacking = true;
-        if (attackColShow != null)
+        if (!charStats.SurvivalLeader)
         {
-            attackColShow.SetActive(false);
-            Invoke("ShowAttackTrigger", attackDelay);
-        }
-        
-        attackCol.SetActive(true);        
+            playerAnimation.AlreadySettingAttack = true;
+            Attacking = true;
+            playerAnimation.Anim.SetBool("Boosting", true);
+
+            if (attackColShow != null)
+            {
+                attackColShow.SetActive(false);
+                Invoke("ShowAttackTrigger", attackDelay);
+            }
+
+            attackCol.SetActive(true);
+        }        
 
         playerMovement.FallToTheGround = false;
         charStats.Air -= charStats.GetCurrentBoostDepletion();
@@ -159,6 +164,7 @@ public class PlayerBoost : MonoBehaviour
         Attacking = false;
         boosting = false;
         attackCol.SetActive(false);
+        playerAnimation.Anim.SetBool("Boosting", false);
 
         if (charStats.IsPlayer)
         {

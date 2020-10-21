@@ -15,6 +15,7 @@ public class PlayerTrigger : MonoBehaviour
     private AudioManagerHolder audioHolder;
     private Rigidbody rb;
     private CharacterStats charStats;
+    private SurvivalManager survivalManager;
 
     [SerializeField] private float speed = 2;
     private float closestDistance;
@@ -33,6 +34,10 @@ public class PlayerTrigger : MonoBehaviour
     [SerializeField] private float attackKnockbackHeight = 10;
 
     [SerializeField] private Collider attackCol;
+    [SerializeField] private Transform emeraldHolder;
+    public Transform EmeraldHolder { get { return emeraldHolder; } }
+
+    private bool losingEmerald = false;
 
     private void Start()
     {
@@ -46,6 +51,11 @@ public class PlayerTrigger : MonoBehaviour
         charStats = playerMovement.GetComponent<CharacterStats>();
         audioHolder = playerMovement.GetComponent<AudioManagerHolder>();
         rb = GetComponentInParent<Rigidbody>();
+
+        if (GameManager.instance.GameMode == GameManager.gamemode.SURVIVAL)
+        {
+            survivalManager = FindObjectOfType<SurvivalManager>();
+        }
     }
 
     private void OnTriggerEnter(Collider collision)
@@ -67,15 +77,28 @@ public class PlayerTrigger : MonoBehaviour
                 }
                 break;
             case 9:
-                if (!touchedStartAlready && collision.gameObject.CompareTag(Constants.Tags.startLine))
+
+                switch (collision.gameObject.tag)
                 {
-                    touchedStartAlready = true;
-                    CheckCountdown(collision.gameObject.GetComponent<StartingLevel>());
+                    case Constants.Tags.startLine:
+                        if (!touchedStartAlready)
+                        {
+                            touchedStartAlready = true;
+                            CheckCountdown(collision.gameObject.GetComponent<StartingLevel>());
+                        }
+                        break;
+                    case Constants.Tags.checkpoint:
+                        playerCheckpoints.CheckCheckpoint(collision.transform);
+                        break;
+                    case Constants.Tags.chaosEmerald:
+                        collision.enabled = false;
+                        GotChaosEmerald(collision.transform.parent);
+                        break;
+                    case Constants.Tags.scoreRing:
+                        survivalManager.CheckValidScoreRing(collision.transform.parent.gameObject, playerMovement.gameObject);
+                        break;
                 }
-                else if(collision.gameObject.CompareTag(Constants.Tags.checkpoint))
-                {
-                    playerCheckpoints.CheckCheckpoint(collision.transform);
-                }
+
                 break;
             case 10:
                 if (playerFlight.enabled)
@@ -115,9 +138,58 @@ public class PlayerTrigger : MonoBehaviour
         }       
     }
 
+    private void GotChaosEmerald(Transform chaosEmerald)
+    {
+        survivalManager.MakePlayerLeader(playerMovement.gameObject);
+
+        chaosEmerald.SetParent(emeraldHolder, false);
+        chaosEmerald.localPosition = Vector3.zero;
+        chaosEmerald.forward = transform.forward;
+        chaosEmerald.GetChild(0).localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        playerBoost.Attacking = false;
+        playerAnimation.Anim.SetBool("Boosting", false);
+    }
+
     private void AttackPlayer(Collider collision)
     {
-        collision.GetComponent<PlayerTrigger>().BounceCol(attackCol);
+        PlayerTrigger playerTrigger = collision.GetComponent<PlayerTrigger>();
+
+        if (playerTrigger.emeraldHolder.childCount > 0)
+        {
+            survivalManager.MakePlayerLeader(playerMovement.gameObject);
+
+            Transform emerald = playerTrigger.emeraldHolder.GetChild(0);
+
+            emerald.SetParent(emeraldHolder, false);
+            emerald.localPosition = Vector3.zero;
+            emerald.forward = transform.forward;
+            emerald.GetChild(0).localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            playerBoost.Attacking = false;
+            playerAnimation.Anim.SetBool("Boosting", false);
+        }
+
+        playerTrigger.BounceCol(attackCol);
+    }
+
+    public void Electrocute(float timer, bool countDown)
+    {
+        losingEmerald = !countDown;
+        playerMovement.CantMove = true;
+        playerAnimation.Anim.SetBool("Electrocuted", true);
+        charStats.DisableAllFeatures = true;
+        playerMovement.Speed = 0;
+        rb.velocity = Vector3.zero;
+        float waitTime = 2;        
+
+        if (countDown)
+        {
+            if (timer > 2)
+            {
+                waitTime = timer;
+            }
+        }
+
+        Invoke("CanRun", waitTime);
     }
 
     private void CheckCountdown(StartingLevel startingLevel)
@@ -126,19 +198,7 @@ public class PlayerTrigger : MonoBehaviour
 
         if (startingLevel.Timer > 0)
         {
-            playerMovement.CantMove = true;
-            playerAnimation.Anim.SetBool("Electrocuted", true);
-            charStats.DisableAllFeatures = true;
-            playerMovement.Speed = 0;
-            rb.velocity = Vector3.zero;
-            float waitTime = 2;
-
-            if (startingLevel.Timer > 2)
-            {
-                waitTime = startingLevel.Timer;
-            }
-
-            Invoke("CanRun", waitTime);
+            Electrocute(startingLevel.Timer, true);
         }
         else
         {
@@ -170,6 +230,11 @@ public class PlayerTrigger : MonoBehaviour
         playerAnimation.Anim.SetBool("Electrocuted", false);
         playerMovement.CantMove = false;
         charStats.DisableAllFeatures = false;
+
+        if (losingEmerald)
+        {
+            charStats.Air = charStats.MaxAir;
+        }
     }
 
     private IEnumerator FollowPath()
@@ -222,7 +287,12 @@ public class PlayerTrigger : MonoBehaviour
             if (!alreadyAttacked)
             {
                 otherPlayerForce = collision.GetComponentInParent<PlayerMovement>().Speed * attackKnockbackMultiplier;
-                charStats.Rings -= 20;
+
+                if (survivalManager == null)
+                {
+                    charStats.Rings -= 20;
+                }
+
                 alreadyAttacked = true;
             }
             else

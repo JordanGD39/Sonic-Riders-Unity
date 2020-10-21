@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HUD : MonoBehaviour
+public class HUD : SurvivalFunctionsUI
 {
     [SerializeField] private Text speedText;
     [SerializeField] private Image airBar;
@@ -16,6 +16,11 @@ public class HUD : MonoBehaviour
     [SerializeField] private Text levelText;
     [SerializeField] private Text lapText;
     [SerializeField] private Text maxLapText;
+    [SerializeField] private GameObject distanceRadar;
+    public GameObject DistanceRadar { get { return distanceRadar; } }
+    [SerializeField] private GameObject placingUI;
+    public GameObject PlacingUI { get { return placingUI; } }
+    
     [SerializeField] private Animator placingAnim;
     private float displayDelay = 0.05f;
     private float timer = 0;
@@ -25,10 +30,12 @@ public class HUD : MonoBehaviour
     public int Place { get; set; } = 0;
 
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
+        base.Start();
+
         Transform airBarParent = transform.GetChild(0);
-        UpdateAirBar(200, 200);
+        UpdateAirBar(200, 200);        
     }
 
     private void Update()
@@ -126,5 +133,5 @@ public class HUD : MonoBehaviour
 
         lapText.text = lap.ToString("00") + "/";
         maxLapText.text = maxLap.ToString("00");
-    }
+    }    
 }

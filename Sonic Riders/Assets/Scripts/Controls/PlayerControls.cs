@@ -11,6 +11,7 @@ public class PlayerControls : MonoBehaviour
     private InputMaster inputMaster;
     private PlayerInput playerInput;
     private GameObject player;
+    public GameObject Player { get { return player; } }
     private PlayerMovement playerMovement;
     private PlayerBoost playerBoost;
     private PlayerDrift playerDrift;

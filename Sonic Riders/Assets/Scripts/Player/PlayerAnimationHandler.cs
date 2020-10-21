@@ -68,20 +68,23 @@ public class PlayerAnimationHandler : MonoBehaviour
         anim.SetFloat("Direction", playerMovement.TurnAmount);
         anim.SetBool("Grinding", playerGrind.Grinding);
         anim.SetBool("Grounded", playerMovement.Grounded);
-        anim.SetBool("ChargingJump", playerJump.JumpHold);
-        anim.SetBool("Boosting", playerBoost.Attacking);
-
+        anim.SetBool("ChargingJump", playerJump.JumpHold);        
 
         if (playerBoost.Attacking && !AlreadySettingAttack)
         {
-            if (playerJump.JumpHold || anim.GetBool("Punching"))
+            if (playerJump.JumpHold || anim.GetBool("Punching") || anim.GetBool("Electrocuted"))
             {
                 playerBoost.AttackCol.SetActive(false);
             }
             else
             {
+                anim.SetBool("Boosting", true);
                 playerBoost.AttackCol.SetActive(true);
             }
+        }
+        else if (!playerBoost.Attacking)
+        {
+            playerBoost.AttackCol.SetActive(false);
         }
 
         if (playerTricks.CanDoTricks)
@@ -109,10 +112,14 @@ public class PlayerAnimationHandler : MonoBehaviour
         anim.SetBool("OutOfAir", state);
     }
 
-    public void StartBoostAnimation()
+    public void StartBoostAnimation(bool canAttack)
     {
-        updateBoost = false;
         anim.SetTrigger("Boost");
+
+        if (canAttack)
+        {
+            anim.SetBool("Boosting", true);
+        }
 
         if (moveTails)
         {
