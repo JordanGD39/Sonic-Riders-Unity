@@ -26,7 +26,7 @@ public class ChaosEmerald : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        model.transform.Rotate(0, spinSpeed, 0);    
+        model.transform.Rotate(0, spinSpeed * Time.deltaTime, 0);    
     }
 
     public void FlyToPos(Vector3 pos, Vector3 forward)

@@ -174,9 +174,9 @@ public class PlayerJump : MonoBehaviour
                 //rb.velocity = transform.GetChild(0).forward * mov.Speed;
 
                 //rb.AddForce(transform.parent.GetChild(0).forward * (jumpHeight + rampPower), ForceMode.Force);
+                transform.SetParent(null);
                 rb.velocity = forward * (jumpHeight * jumpMultiplier + rampPower);
 
-                transform.parent = null;
                 alreadyFell = false;
                 playerTricks.ChangeTrickSpeed(rampPower, maxRampPower, worstRampPower, jumpHeight, startingJumpHeight, maxJumpHeight);
             }

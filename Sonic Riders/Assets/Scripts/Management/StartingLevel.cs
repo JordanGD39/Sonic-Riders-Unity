@@ -22,10 +22,7 @@ public class StartingLevel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (GameManager.instance.GameMode == GameManager.gamemode.SURVIVAL)
-        {
-            survivalManager = FindObjectOfType<SurvivalManager>();
-        }
+        survivalManager = FindObjectOfType<SurvivalManager>();
 
         if (GameManager.instance.GetComponent<TestHandleJoin>() == null)
         {
@@ -144,6 +141,17 @@ public class StartingLevel : MonoBehaviour
         if (survivalManager != null)
         {
             survivalManager.GetPlayers(playersInScene);
+        }
+        else
+        {
+            if (GameManager.instance.GameMode == GameManager.gamemode.TUTORIAL)
+            {
+                HUD hud = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).transform.GetChild(0).GetComponent<HUD>();
+                hud.DistanceRadar.SetActive(false);
+                hud.PlacingUI.SetActive(false);
+                BigCanvasUI bigCanvas = FindObjectOfType<BigCanvasUI>();
+                bigCanvas.DistanceRadar.SetActive(false);
+            }
         }
 
         if (tutorialManager == null)

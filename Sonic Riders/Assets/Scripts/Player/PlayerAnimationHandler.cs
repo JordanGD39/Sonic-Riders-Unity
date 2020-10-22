@@ -72,15 +72,7 @@ public class PlayerAnimationHandler : MonoBehaviour
 
         if (playerBoost.Attacking && !AlreadySettingAttack)
         {
-            if (playerJump.JumpHold || anim.GetBool("Punching") || anim.GetBool("Electrocuted"))
-            {
-                playerBoost.AttackCol.SetActive(false);
-            }
-            else
-            {
-                anim.SetBool("Boosting", true);
-                playerBoost.AttackCol.SetActive(true);
-            }
+            playerBoost.AttackCol.SetActive(anim.GetCurrentAnimatorStateInfo(0).IsName("BoostAttack"));
         }
         else if (!playerBoost.Attacking)
         {

@@ -54,6 +54,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         playerInputManager = GetComponent<PlayerInputManager>();
         currScene = SceneManager.GetActiveScene().name;
         //Application.targetFrameRate = 5;

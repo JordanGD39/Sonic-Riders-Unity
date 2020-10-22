@@ -29,7 +29,7 @@ public class CharacterSelectInput : MonoBehaviour
 
     public void StartFunctions()
     {
-        if (SceneManager.GetActiveScene().buildIndex > 1)
+        if (SceneManager.GetActiveScene().name != "CharacterSelect")
         {
             enabled = false;
             return;

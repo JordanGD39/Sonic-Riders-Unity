@@ -156,6 +156,10 @@ public class PlayerTrigger : MonoBehaviour
 
         if (playerTrigger.emeraldHolder.childCount > 0)
         {
+            CharacterStats defenderStats = playerTrigger.GetComponentInParent<CharacterStats>();
+
+            defenderStats.Air = defenderStats.MaxAir;
+
             survivalManager.MakePlayerLeader(playerMovement.gameObject);
 
             Transform emerald = playerTrigger.emeraldHolder.GetChild(0);

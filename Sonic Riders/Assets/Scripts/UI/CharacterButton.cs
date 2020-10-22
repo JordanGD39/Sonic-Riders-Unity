@@ -58,9 +58,17 @@ public class CharacterButton : MonoBehaviour
             playerSelect.GetChild(1).gameObject.SetActive(true);
         }
 
-        playerSelect.GetChild(1).GetComponentInChildren<Image>().sprite = sprite.sprite;
+        playerSelect.GetChild(1).GetChild(1).GetComponent<Image>().sprite = sprite.sprite;
 
-        Transform statsParent = playerSelect.GetChild(1).GetComponentInChildren<Text>().transform.parent;
+        Transform typeParent = playerSelect.GetChild(1).GetChild(0);
+
+        for (int i = 0; i < typeParent.childCount; i++)
+        {
+            Debug.Log(typeParent.GetChild(i).gameObject);
+            typeParent.GetChild(i).gameObject.SetActive((int)stats.CharType == i);
+        }
+
+        Transform statsParent = playerSelect.GetChild(1).GetChild(2);
 
         for (int i = 0; i < statsParent.childCount; i++)
         {

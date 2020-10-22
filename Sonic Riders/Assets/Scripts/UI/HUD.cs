@@ -17,6 +17,8 @@ public class HUD : SurvivalFunctionsUI
     [SerializeField] private Text lapText;
     [SerializeField] private Text maxLapText;
     [SerializeField] private GameObject distanceRadar;
+    [SerializeField] private RectTransform airBarParent;
+    [SerializeField] private RectTransform textSpeed;
     public GameObject DistanceRadar { get { return distanceRadar; } }
     [SerializeField] private GameObject placingUI;
     public GameObject PlacingUI { get { return placingUI; } }
@@ -46,6 +48,13 @@ public class HUD : SurvivalFunctionsUI
     public void GiveRaceManager(RaceManager aRaceManager)
     {
         raceManager = aRaceManager;
+    }
+
+    public void ReverseAirBar()
+    {
+        airBarParent.localScale = new Vector3(-1, 1, 1);
+        speedText.GetComponent<RectTransform>().localScale = new Vector3(-0.4f, 0.4f, 1);
+        textSpeed.localScale = new Vector3(-1, 1, 1);
     }
 
     public void ChangePlacing()

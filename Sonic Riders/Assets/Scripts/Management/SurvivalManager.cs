@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using PathCreation;
 
 public class SurvivalManager : MonoBehaviour
 {
+    [SerializeField] private PathCreator path;
     [SerializeField] private Transform emerald;
     private ChaosEmerald chaosEmerald;
     [SerializeField] private GameObject leader;
@@ -25,10 +27,11 @@ public class SurvivalManager : MonoBehaviour
     [SerializeField] private float distanceMultiplier = 1.5f;
     [SerializeField] private float distanceXMultiplier = 1;
     private int playerCount = 0;
-
+    
     private void Start()
     {
         chaosEmerald = emerald.GetComponent<ChaosEmerald>();
+        bigCanvasUI = GameObject.FindGameObjectWithTag(Constants.Tags.bigCanvas).GetComponent<BigCanvasUI>();
         for (int i = 0; i < scoreRingsParent.childCount; i++)
         {
             scoreRings.Add(scoreRingsParent.GetChild(i).gameObject);
@@ -73,7 +76,6 @@ public class SurvivalManager : MonoBehaviour
                     huds[i].DistanceRadar.SetActive(false);
                 }
 
-                enabled = false;
                 gameObject.SetActive(false);
                 return;
             }
@@ -86,7 +88,12 @@ public class SurvivalManager : MonoBehaviour
         else
         {
             huds.Clear();
-            huds.AddRange(FindObjectsOfType<HUD>());
+
+            Transform canvas = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).transform;
+            for (int i = 0; i < canvas.childCount; i++)
+            {
+                huds.Add(canvas.GetChild(i).GetComponent<HUD>());
+            }
 
             for (int i = 0; i < huds.Count; i++)
             {
@@ -95,12 +102,15 @@ public class SurvivalManager : MonoBehaviour
 
             if (notRightMode)
             {
-                enabled = false;
                 gameObject.SetActive(false);
                 return;
             }
 
-            bigCanvasUI = GameObject.FindGameObjectWithTag(Constants.Tags.bigCanvas).GetComponent<BigCanvasUI>();
+            if (huds.Count > 2)
+            {
+                huds[0].ReverseAirBar();
+                huds[2].ReverseAirBar();
+            }            
 
             for (int i = 0; i < playerCount; i++)
             {
@@ -126,10 +136,29 @@ public class SurvivalManager : MonoBehaviour
             return;
         }
 
+        float emeraldClosestDistance = 1 - path.path.GetClosestTimeOnPath(emerald.position);
+
         for (int i = 0; i < players.Count; i++)
         {
+            float playerClosestDistance = 1 - path.path.GetClosestTimeOnPath(players[i].transform.position);
+
+            /*float halfPoint = playerClosestDistance + 0.5f;
+
+            if (emeraldClosestDistance > halfPoint)
+            {
+                emeraldClosestDistance = 1 - emeraldClosestDistance;
+            }*/
+
+            if (playerClosestDistance > 0.5f && emeraldClosestDistance < 0.5f)
+            {
+                playerClosestDistance -= 1;
+            }
+           
+            distances[i] = playerClosestDistance - emeraldClosestDistance;
+            /*
             distances[i] = Vector3.Dot(emerald.forward, players[i].transform.position - emerald.position);
             distancesX[i] = Vector3.Dot(emerald.right, players[i].transform.position - emerald.position);
+            */
         }
 
         if (playerCount < 3)
@@ -248,7 +277,12 @@ public class SurvivalManager : MonoBehaviour
 
     public void Win()
     {
-        Debug.Log(leaderStats.CharacterName + " won the game!");
+        for (int i = 0; i < players.Count; i++)
+        {
+            players[i].GetComponent<CharacterStats>().DisableAllFeatures = true;
+        }
+
+        bigCanvasUI.ShowSurvivalWinner(leaderStats.CharacterName);
     }
 
     public void CheckLeaderLap(GameObject player)

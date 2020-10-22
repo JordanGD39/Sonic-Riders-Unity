@@ -18,6 +18,8 @@ public class BigCanvasUI : SurvivalFunctionsUI
     public GameObject DistanceRadar { get { return distanceRadar; } }
     [SerializeField] private Animator tutorialAnim;
     [SerializeField] private Text tutorialText;
+
+    [SerializeField] private Text survivalWin;
     private float timer = 0;
     private bool stopCounting = false;
 
@@ -30,8 +32,9 @@ public class BigCanvasUI : SurvivalFunctionsUI
     {
         base.Start();
 
+        survivalWin.gameObject.SetActive(false);
         tutorialPanel.SetActive(false);
-        changePlace = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponentInChildren<ChangePlace>();
+        changePlace = FindObjectOfType<ChangePlace>();
         characterPlaceParent.gameObject.SetActive(false);
         pausePanel.SetActive(false);
         winPanel.SetActive(false);
@@ -88,6 +91,11 @@ public class BigCanvasUI : SurvivalFunctionsUI
 
     public void PostPlacings(List<PlayerCheckpoints> players)
     {
+        if (changePlace == null)
+        {
+            changePlace = FindObjectOfType<ChangePlace>();
+        }
+
         stopCounting = true;
         characterPlaceParent.gameObject.SetActive(true);
 
@@ -121,6 +129,16 @@ public class BigCanvasUI : SurvivalFunctionsUI
         StartCoroutine("ShowMenuPanelInput");
     }
 
+    public void ShowSurvivalWinner(string charName)
+    {
+        GameManager.instance.GetAudioManager.StopPlaying(GameManager.instance.GetAudioManager.CurrSound.name);
+        GameManager.instance.GetAudioManager.Play("Victory");
+        survivalWin.gameObject.SetActive(true);
+        survivalWin.text = charName.ToUpper() + " WINS!";
+
+        StartCoroutine("ShowMenuPanel");
+    }    
+
     private IEnumerator ShowMenuPanelInput()
     {
         while (!winPanel.activeSelf && !Input.GetButtonDown("Submit"))
@@ -134,17 +152,29 @@ public class BigCanvasUI : SurvivalFunctionsUI
     private IEnumerator ShowMenuPanel()
     {
         yield return new WaitForSeconds(3);
-        winPanel.SetActive(true);
+
+        if (!winPanel.activeSelf)
+        {
+            winPanel.SetActive(true);
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(restartButton);
+        }        
     }
 
     private void SelectRestartButton()
     {
+        winPanel.SetActive(true);
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(restartButton);
     }
 
     public void PauseToggle()
     {
+        if (winPanel.activeSelf || survivalWin.gameObject.activeSelf)
+        {
+            return;
+        }
+
         pausePanel.SetActive(!pausePanel.activeSelf);
         Time.timeScale = pausePanel.activeSelf ? 0 : 1;
 
