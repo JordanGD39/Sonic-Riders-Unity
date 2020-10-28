@@ -70,13 +70,9 @@ public class PlayerAnimationHandler : MonoBehaviour
         anim.SetBool("Grounded", playerMovement.Grounded);
         anim.SetBool("ChargingJump", playerJump.JumpHold);        
 
-        if (playerBoost.Attacking && !AlreadySettingAttack)
+        if (!AlreadySettingAttack)
         {
             playerBoost.AttackCol.SetActive(anim.GetCurrentAnimatorStateInfo(0).IsName("BoostAttack"));
-        }
-        else if (!playerBoost.Attacking)
-        {
-            playerBoost.AttackCol.SetActive(false);
         }
 
         if (playerTricks.CanDoTricks)

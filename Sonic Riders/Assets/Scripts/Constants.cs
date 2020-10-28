@@ -17,6 +17,7 @@ public class Constants
         public const string survivalManager = "SurvivalManager";
         public const string scoreRing = "ScoreRing";
         public const string chaosEmerald = "ChaosEmerald";
+        public const string flyPortal = "FlyPortal";
     }
 
     public class VoiceSounds

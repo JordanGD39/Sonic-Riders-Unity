@@ -7,9 +7,11 @@ using PathCreation;
 public class SurvivalManager : MonoBehaviour
 {
     [SerializeField] private PathCreator path;
+    private Transform raceCheckpointsParent;
     [SerializeField] private Transform emerald;
     private ChaosEmerald chaosEmerald;
     [SerializeField] private GameObject leader;
+    private int leaderIndex = 0;
     private PlayerCheckpoints currPlayerCheckpoints;
     private CharacterStats leaderStats;
     public GameObject Leader { set { leader = value; } }
@@ -22,20 +24,28 @@ public class SurvivalManager : MonoBehaviour
     private BigCanvasUI bigCanvasUI;
 
     private List<GameObject> players = new List<GameObject>();
+    private List<PlayerCheckpoints> playersCheckpoints = new List<PlayerCheckpoints>();
     [SerializeField] private float[] distances = { 0,0,0,0 };
     [SerializeField] private float[] distancesX = { 0,0,0,0 };
     [SerializeField] private float distanceMultiplier = 1.5f;
     [SerializeField] private float distanceXMultiplier = 1;
     private int playerCount = 0;
-    
+
+    private float outOfRadar = 140;
+
     private void Start()
     {
         chaosEmerald = emerald.GetComponent<ChaosEmerald>();
         bigCanvasUI = GameObject.FindGameObjectWithTag(Constants.Tags.bigCanvas).GetComponent<BigCanvasUI>();
+
+        raceCheckpointsParent = GameObject.FindGameObjectWithTag(Constants.Tags.raceManager).transform;
+
         for (int i = 0; i < scoreRingsParent.childCount; i++)
         {
             scoreRings.Add(scoreRingsParent.GetChild(i).gameObject);
         }
+
+        outOfRadar /= distanceMultiplier;
     }
 
     // Start is called before the first frame update
@@ -46,17 +56,71 @@ public class SurvivalManager : MonoBehaviour
         if (playerCount == 0)
         {
             return;
-        }
-
-        bool notRightMode = GameManager.instance.GameMode != GameManager.gamemode.SURVIVAL;
+        }       
 
         players = somePlayers;
         players.Sort(CompareIndex);
 
-        if (playerCount < 3)
+        for (int i = 0; i < players.Count; i++)
         {
-            huds.Clear();
+            playersCheckpoints.Add(players[i].GetComponent<PlayerCheckpoints>());
+        }
+
+        huds.Clear();
+
+        Transform canvasParent = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).transform;
+
+        if (GameManager.instance.GameMode != GameManager.gamemode.SURVIVAL)
+        {
+            if (playerCount <= 2)
+            {
+                for (int i = 0; i < playerCount; i++)
+                {
+                    huds.Add(canvasParent.GetChild(i).GetComponent<HUD>());
+                    huds[i].DistanceRadar.SetActive(false);
+                }                
+            }
+            else
+            {
+                bigCanvasUI.DistanceRadar.SetActive(false);
+            }
+
+            gameObject.SetActive(false);
+            return;
+        }
+        
+
+        StartCoroutine("WaitForUI");      
+    }
+
+    private IEnumerator WaitForUI()
+    {
+        if (playerCount <= 2)
+        {
+            while (!huds[huds.Count - 1].ReadyToChange)
+            {
+                yield return null;
+            }
+        }
+        else
+        {
+            while (!bigCanvasUI.ReadyToChange)
+            {
+                yield return null;
+            }
+        }
+
+        ReadyToChangeUI();
+    }
+
+    private void ReadyToChangeUI()
+    {
+        bool notRightMode = GameManager.instance.GameMode != GameManager.gamemode.SURVIVAL;
+
+        if (playerCount <= 2)
+        {
             Transform canvasParent = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).transform;
+
             for (int i = 0; i < playerCount; i++)
             {
                 huds.Add(canvasParent.GetChild(i).GetComponent<HUD>());
@@ -87,8 +151,6 @@ public class SurvivalManager : MonoBehaviour
         }
         else
         {
-            huds.Clear();
-
             Transform canvas = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).transform;
             for (int i = 0; i < canvas.childCount; i++)
             {
@@ -110,7 +172,7 @@ public class SurvivalManager : MonoBehaviour
             {
                 huds[0].ReverseAirBar();
                 huds[2].ReverseAirBar();
-            }            
+            }
 
             for (int i = 0; i < playerCount; i++)
             {
@@ -120,7 +182,7 @@ public class SurvivalManager : MonoBehaviour
             }
 
             bigCanvasUI.DistanceRadar.SetActive(true);
-        }        
+        }
     }
 
     private int CompareIndex(GameObject a, GameObject b)
@@ -140,7 +202,24 @@ public class SurvivalManager : MonoBehaviour
 
         for (int i = 0; i < players.Count; i++)
         {
-            float playerClosestDistance = 1 - path.path.GetClosestTimeOnPath(players[i].transform.position);
+            if (i != leaderIndex || leader == null)
+            {
+                float vel = 0;
+
+                float calcDistance = CalculateDistanceToEmerald(playersCheckpoints[i]);
+
+                if ((calcDistance >= -outOfRadar && distances[i] <= outOfRadar) || (distances[i] >= -outOfRadar && calcDistance <= outOfRadar))
+                {
+                    distances[i] = Mathf.SmoothDamp(distances[i], calcDistance, ref vel, 0.1f);
+                }
+                else
+                {
+                    distances[i] = calcDistance;
+                }
+                
+            }
+            
+            //float playerClosestDistance = 1 - path.path.GetClosestTimeOnPath(players[i].transform.position);
 
             /*float halfPoint = playerClosestDistance + 0.5f;
 
@@ -149,12 +228,12 @@ public class SurvivalManager : MonoBehaviour
                 emeraldClosestDistance = 1 - emeraldClosestDistance;
             }*/
 
-            if (playerClosestDistance > 0.5f && emeraldClosestDistance < 0.5f)
-            {
-                playerClosestDistance -= 1;
-            }
-           
-            distances[i] = playerClosestDistance - emeraldClosestDistance;
+            //if (playerClosestDistance > 0.5f && emeraldClosestDistance < 0.5f)
+            //{
+            //playerClosestDistance -= 1;
+            //}
+
+            //distances[i] = playerClosestDistance - emeraldClosestDistance;
             /*
             distances[i] = Vector3.Dot(emerald.forward, players[i].transform.position - emerald.position);
             distancesX[i] = Vector3.Dot(emerald.right, players[i].transform.position - emerald.position);
@@ -180,6 +259,66 @@ public class SurvivalManager : MonoBehaviour
         }
     }
 
+    private float CalculateDistanceToEmerald(PlayerCheckpoints player)
+    {
+        if (player.CurrSurvivalCheckpoint == chaosEmerald.Checkpoint)
+        {
+            if (Vector3.Dot(emerald.forward, player.transform.position - emerald.position) > 0)
+            {
+                return (emerald.position - player.transform.position).sqrMagnitude;
+            }
+            else
+            {
+                return -(emerald.position - player.transform.position).sqrMagnitude;
+            }
+
+        }
+
+        int maxCheckpoints = raceCheckpointsParent.transform.childCount - 1;
+        int diffCheckpoints = Mathf.Abs(chaosEmerald.Checkpoint - player.CurrSurvivalCheckpoint);        
+
+        float distancesCombined = 0;
+
+        bool pastEmerald = false;
+
+        for (int i = 1; i < diffCheckpoints + 1; i++)
+        {
+            int checkpoint = 0;
+
+            if (player.CurrSurvivalCheckpoint > chaosEmerald.Checkpoint)
+            {
+                checkpoint = player.CurrCheckpoint - i;
+                pastEmerald = true;
+            }
+            else
+            {
+                checkpoint = player.CurrCheckpoint + i;
+            }
+
+            if (checkpoint > maxCheckpoints)
+            {
+                checkpoint -= maxCheckpoints;
+            }
+            else if (checkpoint < 0)
+            {
+                checkpoint += maxCheckpoints + 1;
+            }
+
+            float distance = (raceCheckpointsParent.GetChild(checkpoint).position - player.transform.position).sqrMagnitude;
+
+            distancesCombined += distance;
+        }
+
+        if (pastEmerald)
+        {
+            return distancesCombined;
+        }
+        else
+        {
+            return -distancesCombined;
+        }        
+    }
+
     public void MakePlayerLeader(GameObject player)
     {
         if (leader != null)
@@ -188,6 +327,8 @@ public class SurvivalManager : MonoBehaviour
         }
 
         leader = player;
+
+        leaderIndex = players.IndexOf(leader);
 
         leaderStats = leader.GetComponent<CharacterStats>();
 

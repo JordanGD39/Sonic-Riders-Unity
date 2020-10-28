@@ -7,7 +7,10 @@ public class ChaosEmerald : MonoBehaviour
 {
     [SerializeField] private PathCreator path;
     [SerializeField] private Transform model;
-    private Collider col;
+    
+    public bool CanCatch { get; set; } = true;
+
+    private Transform raceCheckpointsParent;
     [SerializeField] private float spinSpeed = 15;
 
     private Vector3 posToFlyTo;
@@ -17,20 +20,32 @@ public class ChaosEmerald : MonoBehaviour
     private Vector3 checkpointForward;
     private Transform survivalParent;
 
+    [SerializeField] private int checkPoint = 2;
+    public int Checkpoint { get { return checkPoint; } }
+
     private void Start()
     {
         survivalParent = transform.parent;
-        col = model.GetComponent<Collider>();
+        raceCheckpointsParent = GameObject.FindGameObjectWithTag(Constants.Tags.raceManager).transform;
     }
 
     // Update is called once per frame
     void Update()
     {
-        model.transform.Rotate(0, spinSpeed * Time.deltaTime, 0);    
+        model.transform.Rotate(0, spinSpeed * Time.deltaTime, 0);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == 9 && other.transform.parent == raceCheckpointsParent)
+        {
+            checkPoint = other.transform.GetSiblingIndex();
+        }
     }
 
     public void FlyToPos(Vector3 pos, Vector3 forward)
     {
+        CanCatch = false;
         posToFlyTo = pos;
         checkpointForward = forward;
 
@@ -54,8 +69,6 @@ public class ChaosEmerald : MonoBehaviour
 
         while ((posToFlyTo - transform.position).sqrMagnitude > 1000)
         {
-            Debug.Log((posToFlyTo - transform.position).sqrMagnitude);
-
             float step = pathSpeed * Time.deltaTime;
 
             closestDistance += step;
@@ -77,7 +90,7 @@ public class ChaosEmerald : MonoBehaviour
             yield return null;
         }
 
-        col.enabled = true;
+        CanCatch = true;
 
         while (posToFlyTo != transform.position)
         {

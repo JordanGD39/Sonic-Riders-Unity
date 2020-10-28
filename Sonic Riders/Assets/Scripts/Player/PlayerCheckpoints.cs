@@ -15,6 +15,9 @@ public class PlayerCheckpoints : MonoBehaviour
     [SerializeField] private int currCheckpoint = 0;
     public int CurrCheckpoint { get { return currCheckpoint; } set { currCheckpoint = value; } }
 
+    [SerializeField] private int currSurvivalCheckpoint = 0;
+    public int CurrSurvivalCheckpoint { get { return currSurvivalCheckpoint; } }
+
     [SerializeField] private int lapCount = 1;
     public int LapCount { get { return lapCount; } set { lapCount = value; } }
 
@@ -94,6 +97,8 @@ public class PlayerCheckpoints : MonoBehaviour
     public void CheckCheckpoint(Transform checkpoint)
     {
         int checkpointIndex = checkpoint.GetSiblingIndex();
+
+        currSurvivalCheckpoint = checkpointIndex;
 
         bool lastCheckpointReached = checkpointIndex == 0 && currCheckpoint == raceManager.transform.childCount - 1;
 

@@ -411,7 +411,7 @@ public class PlayerMovement : MonoBehaviour
                     {
                         float deccMultiplier = 1;
 
-                        if (charStats.OffRoad)
+                        if (charStats.OffRoad && speed > charStats.GetCurrentLimit() + 3)
                         {
                             //Multiplier for decceleration
                             deccMultiplier = offRoadDeccMultiplier;

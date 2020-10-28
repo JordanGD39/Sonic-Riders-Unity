@@ -16,6 +16,7 @@ TagManager:
   - LoadingScreen
   - ScoreRing
   - ChaosEmerald
+  - FlyPortal
   layers:
   - Default
   - TransparentFX
@@ -27,14 +28,14 @@ TagManager:
   - 
   - Player
   - PlayerOnly
-  - FlyPortal
+  - ChaosEmerald
   - Obstacle
   - OffRoad
   - NotRidable
   - Auto
   - PostProcessing
-  - 
-  - 
+  - WallBounce
+  - NoPlayer
   - 
   - 
   - 

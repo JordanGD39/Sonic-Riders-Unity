@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb6bd540708c2b14ca776d4c5531997c, type: 3}
+  m_Name: BlueStarII
+  m_EditorClassIdentifier: 
+  boardName: Blue Star II
+  boardIcon: {fileID: 0}
+  dash: 15
+  limit: 55.67
+  power:
+  - 25
+  - 28.33
+  - 28.33
+  cornering: 60
+  boost:
+  - 66.5
+  - 76.75
+  - 83.5
+  maxAir: 6400000096000000c8000000
+  airDepletion: 1.6
+  boostDepletion:
+  - 25
+  - 30
+  - 40
+  driftDepletion:
+  - 8
+  - 10.5
+  - 13
+  tornadoCost:
+  - 25
+  - 30
+  - 40
+  boardType: 0
+  standard: 1
+  changeType: 0

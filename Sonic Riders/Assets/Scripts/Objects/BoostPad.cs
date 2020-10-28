@@ -20,7 +20,7 @@ public class BoostPad : MonoBehaviour
             PlayerMovement player = other.GetComponentInParent<PlayerMovement>();
             CharacterStats characterStats = player.GetComponent<CharacterStats>();
 
-            player.Speed = characterStats.BoardStats.Limit[characterStats.Level] + 10;
+            player.Speed = characterStats.GetCurrentBoost() + 10;
 
             player.transform.position = transform.position;
             other.transform.parent.forward = transform.forward;

@@ -89,7 +89,7 @@ public class PlayerBoost : MonoBehaviour
 
     public void CheckBoost()
     {
-        if (charStats.DisableAllFeatures || (!playerMovement.Grounded && !playerGrind.Grinding) || boosting || charStats.Air < charStats.GetCurrentBoostDepletion())
+        if (charStats.DisableAllFeatures || charStats.GetCurrentBoost() == 0 ||(!playerMovement.Grounded && !playerGrind.Grinding) || boosting || charStats.Air < charStats.GetCurrentBoostDepletion())
         {
             return;
         }

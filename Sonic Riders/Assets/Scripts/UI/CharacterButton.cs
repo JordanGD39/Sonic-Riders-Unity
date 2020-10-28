@@ -127,7 +127,7 @@ public class CharacterButton : MonoBehaviour
 
         CharacterSelectInput selectInput = selectTransform.GetChild(pressedIndex).GetComponent<CharacterSelectInput>();
 
-        if (selectInput.CanSelect)
+        if (selectInput.CanSelect && !disabled.activeSelf)
         {
             holder.MultiplayerEventSystems[pressedIndex].SetSelectedGameObject(null);
             selectInput.ConfirmCharacter(characterPrefab);

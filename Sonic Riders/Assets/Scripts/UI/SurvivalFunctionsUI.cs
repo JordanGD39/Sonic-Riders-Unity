@@ -12,6 +12,8 @@ public class SurvivalFunctionsUI : MonoBehaviour
     [SerializeField] private Image survivalLeader;
     private Sprite emeraldSprite;
 
+    public bool ReadyToChange { get; set; } = false;
+
     // Start is called before the first frame update
     public virtual void Start()
     {
@@ -26,6 +28,8 @@ public class SurvivalFunctionsUI : MonoBehaviour
             survivalColors[i].color = gray;
             survivalIconsRect.Add(survivalIcons[i].GetComponent<RectTransform>());
         }
+
+        ReadyToChange = true;
     }
 
     public void ChangeSurvivalColor(int colorIndex, Color color)

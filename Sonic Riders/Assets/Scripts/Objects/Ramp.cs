@@ -13,6 +13,7 @@ public class Ramp : MonoBehaviour
     [SerializeField] private bool flightRamp = false;
     [SerializeField] private Transform differentForward;
     [SerializeField] private float jumpRotationZ = -0.5f;
+    [SerializeField] private bool survivalException = false;
 
     public float PerfectJump { get { return perfectJumpRange; } }
     public float Power { get { return power; } }
@@ -25,7 +26,15 @@ public class Ramp : MonoBehaviour
     private void Start()
     {
         power *= GameManager.instance.GravitityMultiplier * gravMultipler;
-        worstPower = power * multiplier;
+
+        if (GameManager.instance.GameMode == GameManager.gamemode.SURVIVAL && !survivalException)
+        {
+            power *= 0.8f;
+            multiplier += 0.2f;
+
+        }
+
+        worstPower = power * multiplier;        
     }
 
     private void OnTriggerEnter(Collider other)

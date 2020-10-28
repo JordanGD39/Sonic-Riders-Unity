@@ -31,6 +31,11 @@ public class Capsule : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.layer != 8)
+        {
+            return;
+        }
+
         model.SetActive(false);
         Invoke("Respawn", respawnTime);
         CharacterStats characterStats = other.GetComponentInParent<CharacterStats>();

@@ -234,11 +234,13 @@ public class CharacterStats : MonoBehaviour
                 rings = 100;
                 maxRings = 100;
                 maxAir = 200;
+                air = 0;
 
                 if (hud != null)
                 {
                     hud.UpdateRings(rings, maxRings);
                     hud.UpdateLevel(level);
+                    hud.UpdateAirBar(air, maxAir);
                 }
             }
         }
@@ -263,7 +265,7 @@ public class CharacterStats : MonoBehaviour
 
     public bool TypeCheck(type aType)
     {
-        return (aType == charType || (aType == stats.BoardType && !stats.IsStandard) || charType == type.ALL);
+        return aType == charType || (aType == stats.BoardType && stats.ChangeType) || charType == type.ALL;
     }
 
     public float GetCurrentLimit()
@@ -277,16 +279,13 @@ public class CharacterStats : MonoBehaviour
             multiplier = SurvivalLeader ? 0.8f : 1.2f;
         }
 
+        float limit = stats.Limit + (4.3f * level) - speedLoss;
+
         if (OffRoad)
         {
             speed = stats.Power[level] + extraPower;
 
-            if (speed > runSpeed)
-            {
-                speed = runSpeed;
-            }
-
-            return speed;
+            return speed * multiplier;
         }
 
         if (air <= 0)
@@ -295,7 +294,7 @@ public class CharacterStats : MonoBehaviour
         }
         else
         {
-            speed = stats.Limit[level] - speedLoss;
+            speed = limit;
         }
 
         return speed * multiplier;
@@ -358,11 +357,21 @@ public class CharacterStats : MonoBehaviour
 
     public float GetCurrentDash()
     {
+        if (air <= 0)
+        {
+            return 13;
+        }
+
         return stats.Dash + extraDash;
     }
 
     public float GetCurrentCornering()
     {
+        if (air <= 0)
+        {
+            return 80;
+        }
+
         return stats.Cornering + extraCornering;
     }
 
@@ -379,5 +388,10 @@ public class CharacterStats : MonoBehaviour
         }
 
         return (stats.AirDepletion - lessAirLoss) * multiplier;
+    }
+
+    public float GetCurrentTornadoCost()
+    {
+        return stats.TornadoCost[level];
     }
 }

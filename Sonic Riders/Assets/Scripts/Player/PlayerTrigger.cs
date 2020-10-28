@@ -10,10 +10,12 @@ public class PlayerTrigger : MonoBehaviour
     private Transform playerTransform;
     private PlayerFlight playerFlight;
     private PlayerAnimationHandler playerAnimation;
+    public PlayerAnimationHandler PlayerAnimation { get { return playerAnimation; } }
     private PlayerBoost playerBoost;
     private PlayerPunchObstacle playerPunch;
     private AudioManagerHolder audioHolder;
     private Rigidbody rb;
+    private PlayerBounce playerBounce;
     private CharacterStats charStats;
     private SurvivalManager survivalManager;
 
@@ -29,6 +31,7 @@ public class PlayerTrigger : MonoBehaviour
 
     private bool touchedStartAlready = false;
     private bool alreadyAttacked = false;
+    public bool AlreadyAttacked { set { alreadyAttacked = value; } }
     private float otherPlayerForce = 0;
     private float attackKnockbackMultiplier = 1f;
     [SerializeField] private float attackKnockbackHeight = 10;
@@ -51,6 +54,7 @@ public class PlayerTrigger : MonoBehaviour
         charStats = playerMovement.GetComponent<CharacterStats>();
         audioHolder = playerMovement.GetComponent<AudioManagerHolder>();
         rb = GetComponentInParent<Rigidbody>();
+        playerBounce = playerMovement.GetComponentInChildren<PlayerBounce>();
 
         if (GameManager.instance.GameMode == GameManager.gamemode.SURVIVAL)
         {
@@ -64,20 +68,13 @@ public class PlayerTrigger : MonoBehaviour
 
         switch (collision.gameObject.layer)
         {            
-            case 0:
-                if (!collision.isTrigger)
-                {
-                    BounceCol(collision);
-                }                
-                break;
             case 8:
-                if (playerBoost.Attacking && collision.isTrigger)
+                if (collision.isTrigger && collision.transform != attackCol.transform && !alreadyAttacked)
                 {
-                    AttackPlayer(collision);
+                    AttackedByPlayer(collision);
                 }
                 break;
             case 9:
-
                 switch (collision.gameObject.tag)
                 {
                     case Constants.Tags.startLine:
@@ -90,35 +87,28 @@ public class PlayerTrigger : MonoBehaviour
                     case Constants.Tags.checkpoint:
                         playerCheckpoints.CheckCheckpoint(collision.transform);
                         break;
-                    case Constants.Tags.chaosEmerald:
-                        collision.enabled = false;
-                        GotChaosEmerald(collision.transform.parent);
-                        break;
                     case Constants.Tags.scoreRing:
                         survivalManager.CheckValidScoreRing(collision.transform.parent.gameObject, playerMovement.gameObject);
+                        break;
+                    case Constants.Tags.flyPortal:
+                        if (playerFlight.enabled)
+                        {
+                            playerFlight.IncreaseFlightSpeed(collision.transform.parent);
+                        }
                         break;
                 }
 
                 break;
             case 10:
-                if (playerFlight.enabled)
-                {
-                    playerFlight.IncreaseFlightSpeed(collision.transform.parent);
-                }
+                GotChaosEmerald(collision.transform.parent);
                 break;
             case 11:
                 playerPunch.Punch(collision.GetComponentInParent<Rigidbody>());
 
-                if (playerPunch.CantPunch || charStats.Air <= 0)
+                /*if (playerPunch.CantPunch || charStats.Air <= 0)
                 {
                     BounceCol(collision);
-                }
-                break;
-            case 13:
-                if (!collision.isTrigger)
-                {
-                    BounceCol(collision);
-                }
+                }*/
                 break;
             case 14:
                 if (charStats.Air == 0 && path == null)
@@ -140,6 +130,11 @@ public class PlayerTrigger : MonoBehaviour
 
     private void GotChaosEmerald(Transform chaosEmerald)
     {
+        if (!chaosEmerald.GetComponent<ChaosEmerald>().CanCatch)
+        {
+            return;
+        }
+
         survivalManager.MakePlayerLeader(playerMovement.gameObject);
 
         chaosEmerald.SetParent(emeraldHolder, false);
@@ -150,29 +145,37 @@ public class PlayerTrigger : MonoBehaviour
         playerAnimation.Anim.SetBool("Boosting", false);
     }
 
-    private void AttackPlayer(Collider collision)
+    public void AttackedByPlayer(Collider collision)
     {
-        PlayerTrigger playerTrigger = collision.GetComponent<PlayerTrigger>();
+        CharacterStats attackerStats = collision.GetComponentInParent<CharacterStats>();
+        PlayerBoost attackerBoost = attackerStats.GetComponent<PlayerBoost>();
 
-        if (playerTrigger.emeraldHolder.childCount > 0)
+        if (!(attackerBoost.AttackCol.activeSelf || attackerBoost.Attacking))
         {
-            CharacterStats defenderStats = playerTrigger.GetComponentInParent<CharacterStats>();
+            return;
+        }
 
-            defenderStats.Air = defenderStats.MaxAir;
+        alreadyAttacked = true;
+        
+        PlayerTrigger attackerTrigger = attackerStats.GetComponentInChildren<PlayerTrigger>();
 
-            survivalManager.MakePlayerLeader(playerMovement.gameObject);
+        if (emeraldHolder.childCount > 0)
+        {
+            charStats.Air = charStats.MaxAir;
 
-            Transform emerald = playerTrigger.emeraldHolder.GetChild(0);
+            survivalManager.MakePlayerLeader(attackerStats.gameObject);
 
-            emerald.SetParent(emeraldHolder, false);
+            Transform emerald = emeraldHolder.GetChild(0);
+
+            emerald.SetParent(attackerTrigger.EmeraldHolder, false);
             emerald.localPosition = Vector3.zero;
             emerald.forward = transform.forward;
             emerald.GetChild(0).localScale = new Vector3(0.5f, 0.5f, 0.5f);
-            playerBoost.Attacking = false;
-            playerAnimation.Anim.SetBool("Boosting", false);
+            attackerBoost.Attacking = false;
+            attackerTrigger.PlayerAnimation.Anim.SetBool("Boosting", false);
         }
 
-        playerTrigger.BounceCol(attackCol);
+        playerBounce.Attacked(attackCol.transform, playerMovement.Speed);
     }
 
     public void Electrocute(float timer, bool countDown)
@@ -284,7 +287,7 @@ public class PlayerTrigger : MonoBehaviour
         }        
     }
 
-    public void BounceCol(Collider collision)
+    /*public void BounceCol(Collider collision)
     {
         if (collision.gameObject.layer == 8)
         {
@@ -322,52 +325,6 @@ public class PlayerTrigger : MonoBehaviour
         StartCoroutine("Bounce");
     }
 
-    private IEnumerator Bounce()
-    {
-        playerMovement.CantMove = true;
-
-        //Debug.Log(transform.InverseTransformDirection(bounceDir).z);
-
-        bool hitDirectly = false;
-
-        Vector3 localBounce = transform.InverseTransformDirection(bounceDir);
-
-        localBounce.z = -Mathf.Abs(localBounce.z);
-
-        if (localBounce.z < -0.8f)
-        {
-            playerMovement.Speed = speed;
-            hitDirectly = true;
-        }
-
-        float knockback = speed;
-
-        bounceDir = transform.TransformDirection(localBounce);
-
-        if (otherPlayerForce > 0)
-        {
-            rb.AddForce(transform.up * attackKnockbackHeight, ForceMode.Impulse);
-            knockback = otherPlayerForce;
-        }
-        else
-        {
-            audioHolder.SfxManager.Play(Constants.SoundEffects.bounceWall);
-        }
-
-        rb.AddForce(bounceDir * knockback, ForceMode.Impulse);
-        yield return new WaitForSeconds(time / 2);
-        playerMovement.Bouncing = false;
-        yield return new WaitForSeconds(time / 2);
-        playerMovement.CantMove = false;
-        alreadyAttacked = false;
-
-        if (hitDirectly && playerMovement.Grounded)
-        {
-            playerMovement.Speed = 0;
-            rb.velocity = Vector3.zero;
-        }
-    }
-
     public Vector3 NearestVertexTo(Vector3 point, Mesh mesh)
     {
         // convert point to local space
@@ -387,5 +344,5 @@ public class PlayerTrigger : MonoBehaviour
         }
         // convert nearest vertex back to world space
         return transform.TransformPoint(nearestVertex);
-    }
+    }*/
 }

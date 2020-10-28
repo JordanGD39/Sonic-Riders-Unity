@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb6bd540708c2b14ca776d4c5531997c, type: 3}
   m_Name: Standard
   m_EditorClassIdentifier: 
+  boardName: Standard
+  boardIcon: {fileID: 0}
   dash: 13
-  limit:
-  - 54
-  - 57
-  - 60
+  limit: 54
   power:
   - 28.75
   - 31.75
@@ -36,5 +35,10 @@ MonoBehaviour:
   - 8
   - 10.5
   - 13
+  tornadoCost:
+  - 25
+  - 30
+  - 40
   boardType: 0
   standard: 1
+  changeType: 0

@@ -9,21 +9,34 @@ public class Ring : MonoBehaviour
 
     private AudioSource source;
     private GameObject model;
+    private Renderer ringRenderer;
+
+    private LODGroup lod;
 
     private void Start()
     {
-        model = GetComponentInChildren<MeshRenderer>().gameObject;
+        ringRenderer = GetComponentInChildren<MeshRenderer>();
+        model = ringRenderer.gameObject;
         source = GetComponentInChildren<AudioSource>();
+        lod = GetComponent<LODGroup>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.Rotate(0, rotateSpeed * Time.deltaTime, 0);
+        if (ringRenderer.isVisible)
+        {
+            transform.Rotate(0, rotateSpeed * Time.deltaTime, 0);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.layer != 8)
+        {
+            return;
+        }
+
         model.SetActive(false);
         other.GetComponentInParent<CharacterStats>().Rings++;
         source.Play();
