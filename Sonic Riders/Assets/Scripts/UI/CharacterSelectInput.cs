@@ -19,9 +19,20 @@ public class CharacterSelectInput : MonoBehaviour
     private GameObject prevButton;
     [SerializeField] private GameObject playerTextPref;
     private Text playerText;
+    private ButtonSounds buttonSounds;
+
+    private bool selectingBoard = false;
+    private GameObject currPrefabInstance;
+    private GameObject currPrefab;
+    private CharacterStats charStats;
+    private PlayerSelectReferences playerSelect;
+
+    [SerializeField] private BoardStats[] boards;
+    private int boardIndex = 0;
+    private CharacterButton characterButton;
+    private bool playerReady = false;
 
     // Start is called before the first frame update
-
     private void Start()
     {
         StartFunctions();
@@ -34,16 +45,29 @@ public class CharacterSelectInput : MonoBehaviour
             enabled = false;
             return;
         }
+        prevButton = null;
+        playerReady = false;
+        selectingBoard = false;
 
-        GameObject button = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).GetComponentInChildren<Button>().gameObject;
+        GameObject canvas = GameObject.FindGameObjectWithTag(Constants.Tags.canvas);
+
+        GameObject button = canvas.GetComponentInChildren<Button>().gameObject;
+        characterButton = button.GetComponent<CharacterButton>();
+
+        buttonSounds = canvas.GetComponentInChildren<ButtonSounds>();
 
         playerConfigManager = GameManager.instance.GetComponent<PlayerConfigManager>();
 
         InputMaster inputMaster = new InputMaster();
         playerInput = GetComponent<PlayerInput>();
         eventSystem = playerInput.uiInputModule.GetComponent<MultiplayerEventSystem>();
+        playerInput.actions.FindAction(inputMaster.Player.Movement.id).performed += ctx => ScrollTroughBoard(ctx.ReadValue<Vector2>().x);
         playerInput.actions.FindAction(inputMaster.UI.Cancel.id).performed += ctx => CancelSelection();
         playerInput.actions.FindAction(inputMaster.UI.Select.id).performed += ctx => SelectButton();
+
+        playerSelect = canvas.GetComponentInChildren<GridLayoutGroup>().transform.GetChild(playerInput.playerIndex).GetComponent<PlayerSelectReferences>();
+
+        playerSelect.BoardImage.transform.parent.gameObject.SetActive(false);
 
         GameObject textPlayer = Instantiate(playerTextPref, button.transform, false);
 
@@ -78,32 +102,103 @@ public class CharacterSelectInput : MonoBehaviour
 
     private void SelectButton()
     {
-        if (canSelect)
+        if (!canSelect)
         {
-            PressedButton = true;
+            return;
         }
+
+        if(eventSystem.currentSelectedGameObject != null)
+        {
+            buttonSounds.Pressed();
+            eventSystem.currentSelectedGameObject.GetComponent<CharacterButton>().Pressed(playerInput.playerIndex);
+            canSelect = false;
+            Invoke("CanSelectInput", 0.25f);
+        }
+        else if (selectingBoard)
+        {
+            RectTransform boardTransform = playerSelect.BoardImage.GetComponent<RectTransform>();
+            boardTransform.localPosition = new Vector2(-45, -10);
+            boardTransform.localRotation = new Quaternion(0, 0, 0.27f, 0);
+            playerSelect.CharacterImage.gameObject.SetActive(true);
+            playerSelect.PointersParent.SetActive(false);
+            playerReady = true;
+            PlayerDone();
+        }
+    }
+
+    private void ScrollTroughBoard(float dir)
+    {
+        int direction = Mathf.RoundToInt(dir);
+
+        if (!selectingBoard || direction == 0 || playerReady)
+        {
+            return;
+        }
+
+        boardIndex += direction;
+
+        if (boardIndex < 0)
+        {
+            boardIndex = boards.Length - 1;
+        }
+        else if (boardIndex > boards.Length - 1)
+        {
+            boardIndex = 0;
+        }
+
+        buttonSounds.Select();
+
+        CheckBoard(boardIndex);       
+    }
+
+    private void CheckBoard(int index)
+    {
+        if (boards[index].IsStandard)
+        {
+            playerSelect.BoardImage.sprite = charStats.BoardImage;
+        }
+        else
+        {
+            playerSelect.BoardImage.sprite = boards[index].BoardIcon;
+        }
+
+        charStats.BoardStats = boards[index];
+        characterButton.ShowSelectedCharacter(playerInput.playerIndex, true, charStats);
     }
 
     private void Update()
     {
-        if (eventSystem != null && eventSystem.currentSelectedGameObject != null)
+        if (eventSystem != null && eventSystem.currentSelectedGameObject != null && !selectingBoard)
         {            
             playerText.transform.SetParent(eventSystem.currentSelectedGameObject.transform, false);
             playerText.transform.localPosition = new Vector3(0, 22, 0);
 
             if (eventSystem.currentSelectedGameObject != prevButton)
             {
-                PressedButton = false;
+                buttonSounds.Select();
+                eventSystem.currentSelectedGameObject.GetComponent<CharacterButton>().ShowSelectedCharacter(playerInput.playerIndex, false, null);
             }
 
             prevButton = eventSystem.currentSelectedGameObject;
-        }        
+        }
     }
 
     public void ConfirmCharacter(GameObject prefab)
     {
+        currPrefab = prefab;
+        currPrefabInstance = Instantiate(prefab);
+        currPrefabInstance.SetActive(false);
+        charStats = currPrefabInstance.GetComponent<CharacterStats>();
         playerText.gameObject.SetActive(false);
-        playerConfigManager.SetPlayerPrefab(playerInput.playerIndex, prefab);
+        playerSelect.CharacterImage.gameObject.SetActive(false);
+        playerSelect.BoardImage.transform.parent.gameObject.SetActive(true);
+        CheckBoard(0);
+        selectingBoard = true;
+    }
+
+    private void PlayerDone()
+    {
+        playerConfigManager.SetPlayerPrefab(playerInput.playerIndex, currPrefab, charStats.BoardStats);
         playerConfigManager.PlayerReady(playerInput.playerIndex, true);
     }
 
@@ -111,10 +206,27 @@ public class CharacterSelectInput : MonoBehaviour
     {
         if (eventSystem.currentSelectedGameObject == null)
         {
-            prevButton.GetComponent<CharacterButton>().DisabledImage.SetActive(false);
-            playerText.gameObject.SetActive(true);
-            eventSystem.SetSelectedGameObject(prevButton);
-            playerConfigManager.PlayerReady(playerInput.playerIndex, false);
+            buttonSounds.Cancel();
+
+            if(!playerReady)
+            {
+                Destroy(currPrefab);
+                prevButton.GetComponent<CharacterButton>().DisabledImage.SetActive(false);
+                playerText.gameObject.SetActive(true);
+                playerSelect.BoardImage.transform.parent.gameObject.SetActive(false);
+                playerSelect.CharacterImage.gameObject.SetActive(true);
+                eventSystem.SetSelectedGameObject(prevButton);
+                eventSystem.currentSelectedGameObject.GetComponent<CharacterButton>().ShowSelectedCharacter(playerInput.playerIndex, false, null);
+                playerConfigManager.PlayerReady(playerInput.playerIndex, false);
+                selectingBoard = false;
+            }
+
+            RectTransform boardTransform = playerSelect.BoardImage.GetComponent<RectTransform>();
+            boardTransform.localPosition = new Vector2(-75, -10);
+            boardTransform.localRotation = new Quaternion(0, 0, 0, 0);
+            playerSelect.PointersParent.SetActive(true);
+
+            playerReady = false;
         }
     }
 

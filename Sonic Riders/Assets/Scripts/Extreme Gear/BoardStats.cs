@@ -35,4 +35,6 @@ public class BoardStats : ScriptableObject
     public bool IsStandard { get { return standard; } }
     [SerializeField] private bool changeType = false;
     public bool ChangeType { get { return changeType; } }
+    [SerializeField] private GameObject[] characterRestriction;
+    public GameObject[] CharacterRestriction { get { return characterRestriction; } }
 }

@@ -31,9 +31,10 @@ public class PlayerConfigManager : MonoBehaviour
         }
     }
 
-    public void SetPlayerPrefab(int index, GameObject prefab)
+    public void SetPlayerPrefab(int index, GameObject prefab, BoardStats boardStats)
     {
         playerConfigs[index].CharacterPrefab = prefab;
+        playerConfigs[index].GearStats = boardStats;
     }
 
     private void UnreadyPlayers()
@@ -100,6 +101,7 @@ public class PlayerConfigManager : MonoBehaviour
         for (int i = 0; i < playerConfigs.Count; i++)
         {
             GameObject character = Instantiate(playerConfigs[i].CharacterPrefab, new Vector3(0, 0.4f, 0), Quaternion.identity);
+            character.GetComponent<CharacterStats>().BoardStats = playerConfigs[i].GearStats;
             GameManager.instance.PlayersLeft.Add(character);
         }
 
@@ -121,6 +123,8 @@ public class PlayerConfig
     public int PlayerIndex { get; set; }
 
     public GameObject CharacterPrefab { get; set; }
+
+    public BoardStats GearStats { get; set; }
 
     public bool IsReady { get; set; } = false;
 }

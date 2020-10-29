@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Accelerator
   m_EditorClassIdentifier: 
   boardName: Accelerator
-  boardIcon: {fileID: 0}
-  dash: 17
+  boardIcon: {fileID: 21300000, guid: 71d1028c05e53d848aba0fd1174f0122, type: 3}
+  dash: 20
   limit: 49
   power:
   - 25.75
@@ -40,5 +40,6 @@ MonoBehaviour:
   - 30
   - 40
   boardType: 0
-  standard: 1
+  standard: 0
   changeType: 0
+  characterRestriction: []

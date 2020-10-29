@@ -56,29 +56,25 @@ public class SurvivalManager : MonoBehaviour
         if (playerCount == 0)
         {
             return;
-        }       
-
-        players = somePlayers;
-        players.Sort(CompareIndex);
-
-        for (int i = 0; i < players.Count; i++)
-        {
-            playersCheckpoints.Add(players[i].GetComponent<PlayerCheckpoints>());
         }
 
         huds.Clear();
 
         Transform canvasParent = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).transform;
 
+        for (int i = 0; i < playerCount; i++)
+        {
+            huds.Add(canvasParent.GetChild(i).GetComponent<HUD>());
+        }
+
         if (GameManager.instance.GameMode != GameManager.gamemode.SURVIVAL)
         {
             if (playerCount <= 2)
             {
-                for (int i = 0; i < playerCount; i++)
+                for (int i = 0; i < huds.Count; i++)
                 {
-                    huds.Add(canvasParent.GetChild(i).GetComponent<HUD>());
                     huds[i].DistanceRadar.SetActive(false);
-                }                
+                }
             }
             else
             {
@@ -88,7 +84,14 @@ public class SurvivalManager : MonoBehaviour
             gameObject.SetActive(false);
             return;
         }
-        
+
+        players = somePlayers;
+        players.Sort(CompareIndex);
+
+        for (int i = 0; i < players.Count; i++)
+        {
+            playersCheckpoints.Add(players[i].GetComponent<PlayerCheckpoints>());
+        }        
 
         StartCoroutine("WaitForUI");      
     }
@@ -115,33 +118,16 @@ public class SurvivalManager : MonoBehaviour
 
     private void ReadyToChangeUI()
     {
-        bool notRightMode = GameManager.instance.GameMode != GameManager.gamemode.SURVIVAL;
-
         if (playerCount <= 2)
         {
-            Transform canvasParent = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).transform;
-
             for (int i = 0; i < playerCount; i++)
             {
-                huds.Add(canvasParent.GetChild(i).GetComponent<HUD>());
-
                 for (int j = 0; j < playerCount; j++)
                 {
                     huds[i].ChangeSurvivalColor(j, players[j].GetComponent<CharacterStats>().CharColor);
                     huds[i].ChangeIcons(j, players[j].GetComponent<CharacterStats>().Icon);
                     huds[i].ShowSurvivalScores(j);
                 }
-            }
-
-            if (notRightMode)
-            {
-                for (int i = 0; i < huds.Count; i++)
-                {
-                    huds[i].DistanceRadar.SetActive(false);
-                }
-
-                gameObject.SetActive(false);
-                return;
             }
 
             for (int i = 0; i < huds.Count; i++)
@@ -151,21 +137,9 @@ public class SurvivalManager : MonoBehaviour
         }
         else
         {
-            Transform canvas = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).transform;
-            for (int i = 0; i < canvas.childCount; i++)
-            {
-                huds.Add(canvas.GetChild(i).GetComponent<HUD>());
-            }
-
             for (int i = 0; i < huds.Count; i++)
             {
                 huds[i].DistanceRadar.SetActive(false);
-            }
-
-            if (notRightMode)
-            {
-                gameObject.SetActive(false);
-                return;
             }
 
             if (huds.Count > 2)

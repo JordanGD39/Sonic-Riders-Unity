@@ -8,18 +8,19 @@ public class CharacterStats : MonoBehaviour
 {
     [SerializeField] private string characterName = "Sonic";
     public string CharacterName { get { return characterName; } }
-
     [SerializeField] private Sprite portrait;
     public Sprite Portrait { get { return portrait; } }
-
     [SerializeField] private Sprite icon;
     public Sprite Icon { get { return icon; } }
-
     [SerializeField] private Color color = Color.blue;
     public Color CharColor { get { return color; } }
-
     [SerializeField] private float extraY = 0;
     public float ExtraY { get { return extraY; } }
+
+    [SerializeField] private string boardName = "Blue Star";
+    public string BoardName { get { return boardName; } }
+    [SerializeField] private Sprite boardImage;
+    public Sprite BoardImage { get { return boardImage; } }
 
     public int PlayerIndex { get; set; } = 4;
     public Transform Cam { get; set; }
@@ -186,7 +187,7 @@ public class CharacterStats : MonoBehaviour
     [SerializeField] private type charType;
     public type CharType { get { return charType; } }
     [SerializeField] private BoardStats stats;
-    public BoardStats BoardStats { get { return stats; } }
+    public BoardStats BoardStats { get { return stats; } set { stats = value; } }
 
     [SerializeField] private float[] boostTime = { 2, 3.5f, 4f };
 
@@ -387,7 +388,14 @@ public class CharacterStats : MonoBehaviour
             }
         }
 
-        return (stats.AirDepletion - lessAirLoss) * multiplier;
+        float airLoss = (stats.AirDepletion - lessAirLoss) * multiplier;
+
+        if (airLoss < 0)
+        {
+            airLoss = 0;
+        }
+
+        return airLoss;
     }
 
     public float GetCurrentTornadoCost()

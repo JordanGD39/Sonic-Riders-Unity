@@ -1719,6 +1719,8 @@ MonoBehaviour:
   icon: {fileID: 5677129620272996381, guid: 94c01ff7ffdaeec45a27b211c4c07a6a, type: 3}
   color: {r: 0, g: 0.2509804, b: 1, a: 0.39215687}
   extraY: 0
+  boardName: Blue Star
+  boardImage: {fileID: 21300000, guid: ab87a8735faa4bb4a9f0259750bfd3ae, type: 3}
   level: 0
   air: 100
   maxAir: 100
@@ -9963,7 +9965,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bounceDir: {x: 0, y: 0, z: 0}
-  speedMultipler: 1
   time: 0.25
 --- !u!1 &7013362384648845897
 GameObject:

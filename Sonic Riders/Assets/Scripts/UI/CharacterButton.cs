@@ -28,55 +28,44 @@ public class CharacterButton : MonoBehaviour
         image = GetComponent<Button>().image;
     }
 
-    public void Selected()
+    public void ShowSelectedCharacter(int index, bool selectingBoard, CharacterStats updatedStats)
     {
-        List<int> indexes = new List<int>();
+        CharacterStats someStats = stats;
 
-        for (int i = 0; i < holder.MultiplayerEventSystems.Count; i++)
+        if (updatedStats != null)
         {
-            if (holder.MultiplayerEventSystems[i].currentSelectedGameObject == gameObject)
+            someStats = updatedStats;
+        }
+
+        PlayerSelectReferences playerSelect = playerSelectParent.GetChild(index).GetComponent<PlayerSelectReferences>();
+
+        if (!selectingBoard)
+        {
+            image.color = playerSelect.NotJoinedPanel.transform.GetChild(0).GetComponent<Outline>().effectColor;
+
+            if (playerSelect.NotJoinedPanel.activeSelf)
             {
-                indexes.Add(i);
+                playerSelect.NotJoinedPanel.SetActive(false);
+                playerSelect.JoinedPanel.SetActive(true);
+            }
+
+            playerSelect.CharacterImage.sprite = sprite.sprite;
+
+            for (int i = 0; i < playerSelect.TypeParent.childCount; i++)
+            {
+                playerSelect.TypeParent.GetChild(i).gameObject.SetActive((int)someStats.CharType == i);
             }
         }
 
-        for (int i = 0; i < indexes.Count; i++)
-        {
-            ShowSelectedCharacter(indexes[i]);
-        }
-    }
-
-    private void ShowSelectedCharacter(int index)
-    {
-        Transform playerSelect = playerSelectParent.GetChild(index);
-
-        image.color = playerSelect.GetChild(0).GetChild(0).GetComponent<Outline>().effectColor;
-
-        if (playerSelect.GetChild(0).gameObject.activeSelf)
-        {
-            playerSelect.GetChild(0).gameObject.SetActive(false);
-            playerSelect.GetChild(1).gameObject.SetActive(true);
-        }
-
-        playerSelect.GetChild(1).GetChild(1).GetComponent<Image>().sprite = sprite.sprite;
-
-        Transform typeParent = playerSelect.GetChild(1).GetChild(0);
-
-        for (int i = 0; i < typeParent.childCount; i++)
-        {
-            Debug.Log(typeParent.GetChild(i).gameObject);
-            typeParent.GetChild(i).gameObject.SetActive((int)stats.CharType == i);
-        }
-
-        Transform statsParent = playerSelect.GetChild(1).GetChild(2);
+        Transform statsParent = playerSelect.StatsParent;
 
         for (int i = 0; i < statsParent.childCount; i++)
         {
-            DisplayStats(i, statsParent.GetChild(i));
+            DisplayStats(i, statsParent.GetChild(i), someStats);
         }
     }
 
-    private void DisplayStats(int index, Transform statTransform)
+    private void DisplayStats(int index, Transform statTransform, CharacterStats someStats)
     {
         float stat = 0.5f;
         float minValue = 0;
@@ -84,46 +73,35 @@ public class CharacterButton : MonoBehaviour
         {
             case 0:
                 minValue = 7;
-                stat = (stats.GetCurrentDash() - minValue) / 20;
+                stat = (someStats.GetCurrentDash() - minValue) / 20;
                 break;
             case 1:
                 minValue = 25;
-                stat = (stats.GetCurrentLimit() - minValue) / 60;
+                stat = (someStats.GetCurrentLimit() - minValue) / 60;
                 break;
             case 2:
                 minValue = 15;
-                stat = (stats.GetCurrentPower() - minValue) / 46.75f;
+                stat = (someStats.GetCurrentPower() - minValue) / 46.75f;
                 break;
             case 3:
                 minValue = 40;
-                stat = (stats.GetCurrentCornering() - minValue) / 160;
+                stat = (someStats.GetCurrentCornering() - minValue) / 160;
                 break;
             case 4:
-                stat = stats.GetCurrentAirLoss() / 5;
+                stat = someStats.GetCurrentAirLoss() / 5;
                 break;
             case 5:
                 minValue = 30;
-                stat = (stats.RunSpeed - minValue) / 20;
+                stat = (someStats.RunSpeed - minValue) / 20;
                 break;
         }
 
         statTransform.GetChild(0).GetComponent<Image>().fillAmount = stat;
     }
 
-    public void Pressed()
+    public void Pressed(int pressedIndex)
     {
         Transform selectTransform = GameManager.instance.transform.transform.GetChild(0);
-
-        int pressedIndex = 0;
-
-        for (int i = 0; i < holder.MultiplayerEventSystems.Count; i++)
-        {
-            if (holder.MultiplayerEventSystems[i].currentSelectedGameObject == gameObject && selectTransform.GetChild(i).GetComponent<CharacterSelectInput>().PressedButton)
-            {
-                Debug.Log(pressedIndex);
-                pressedIndex = i;
-            }
-        }
 
         CharacterSelectInput selectInput = selectTransform.GetChild(pressedIndex).GetComponent<CharacterSelectInput>();
 
@@ -137,8 +115,7 @@ public class CharacterButton : MonoBehaviour
     public void Deselected()
     {
         if (!alreadyDeselecting)
-        {
-            image.color = new Color32(166, 165, 166, 255);
+        {            
             alreadyDeselecting = true;
             StartCoroutine("DelaySelect");        
         }
@@ -161,8 +138,11 @@ public class CharacterButton : MonoBehaviour
 
         if (index > -1)
         {
-            holder.MultiplayerEventSystems[index].SetSelectedGameObject(null);
-            holder.MultiplayerEventSystems[index].SetSelectedGameObject(gameObject);
+            ShowSelectedCharacter(index, false, null);
+        }
+        else
+        {
+            image.color = new Color32(166, 165, 166, 255);
         }
 
         alreadyDeselecting = false;

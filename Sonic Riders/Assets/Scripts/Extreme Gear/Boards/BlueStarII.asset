@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BlueStarII
   m_EditorClassIdentifier: 
   boardName: Blue Star II
-  boardIcon: {fileID: 0}
+  boardIcon: {fileID: 21300000, guid: 75e35ef5af07bb946a41ad91d0cdae66, type: 3}
   dash: 15
   limit: 55.67
   power:
@@ -40,5 +40,7 @@ MonoBehaviour:
   - 30
   - 40
   boardType: 0
-  standard: 1
+  standard: 0
   changeType: 0
+  characterRestriction:
+  - {fileID: 2005097834745034059, guid: a3de9f936806e45449e0097b42613fac, type: 3}

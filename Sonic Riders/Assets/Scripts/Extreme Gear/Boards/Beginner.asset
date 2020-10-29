@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Beginner
   m_EditorClassIdentifier: 
   boardName: Beginner
-  boardIcon: {fileID: 0}
-  dash: 9
+  boardIcon: {fileID: 21300000, guid: e9a145e0d92acae4d8f74aba188573cb, type: 3}
+  dash: 11
   limit: 52
   power:
   - 28.75
@@ -40,5 +40,6 @@ MonoBehaviour:
   - 30
   - 40
   boardType: 0
-  standard: 1
+  standard: 0
   changeType: 0
+  characterRestriction: []

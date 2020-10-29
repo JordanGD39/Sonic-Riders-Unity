@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Powerful Gear
   m_EditorClassIdentifier: 
   boardName: Powerful Gear
-  boardIcon: {fileID: 0}
-  dash: 7
+  boardIcon: {fileID: 21300000, guid: d0f51acda480a69459b922029bce463d, type: 3}
+  dash: 9
   limit: 54
   power:
   - 52
@@ -40,5 +40,6 @@ MonoBehaviour:
   - 30
   - 40
   boardType: 0
-  standard: 1
+  standard: 0
   changeType: 0
+  characterRestriction: []

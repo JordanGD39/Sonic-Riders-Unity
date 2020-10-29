@@ -62,6 +62,7 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1139516671955378230}
+        m_TargetAssemblyTypeName: 
         m_MethodName: OnMove
         m_Mode: 0
         m_Arguments:
@@ -77,6 +78,7 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1139516671955378230}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Boost
         m_Mode: 1
         m_Arguments:
@@ -92,6 +94,7 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1139516671955378230}
+        m_TargetAssemblyTypeName: 
         m_MethodName: JumpHold
         m_Mode: 0
         m_Arguments:
@@ -107,6 +110,7 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1139516671955378230}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Drift
         m_Mode: 0
         m_Arguments:
@@ -150,3 +154,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTextPref: {fileID: 2605712637748850433, guid: f92bac3de40d79b409b4d9bf7156ac17,
     type: 3}
+  boards:
+  - {fileID: 11400000, guid: cccfd161fcb39714a9103fe27e95fd36, type: 2}
+  - {fileID: 11400000, guid: cef71e3da9e14bb4284c2799aeca82c2, type: 2}
+  - {fileID: 11400000, guid: 9ab71b0fceea0bf45a3fe6d3faf572d0, type: 2}
+  - {fileID: 11400000, guid: 7096000016c1b0f49b08b2698231b62e, type: 2}
+  - {fileID: 11400000, guid: 704df8fab73660845bf03b393c429925, type: 2}
+  - {fileID: 11400000, guid: cb69c78203ae20b488631c1b8b0bc564, type: 2}
