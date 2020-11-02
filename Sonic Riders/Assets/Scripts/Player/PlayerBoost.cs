@@ -57,6 +57,11 @@ public class PlayerBoost : MonoBehaviour
             playerAnimation.Anim.SetBool("Boosting", false);
             attackCol.SetActive(false);
 
+            if (attackColShow != null)
+            {
+                attackColShow.SetActive(false);
+            }
+
             if (charStats.IsPlayer)
             {
                 startPuttingBackCameraPos = true;
@@ -164,6 +169,12 @@ public class PlayerBoost : MonoBehaviour
         Attacking = false;
         boosting = false;
         attackCol.SetActive(false);
+
+        if (attackColShow != null)
+        {
+            attackColShow.SetActive(false);
+        }
+
         playerAnimation.Anim.SetBool("Boosting", false);
 
         if (charStats.IsPlayer)

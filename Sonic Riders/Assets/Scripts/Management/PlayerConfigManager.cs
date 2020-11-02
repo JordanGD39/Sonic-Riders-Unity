@@ -18,6 +18,8 @@ public class PlayerConfigManager : MonoBehaviour
     private PlayerInputManager playerInputManager;
     public int MaxPlayers { get; set; } = 4;
 
+    private bool canJoin = false;
+
     private void Start()
     {
         playerInputManager = GetComponent<PlayerInputManager>();
@@ -33,6 +35,12 @@ public class PlayerConfigManager : MonoBehaviour
 
     public void SetPlayerPrefab(int index, GameObject prefab, BoardStats boardStats)
     {
+        if (index >= playerConfigs.Count || index < 0)
+        {
+            Debug.LogError(index + " is not in player configs!");
+            return;
+        }
+
         playerConfigs[index].CharacterPrefab = prefab;
         playerConfigs[index].GearStats = boardStats;
     }
@@ -51,9 +59,22 @@ public class PlayerConfigManager : MonoBehaviour
 
         if (playerConfigs.All(p => p.IsReady))
         {
-            GetComponent<PlayerInputManager>().DisableJoining();
+            playerInputManager.DisableJoining();
             GameManager.instance.LoadScene(GameManager.instance.TrackToLoad, true);
         }
+    }
+
+    public void RemovePlayer(int index)
+    {
+        playerInputManager.DisableJoining();
+        playerConfigs.RemoveAt(index);
+
+        Invoke("CanJoinAgain", 0.25f);
+    }
+
+    private void CanJoinAgain()
+    {
+        playerInputManager.EnableJoining();
     }
 
     public void HandlePlayerJoin(PlayerInput pi)

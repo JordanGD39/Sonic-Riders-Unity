@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Beginner
   m_EditorClassIdentifier: 
   boardName: Beginner
+  boardDescription: Doesn't use any Air while riding (sometimes extremly little)
+    and a bit slower
   boardIcon: {fileID: 21300000, guid: e9a145e0d92acae4d8f74aba188573cb, type: 3}
   dash: 11
   limit: 52
@@ -32,9 +34,9 @@ MonoBehaviour:
   - 30
   - 40
   driftDepletion:
-  - 8
-  - 10.5
-  - 13
+  - 1
+  - 2
+  - 3
   tornadoCost:
   - 25
   - 30
@@ -42,4 +44,5 @@ MonoBehaviour:
   boardType: 0
   standard: 0
   changeType: 0
+  ringsAsAir: 0
   characterRestriction: []

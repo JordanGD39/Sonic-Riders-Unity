@@ -83,6 +83,9 @@ public class CharacterStats : MonoBehaviour
 
     public bool OffRoad { get; set; } = false;
 
+    private float ringsFloat = 0;
+    public float RingsFloat { get { return ringsFloat; } set { Rings = Mathf.RoundToInt(value);  ringsFloat = value; } }
+
     public int Rings
     {
         get { return rings; }
@@ -103,24 +106,31 @@ public class CharacterStats : MonoBehaviour
                 value = 100;
             }
 
-            if (value >= maxRings && level < 2)
+            if (stats.RingsAsAir)
             {
-                Level++;
-
+                air = value;
+            }
+            else
+            {
                 if (value >= maxRings && level < 2)
                 {
                     Level++;
-                }
-            }
-            else if (value <  startRings)
-            {
-                Level--;
 
-                if (value < startRings)
+                    if (value >= maxRings && level < 2)
+                    {
+                        Level++;
+                    }
+                }
+                else if (value < startRings)
                 {
                     Level--;
+
+                    if (value < startRings)
+                    {
+                        Level--;
+                    }
                 }
-            }
+            }            
 
             rings = value;
 
@@ -140,7 +150,7 @@ public class CharacterStats : MonoBehaviour
             if (value > maxAir)
             {
                 value = maxAir;
-            }
+            }           
 
             if (value <= 0)
             {
@@ -152,6 +162,11 @@ public class CharacterStats : MonoBehaviour
                 value = 0;
             }
 
+            if (stats.RingsAsAir)
+            {
+                RingsFloat = value;
+            }
+
             if (alreadyRunning && value > 0)
             {
                 alreadyRunning = false;
@@ -160,13 +175,8 @@ public class CharacterStats : MonoBehaviour
 
             air = value;
 
-            if (IsPlayer)
+            if (IsPlayer && hud != null && !stats.RingsAsAir)
             {
-                if (hud == null)
-                {
-                    return;
-                }
-
                 hud.UpdateAirBar(air, maxAir);
             }
         }
@@ -227,7 +237,7 @@ public class CharacterStats : MonoBehaviour
         if (IsPlayer)
         {
             hud = Canvas.GetComponent<HUD>();
-            hud.LevelThreeMaxAir = stats.MaxAir[2];
+            hud.LevelThreeMaxAir = stats.MaxAir[2];           
 
             if (GameManager.instance.GameMode == GameManager.gamemode.SURVIVAL)
             {
@@ -243,6 +253,11 @@ public class CharacterStats : MonoBehaviour
                     hud.UpdateLevel(level);
                     hud.UpdateAirBar(air, maxAir);
                 }
+            }
+
+            if (hud != null && stats.RingsAsAir)
+            {
+                hud.UpdateAirBar(0, 0);
             }
         }
     }
@@ -388,14 +403,19 @@ public class CharacterStats : MonoBehaviour
             }
         }
 
-        float airLoss = (stats.AirDepletion - lessAirLoss) * multiplier;
+        float airLoss = stats.AirDepletion - lessAirLoss;
+
+        if (BoardStats.RingsAsAir)
+        {
+            airLoss += lessAirLoss;
+        }
 
         if (airLoss < 0)
         {
             airLoss = 0;
         }
 
-        return airLoss;
+        return airLoss * multiplier;
     }
 
     public float GetCurrentTornadoCost()

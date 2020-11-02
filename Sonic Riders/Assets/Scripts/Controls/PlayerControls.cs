@@ -9,6 +9,7 @@ public class PlayerControls : MonoBehaviour
 {
     private PlayerInputManager playerInputManager;
     private InputMaster inputMaster;
+    private InputAction boostAction;
     private PlayerInput playerInput;
     private GameObject player;
     public GameObject Player { get { return player; } }
@@ -23,6 +24,8 @@ public class PlayerControls : MonoBehaviour
 
     private InputAction moveAction;
     private InputAction jumpAction;
+    private InputAction grindAction;
+    private InputAction driftAction;
     private BigCanvasUI bigCanvasUI;
     private InputAction pauseAction;
 
@@ -76,7 +79,7 @@ public class PlayerControls : MonoBehaviour
 
         Transform canvasHolder = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).transform;
 
-        charStats.Canvas = canvasHolder.transform.GetChild(playerInput.playerIndex);
+        charStats.Canvas = canvasHolder.transform.GetChild(transform.GetSiblingIndex());
 
         playerMovement.GiveCanvasHud();
         playerGrind.GiveCanvasHud();
@@ -84,8 +87,7 @@ public class PlayerControls : MonoBehaviour
         charStats.GiveCanvasHud();
         playerDrift.GiveAnim();
         playerBoost.GiveAnim();
-        player.GetComponent<PlayerCheckpoints>().GiveHud(charStats.Canvas.GetComponent<HUD>());
-        
+        player.GetComponent<PlayerCheckpoints>().GiveHud(charStats.Canvas.GetComponent<HUD>());        
 
         if (playerInputManager.playerCount > 1)
         {
@@ -114,12 +116,14 @@ public class PlayerControls : MonoBehaviour
             AddActions();
         }
 
+        ControlsEnable();
+
         restartedScene = true;
         //inputMaster.Player.Enable();
         
-        charStats.PlayerIndex = playerInput.playerIndex;
+        charStats.PlayerIndex = transform.GetSiblingIndex();
         
-        charStats.Cam = cams[playerInput.playerIndex].transform.parent;
+        charStats.Cam = cams[transform.GetSiblingIndex()].transform.parent;
         charStats.CamStartPos = charStats.Cam.localPosition;
         charStats.Cam.GetComponentInChildren<CameraDeath>().GiveCanvasAnim();
 
@@ -129,26 +133,52 @@ public class PlayerControls : MonoBehaviour
             charStats.GetComponent<PlayerAnimationHandler>().Anim.Play("Standing");
         }
 
-        charStats.Canvas.GetComponent<HUD>().UpdateAirBar(charStats.Air, charStats.MaxAir);
+        if (!charStats.BoardStats.RingsAsAir)
+        {
+            charStats.Canvas.GetComponent<HUD>().UpdateAirBar(charStats.Air, charStats.MaxAir);
+        }
 
         //GameManager.instance.GetAudioManager.Play("Test");
+    }
+
+    public void ControlsEnable()
+    {
+        moveAction.Enable();
+        jumpAction.Enable();
+        driftAction.Enable();
+        boostAction.Enable();
+        grindAction.Enable();
+    }
+
+    public void ControlsDisable()
+    {
+        if (moveAction == null)
+        {
+            return;
+        }
+
+        moveAction.Disable();
+        jumpAction.Disable();
+        driftAction.Disable();
+        boostAction.Disable();
+        grindAction.Disable();
     }
 
     private void AddActions()
     {
         inputMaster = new InputMaster();
 
-        playerInput.actions.FindAction(inputMaster.Player.Boost.id).performed += ctx => playerBoost.CheckBoost();
-
-        InputAction driftAction = playerInput.actions.FindAction(inputMaster.Player.Drift.id);
+        boostAction = playerInput.actions.FindAction(inputMaster.Player.Boost.id);
+        driftAction = playerInput.actions.FindAction(inputMaster.Player.Drift.id);
         moveAction = playerInput.actions.FindAction(inputMaster.Player.Movement.id);
         jumpAction = playerInput.actions.FindAction(inputMaster.Player.JumpHold.id);
+        grindAction = playerInput.actions.FindAction(inputMaster.Player.Grind.id);
 
+        boostAction.performed += ctx => playerBoost.CheckBoost();
         driftAction.performed += ctx => playerDrift.DriftPressed = true;
         driftAction.canceled += ctx => playerDrift.DriftPressed = true;
         driftAction.canceled += ctx => playerDrift.DriftPressed = false;
-        driftAction.canceled += ctx => charStats.Cam.localRotation = new Quaternion(0, 0, 0, charStats.Cam.localRotation.w);
-        playerInput.actions.FindAction(inputMaster.Player.Grind.id).performed += ctx => CheckGrindJump();
+        grindAction.performed += ctx => CheckGrindJump();
         jumpAction.performed += ctx => playerJump.JumpHoldControls = true;
         jumpAction.canceled += ctx => playerJump.JumpHoldControls = false;
         jumpAction.canceled += ctx => playerJump.CheckRelease();       

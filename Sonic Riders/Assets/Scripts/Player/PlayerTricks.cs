@@ -60,7 +60,7 @@ public class PlayerTricks : MonoBehaviour
         tricks++;
     }
 
-    public void ChangeTrickSpeed(float rampPower, float maxRampPower, float worstPower, float jumpHeight, float startingJumpHeight, float maxJumpHeight)
+    public void ChangeTrickSpeed(float jumpHeight, float startingJumpHeight, float maxJumpHeight)
     {
         CanDoTricks = true;
         
@@ -106,12 +106,18 @@ public class PlayerTricks : MonoBehaviour
         {
             audioHolder.VoiceManager.Play(Constants.VoiceSounds.landFail);
             playerMovement.Speed *= 0.1f;
-            Debug.Log("Trick speed loss!!!");
-            characterStats.Air += 25;
+
+            if (!characterStats.BoardStats.RingsAsAir)
+            {
+                characterStats.Air += 25;
+            }
         }
         else
         {
-            characterStats.Air += tricks * 25 + 25;
+            if (!characterStats.BoardStats.RingsAsAir)
+            {
+                characterStats.Air += tricks * 25 + 25;
+            }
 
             if (tricks >= 1)
             {

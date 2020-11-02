@@ -18,6 +18,7 @@ public class PlayerBounce : MonoBehaviour
     private float speed = 0;
     [SerializeField] private float time = 0.25f;
     private bool attacked = false;
+    private bool obstacle = false;
 
     // Start is called before the first frame update
     void Start()
@@ -33,10 +34,19 @@ public class PlayerBounce : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == 11 && !playerPunch.CantPunch && charStats.Air > 0)
+        obstacle = false;
+
+        if (collision.gameObject.layer == 11)
         {
-            return;
-        }       
+            if (!playerPunch.CantPunch && charStats.Air > 0)
+            {
+                return;
+            }
+            else
+            {
+                obstacle = true;
+            }
+        }
         
         speed = rb.velocity.magnitude;
         bounceDir = Vector3.Reflect(rb.velocity.normalized, collision.contacts[0].normal);
@@ -80,7 +90,7 @@ public class PlayerBounce : MonoBehaviour
 
         bounceDir = transform.TransformDirection(localBounce);
 
-        if (!hitDirectly && playerMovement.Grounded && !attacked)
+        if (!hitDirectly && playerMovement.Grounded && !attacked && !obstacle)
         {
             playerMovement.transform.GetChild(0).forward = bounceDir;
 

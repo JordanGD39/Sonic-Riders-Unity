@@ -201,7 +201,15 @@ public class PlayerTrigger : MonoBehaviour
 
     private void CheckCountdown(StartingLevel startingLevel)
     {
-        charStats.Air = charStats.MaxAir;
+        if (charStats.BoardStats.RingsAsAir)
+        {
+            charStats.RingsFloat = 50;
+            charStats.Air = 50;
+        }
+        else
+        {
+            charStats.Air = charStats.MaxAir;
+        }
 
         if (startingLevel.Timer > 0)
         {

@@ -64,7 +64,11 @@ public class PlayerGrind : MonoBehaviour
             if (grinding)
             {
                 audioHolder.SfxManager.Play(Constants.SoundEffects.grind);
-                charStats.Air += airGain * Time.deltaTime;
+
+                if (!charStats.BoardStats.RingsAsAir)
+                {
+                    charStats.Air += airGain * Time.deltaTime;
+                }
 
                 Vector3 distance = transform.position - previousPos;
 

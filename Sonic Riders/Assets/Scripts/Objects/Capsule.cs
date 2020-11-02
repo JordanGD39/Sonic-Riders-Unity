@@ -40,7 +40,17 @@ public class Capsule : MonoBehaviour
         Invoke("Respawn", respawnTime);
         CharacterStats characterStats = other.GetComponentInParent<CharacterStats>();
         characterStats.Rings += ringCount;
-        characterStats.Air += air;
+        if (!characterStats.BoardStats.RingsAsAir)
+        {
+            characterStats.Air += air;
+        }
+        else
+        {
+            if (air > 0)
+            {
+                characterStats.Rings += 5;
+            }
+        }
 
         if(characterStats.IsPlayer)
             source.Play();

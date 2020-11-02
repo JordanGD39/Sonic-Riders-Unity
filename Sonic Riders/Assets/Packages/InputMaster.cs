@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/InputMaster.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/Packages/InputMaster.inputactions'
 
 using System;
 using System.Collections;
@@ -322,7 +322,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""id"": ""47a4082b-59dc-4341-b0c3-ab17bf6ee4c3"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """"
+                    ""interactions"": ""Press""
                 },
                 {
                     ""name"": ""Cancel"",
@@ -339,6 +339,22 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Help"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""502103b2-1ab8-43c8-a46c-b25ad111c40f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press""
+                },
+                {
+                    ""name"": ""Leave"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""1b724aa4-462f-41de-875a-9cfef7b257dd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press""
                 }
             ],
             ""bindings"": [
@@ -561,6 +577,50 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""29cb91d5-0985-4463-888f-21af1f78b7d2"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Help"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b0355744-4a2f-4123-a7d2-2fc9dbaba573"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamePad"",
+                    ""action"": ""Help"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""34f6d688-d084-4972-8eae-524114abe88d"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Leave"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""60a04750-a693-4094-8919-001b92cd6597"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamePad"",
+                    ""action"": ""Leave"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -603,6 +663,8 @@ public class @InputMaster : IInputActionCollection, IDisposable
         m_UI_Select = m_UI.FindAction("Select", throwIfNotFound: true);
         m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
         m_UI_Movement = m_UI.FindAction("Movement", throwIfNotFound: true);
+        m_UI_Help = m_UI.FindAction("Help", throwIfNotFound: true);
+        m_UI_Leave = m_UI.FindAction("Leave", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -728,6 +790,8 @@ public class @InputMaster : IInputActionCollection, IDisposable
     private readonly InputAction m_UI_Select;
     private readonly InputAction m_UI_Cancel;
     private readonly InputAction m_UI_Movement;
+    private readonly InputAction m_UI_Help;
+    private readonly InputAction m_UI_Leave;
     public struct UIActions
     {
         private @InputMaster m_Wrapper;
@@ -735,6 +799,8 @@ public class @InputMaster : IInputActionCollection, IDisposable
         public InputAction @Select => m_Wrapper.m_UI_Select;
         public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
         public InputAction @Movement => m_Wrapper.m_UI_Movement;
+        public InputAction @Help => m_Wrapper.m_UI_Help;
+        public InputAction @Leave => m_Wrapper.m_UI_Leave;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -753,6 +819,12 @@ public class @InputMaster : IInputActionCollection, IDisposable
                 @Movement.started -= m_Wrapper.m_UIActionsCallbackInterface.OnMovement;
                 @Movement.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnMovement;
                 @Movement.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnMovement;
+                @Help.started -= m_Wrapper.m_UIActionsCallbackInterface.OnHelp;
+                @Help.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnHelp;
+                @Help.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnHelp;
+                @Leave.started -= m_Wrapper.m_UIActionsCallbackInterface.OnLeave;
+                @Leave.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnLeave;
+                @Leave.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnLeave;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -766,6 +838,12 @@ public class @InputMaster : IInputActionCollection, IDisposable
                 @Movement.started += instance.OnMovement;
                 @Movement.performed += instance.OnMovement;
                 @Movement.canceled += instance.OnMovement;
+                @Help.started += instance.OnHelp;
+                @Help.performed += instance.OnHelp;
+                @Help.canceled += instance.OnHelp;
+                @Leave.started += instance.OnLeave;
+                @Leave.performed += instance.OnLeave;
+                @Leave.canceled += instance.OnLeave;
             }
         }
     }
@@ -802,5 +880,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
         void OnSelect(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
         void OnMovement(InputAction.CallbackContext context);
+        void OnHelp(InputAction.CallbackContext context);
+        void OnLeave(InputAction.CallbackContext context);
     }
 }

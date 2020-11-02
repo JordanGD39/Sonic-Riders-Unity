@@ -118,11 +118,15 @@ public class PlayerMovement : MonoBehaviour
 
             if (DriftBoost)
             {
+                Quaternion camRot = charStats.Cam.rotation;
+
                 Vector3 camLook = transform.GetChild(0).TransformVector(new Vector3(playerDrift.DriftDir * 0.8f, 0, 1));
 
                 Vector3 pos = transform.position + camLook;
 
                 transform.GetChild(0).LookAt(pos);
+
+                charStats.Cam.rotation = camRot;
 
                 transform.GetChild(0).localRotation = new Quaternion(0, transform.GetChild(0).localRotation.y, 0, transform.GetChild(0).localRotation.w);
 
@@ -232,7 +236,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, new Quaternion(0, 0, 0, transform.rotation.w), 10);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, new Quaternion(0, 0, 0, transform.rotation.w), 625 * Time.deltaTime);
 
             if (transform.rotation.x == 1 || transform.rotation.z == 1)
             {
@@ -349,7 +353,7 @@ public class PlayerMovement : MonoBehaviour
             }
 
             //Losing speed when going up walls
-            if(!(!ridingOnWall && NotOnSlowdownAngle() || ridingOnWall && rb.velocity.y < 0))
+            if (!(!ridingOnWall && NotOnSlowdownAngle() || ridingOnWall && rb.velocity.y < 0))
             {
                 float forwardAngle = transform.GetChild(0).forward.y * 1.7f;
                 float clampDriveUpSpeed = Mathf.Clamp(forwardAngle, 0, 1);
@@ -358,7 +362,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     speed -= 17 * AnglePercent() * clampDriveUpSpeed * Time.deltaTime;
                 }
-                else if(speed < 0)
+                else if (speed < 0)
                 {
                     speed += 17 * AnglePercent() * clampDriveUpSpeed * Time.deltaTime;
                 }
@@ -385,117 +389,91 @@ public class PlayerMovement : MonoBehaviour
                 {
                     hud.UpdateSpeedText(speed);
                 }
+            }            
+
+            float brakeMultiplier = 1;
+
+            if (ridingOnWall && transform.GetChild(0).forward.y < -0.5f && Movement.z < 0.25f)
+            {
+                brakeMultiplier = 0.1f;
             }
 
+            if (speed < charStats.GetCurrentLimit())
+            {
+                if (Drifting)
+                {
+                    return;
+                }
+
+                float mov = Movement.z;
+
+                if (mov < 0.25f && mov >= 0)
+                {
+                    if (speed > 0)
+                    {
+                        mov = -0.75f;
+                    }
+                    else if (speed < 0)
+                    {
+                        mov = 0.5f;
+                    }
+                }
+
+                if (speed < -6.67f && mov < 0)
+                {
+                    mov = 0;
+                }
+                
+                speed += charStats.GetCurrentDash() * mov * brakeMultiplier * Time.deltaTime;
+            }
+            else
+            {
+                if ((!playerBoost.Boosting || playerBoost.Boosting && speed > stats.Boost[charStats.Level]) && !ridingOnWall)
+                {
+                    float deccMultiplier = 1;
+
+                    if (charStats.OffRoad && speed > charStats.GetCurrentLimit() + 3)
+                    {
+                        //Multiplier for decceleration
+                        deccMultiplier = offRoadDeccMultiplier;
+                    }
+
+                    speed -= 3 * deccMultiplier * Time.deltaTime;
+                }
+                else
+                {
+                    if (Drifting)
+                    {
+                        return;
+                    }
+
+                    if (speed < 100)
+                    {
+                        if (transform.GetChild(0).forward.y < -0.5f || playerBoost.Boosting)
+                        {
+                            speed += 20 * AnglePercent() * -transform.GetChild(0).forward.y * Time.deltaTime;
+                        }
+                        else if (speed > charStats.GetCurrentLimit() + 1)
+                        {
+                            speed -= 3 * Time.deltaTime;
+                        }
+                    }
+                }
+            }            
+        }
+        else
+        {
             if (Drifting)
             {
                 return;
             }
 
-            float brakeMultiplier = 1;
-
-            if (ridingOnWall && transform.GetChild(0).forward.y < -0.5f)
-            {
-                brakeMultiplier = 0.1f;
-            }
-
-            if (Movement.z >= 0.25f)
-            {
-                if (speed < charStats.GetCurrentLimit())
-                {
-                    speed += charStats.GetCurrentDash() * Movement.z * Time.deltaTime;                                            
-                }
-                else
-                {
-                    if ((!playerBoost.Boosting || playerBoost.Boosting && speed > stats.Boost[charStats.Level]) && !ridingOnWall)
-                    {
-                        float deccMultiplier = 1;
-
-                        if (charStats.OffRoad && speed > charStats.GetCurrentLimit() + 3)
-                        {
-                            //Multiplier for decceleration
-                            deccMultiplier = offRoadDeccMultiplier;
-                        }
-
-                        speed -= 3 * deccMultiplier * Time.deltaTime;
-                    }     
-                    else
-                    {
-                        if (speed < 100)
-                        {
-                            if (transform.GetChild(0).forward.y < -0.5f || playerBoost.Boosting)
-                            {
-                                //float percent = 1;
-                                //float forwardY = 1;
-
-                                //if (ridingOnWall)
-                                //{
-                                //    percent = ;
-                                //}
-
-                                //if (transform.GetChild(0).forward.y < -0.5f)
-                                //{
-                                //    forwardY = ;
-                                //}
-
-                                speed += 20 * AnglePercent() * -transform.GetChild(0).forward.y * Time.deltaTime;
-                            }
-                            else if(speed > charStats.GetCurrentLimit() + 1)
-                            {
-                                speed -= 3 * Time.deltaTime;
-                            }
-                        }
-                    }
-                }                
-            }
-            else if (Movement.z < 0.25f && Movement.z >= 0)
-            {
-                if (speed > 0)
-                {
-                    if (rb.velocity.y < 0 && brakeMultiplier < 1)
-                    {
-                        if (speed < 133)
-                        {
-                            speed += 3 * Time.deltaTime;
-                        }
-                    }
-                    else
-                    {
-                        speed -= (charStats.GetCurrentDash() * (1 + Movement.z) * brakeMultiplier) * Time.deltaTime;
-                    }                    
-                }
-                else if (speed < -1)
-                {
-                    speed += 9 * brakeMultiplier * Time.deltaTime;
-                }
-                else
-                {
-                    speed = 0;
-                }
-            }
-            else
-            {
-                if (grounded)
-                {
-                    if (speed > -6.75f)
-                    {
-                        speed -= (charStats.GetCurrentDash() * (1 + Mathf.Abs(Movement.z)) * brakeMultiplier) * Time.deltaTime;
-                    }
-                    else
-                    {
-                        speed += 3 * Time.deltaTime;
-                    }
-                }
-            }                      
-        }
-        else
-        {
             localLandingVelocity = transform.GetChild(0).InverseTransformDirection(rb.velocity);
 
             if (rb.velocity.y < highestFallSpeed)
             {
                 highestFallSpeed = rb.velocity.y;
-            }            
+            }
 
             speed = localLandingVelocity.magnitude;
 

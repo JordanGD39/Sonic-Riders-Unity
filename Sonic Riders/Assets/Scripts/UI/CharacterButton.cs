@@ -14,6 +14,7 @@ public class CharacterButton : MonoBehaviour
     [SerializeField] private GameObject disabled;
     public GameObject DisabledImage { get { return disabled; } }
     [SerializeField] private GameObject characterPrefab;
+    private GameObject CharacterPrefab { get { return characterPrefab; } }
     //private BoardStats boardStats;
     private CharacterStats stats;
     
@@ -65,6 +66,13 @@ public class CharacterButton : MonoBehaviour
         }
     }
 
+    public void RemovePlayer(int index)
+    {
+        image.color = new Color32(166, 165, 166, 255);
+
+        holder.MultiplayerEventSystems.RemoveAt(index);
+    }
+
     private void DisplayStats(int index, Transform statTransform, CharacterStats someStats)
     {
         float stat = 0.5f;
@@ -88,6 +96,14 @@ public class CharacterButton : MonoBehaviour
                 stat = (someStats.GetCurrentCornering() - minValue) / 160;
                 break;
             case 4:
+                if (someStats.BoardStats.RingsAsAir)
+                {
+                    statTransform.GetComponent<Text>().text = "Ring loss";
+                }
+                else
+                {
+                    statTransform.GetComponent<Text>().text = "Air loss";
+                }
                 stat = someStats.GetCurrentAirLoss() / 5;
                 break;
             case 5:
@@ -99,7 +115,7 @@ public class CharacterButton : MonoBehaviour
         statTransform.GetChild(0).GetComponent<Image>().fillAmount = stat;
     }
 
-    public void Pressed(int pressedIndex)
+    /*public void Pressed(int pressedIndex)
     {
         Transform selectTransform = GameManager.instance.transform.transform.GetChild(0);
 
@@ -109,6 +125,18 @@ public class CharacterButton : MonoBehaviour
         {
             holder.MultiplayerEventSystems[pressedIndex].SetSelectedGameObject(null);
             selectInput.ConfirmCharacter(characterPrefab);
+        }
+    }*/    
+
+    public GameObject CheckCharacter()
+    {
+        if (disabled.activeSelf)
+        {
+            return null;
+        }
+        else
+        {
+            return characterPrefab;
         }
     }
 
@@ -127,12 +155,16 @@ public class CharacterButton : MonoBehaviour
 
         int index = -1;
 
-        for (int i = 0; i < holder.MultiplayerEventSystems.Count; i++)
+        Transform selectTransform = GameManager.instance.transform.transform.GetChild(0);
+
+        for (int i = 0; i < selectTransform.childCount; i++)
         {
-            if (holder.MultiplayerEventSystems[i].currentSelectedGameObject == gameObject)
+            CharacterSelectInput selectInput = selectTransform.GetChild(i).GetComponent<CharacterSelectInput>();
+
+            if (selectInput.EventSystem.currentSelectedGameObject == gameObject)
             {
-                Debug.Log("Found eventSystem selecting me! " + i);
-                index = i;
+                Debug.Log("Found eventSystem selecting me! " + selectInput.PlayerIndex);
+                index = selectInput.PlayerIndex;
             }
         }
 

@@ -156,6 +156,7 @@ public class GameManager : MonoBehaviour
             {
                 playerConfigManager.CreateEventSystem(playersParent.GetChild(i).GetComponent<PlayerInput>());
                 playersParent.GetChild(i).GetComponent<CharacterSelectInput>().StartFunctions();
+                playersParent.GetChild(i).GetComponent<PlayerControls>().ControlsDisable();
             }
         }
     }

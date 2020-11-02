@@ -52,7 +52,8 @@ public class PlayerFlight : MonoBehaviour
     {
         if (flying)
         {
-            charStats.Air += airGain * Time.deltaTime;
+            if (!charStats.BoardStats.RingsAsAir)
+                charStats.Air += airGain * Time.deltaTime;
 
             if (playerMovement.Speed > 0)
             {

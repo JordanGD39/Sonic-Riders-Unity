@@ -5,12 +5,14 @@ using UnityEngine;
 public class PlayerDrift : MonoBehaviour
 {
     private PlayerMovement movement;
+    private PlayerTricks playerTricks;
     private BoardStats stats;
     private CharacterStats charStats;
     private AudioManagerHolder audioHolder;
     public bool DriftPressed { get; set; } = false;
     public float DriftDir { get; set; } = 0;
     private Animator canvasAnim;
+    public bool CantRotateCam { get; set; } = false;
 
     private float driftTimer = 0;
     [SerializeField] private float brakePower = 30;
@@ -18,6 +20,7 @@ public class PlayerDrift : MonoBehaviour
     public void GiveAnim()
     {
         movement = GetComponent<PlayerMovement>();
+        playerTricks = GetComponent<PlayerTricks>();
         charStats = GetComponent<CharacterStats>();
 
         stats = charStats.BoardStats;
@@ -57,6 +60,14 @@ public class PlayerDrift : MonoBehaviour
                 
                 return;
             }
+            else
+            {
+                ResetCameraRotation();
+            }
+        }
+        else
+        {
+            ResetCameraRotation();
         }
 
         if (!DriftPressed && driftTimer > 1)
@@ -90,9 +101,17 @@ public class PlayerDrift : MonoBehaviour
         }        
     }
 
+    private void ResetCameraRotation()
+    {
+        if (charStats.Cam.localRotation != new Quaternion(0, 0, 0, charStats.Cam.localRotation.w) && !playerTricks.CanDoTricks && !CantRotateCam)
+        {
+            charStats.Cam.localRotation = Quaternion.RotateTowards(charStats.Cam.localRotation, new Quaternion(0, 0, 0, charStats.Cam.localRotation.w), 200 * Time.deltaTime);
+        }
+    }
+
     private void Drift()
     {
-        if (movement.Speed <= 0 || charStats.OffRoad)
+        if (movement.Speed <= 0)
         {
             movement.Drifting = false;
             driftTimer = 0;
@@ -111,13 +130,19 @@ public class PlayerDrift : MonoBehaviour
             }
         }
 
-        Vector3 camLook = transform.GetChild(0).TransformVector(new Vector3(DriftDir * 0.8f, 1.5f, 1));
+        Vector3 camLook = transform.GetChild(0).TransformVector(new Vector3(DriftDir * 0.8f, 0, 1));
+        Vector3 sum = transform.position + camLook;
+        sum.y = transform.position.y;
+        Quaternion targetDir = Quaternion.LookRotation(sum - transform.position, charStats.Cam.up);
+        charStats.Cam.rotation = Quaternion.Slerp(charStats.Cam.rotation, targetDir, 2 * Time.deltaTime);
 
-        charStats.Cam.LookAt(transform.GetChild(0).position + camLook);
+        if (!charStats.OffRoad)
+        {
+            driftTimer += Time.deltaTime;
+        }
 
-        driftTimer += Time.deltaTime;
-        movement.Drifting = true;
         movement.Speed -= 4 * Time.deltaTime;
+        movement.Drifting = true;
         charStats.Air -= charStats.GetCurrentDriftDepletion() * Time.deltaTime;
     }
 }

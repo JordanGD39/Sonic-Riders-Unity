@@ -7,6 +7,8 @@ public class BoardStats : ScriptableObject
 {
     [SerializeField] private string boardName = "";
     public string BoardName { get { return boardName; } }
+    [TextArea] [SerializeField] private string boardDescription = "";
+    public string BoardDescription { get { return boardDescription; } }
     [SerializeField] private Sprite boardIcon;
     public Sprite BoardIcon { get { return boardIcon; } }
     [SerializeField] private float dash = 10f;
@@ -35,6 +37,10 @@ public class BoardStats : ScriptableObject
     public bool IsStandard { get { return standard; } }
     [SerializeField] private bool changeType = false;
     public bool ChangeType { get { return changeType; } }
-    [SerializeField] private GameObject[] characterRestriction;
-    public GameObject[] CharacterRestriction { get { return characterRestriction; } }
+    [SerializeField] private bool ringsAsAir = false;
+    public bool RingsAsAir { get { return ringsAsAir; } }
+    [SerializeField] private bool autoTrick = false;
+    public bool AutoTrick { get { return autoTrick; } }
+    [SerializeField] private List<GameObject> characterRestriction = new List<GameObject>();
+    public List<GameObject> CharacterRestriction { get { return characterRestriction; } }
 }

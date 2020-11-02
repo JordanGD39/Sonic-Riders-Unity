@@ -29,8 +29,8 @@ public class PlayerJump : MonoBehaviour
 
     [SerializeField] private float rampPower;
     public float RampPower { get { return rampPower; } set { rampPower = value; } }
-    private float maxRampPower;
-    private float worstRampPower;
+    //private float maxRampPower;
+    //private float worstRampPower;
 
     [SerializeField] private float highestYvel = 0;
 
@@ -107,7 +107,8 @@ public class PlayerJump : MonoBehaviour
                 }
 
                 rampPower = CurrRamp.Power;
-                maxRampPower = rampPower;
+                //maxRampPower = rampPower;
+
                 jumpMultiplier = CurrRamp.JumpMultiplier;
 
                 if (!playerTricks.CanDoTricks)
@@ -136,7 +137,7 @@ public class PlayerJump : MonoBehaviour
             mov.RaycastLength = raycastJumpLength;
             Invoke("CanDragDown", 0.5f);
 
-            if (rampPower > 0)
+            if (rampPower > 0 && transform.parent != null)
             {
                 canClamp = false;
 
@@ -169,16 +170,23 @@ public class PlayerJump : MonoBehaviour
                     rot.y = transform.GetChild(0).localRotation.y;
                     rot.w = transform.GetChild(0).localRotation.w;
                     transform.GetChild(0).localRotation = rot;
-                }                
+                }
 
                 //rb.velocity = transform.GetChild(0).forward * mov.Speed;
 
+                float jumpPower = jumpHeight;
+
+                if (charStats.BoardStats.AutoTrick)
+                {
+                    jumpPower = maxJumpHeight;
+                }
+
                 //rb.AddForce(transform.parent.GetChild(0).forward * (jumpHeight + rampPower), ForceMode.Force);
                 transform.SetParent(null);
-                rb.velocity = forward * (jumpHeight * jumpMultiplier + rampPower);
+                rb.velocity = forward * (jumpPower * jumpMultiplier + rampPower);
 
                 alreadyFell = false;
-                playerTricks.ChangeTrickSpeed(rampPower, maxRampPower, worstRampPower, jumpHeight, startingJumpHeight, maxJumpHeight);
+                playerTricks.ChangeTrickSpeed(jumpPower, startingJumpHeight, maxJumpHeight);
             }
             else
             {
@@ -223,9 +231,18 @@ public class PlayerJump : MonoBehaviour
         {            
             alreadyFell = true;
             CurrRamp = ramp;
-            rampPower = ramp.WorstPower;
-            maxRampPower = ramp.Power;
-            worstRampPower = rampPower;
+
+            if (charStats.BoardStats.AutoTrick)
+            {
+                rampPower = ramp.Power;
+            }
+            else
+            {
+                rampPower = ramp.WorstPower;
+            }
+
+            //maxRampPower = ramp.Power;
+            //worstRampPower = rampPower;
             jumpMultiplier = ramp.JumpMultiplier;
 
             Debug.Log("Ramp power " + rampPower);
@@ -236,7 +253,7 @@ public class PlayerJump : MonoBehaviour
         }
         else
         {
-            if (!jumpRelease && !DontDragDown)
+            if (!jumpRelease)
             {
                 transform.parent = null;
             }

@@ -58,6 +58,10 @@ public class CameraDeath : MonoBehaviour
         transform.parent = prevParent;
         transform.localPosition = startPos;
         transform.localRotation = new Quaternion(0, 0, 0, transform.localRotation.w);
-        charStats.Rings -= 50;
+
+        if (!charStats.BoardStats.RingsAsAir)
+        {
+            charStats.Rings -= 50;
+        }
     }
 }

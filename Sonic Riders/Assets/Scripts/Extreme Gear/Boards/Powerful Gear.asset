@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Powerful Gear
   m_EditorClassIdentifier: 
   boardName: Powerful Gear
+  boardDescription: This Gear is made for extra power! You lose less speed when going
+    Off-Road!
   boardIcon: {fileID: 21300000, guid: d0f51acda480a69459b922029bce463d, type: 3}
   dash: 9
   limit: 54
@@ -42,4 +44,5 @@ MonoBehaviour:
   boardType: 0
   standard: 0
   changeType: 0
+  ringsAsAir: 0
   characterRestriction: []
