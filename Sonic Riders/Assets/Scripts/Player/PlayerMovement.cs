@@ -49,6 +49,7 @@ public class PlayerMovement : MonoBehaviour
     public Vector3 GrindVelocity { get; set; }
     //public bool IsPlayer { get; set; } = false;
     public bool Bouncing { get; set; } = false;
+    public bool Attacked { get; set; } = false;
 
     [SerializeField] private float hitAngle;
     [SerializeField] private float highestFallSpeed;
@@ -181,9 +182,9 @@ public class PlayerMovement : MonoBehaviour
         bool onGround = false;
         
         RaycastHit hit;
-        Debug.DrawRay(transform.position + new Vector3(0, -0.03f, 0), -transform.up, Color.red);
+        Debug.DrawRay(transform.position, -transform.up, Color.red);
         
-        if (Physics.Raycast(transform.position + new Vector3(0, -0.03f, 0), -transform.GetChild(0).up, out hit, raycastLength, layerMask))
+        if (Physics.Raycast(transform.position, -transform.GetChild(0).up, out hit, raycastLength, layerMask))
         {
             if (!hit.collider.isTrigger)
             {
@@ -193,18 +194,21 @@ public class PlayerMovement : MonoBehaviour
 
                 if (grounded)
                 {
-                    transform.up -= (transform.up - hit.normal) * 0.1f;                    
+                    transform.up -= (transform.up - hit.normal) * (0.1f * -(Time.deltaTime - 1.016f));                    
                 }                
                 else
                 {
+                    if (Attacked)
+                    {
+                        speed = 0;
+                        rb.velocity = Vector3.zero;
+                        Attacked = false;
+                        return true;
+                    }
+
                     transform.up = hit.normal;
 
                     float normalCalc = -(hit.normal.y - 1);
-
-                    if (transform.GetChild(0).forward.y > 0)
-                    {
-                        normalCalc = -normalCalc;
-                    }
 
                     if (normalCalc > 0.1f)
                     {
@@ -216,14 +220,17 @@ public class PlayerMovement : MonoBehaviour
                         normalCalc = 1;
                     }
 
+                    if (transform.GetChild(0).forward.y > 0)
+                    {
+                        normalCalc = -normalCalc;
+                    }
+
                     float tempSpeed = speed * normalCalc;
 
                     if (tempSpeed < 5)
                     {
                         tempSpeed = localLandingVelocity.z;
                     }
-
-                    //Debug.Log(tempSpeed + " up calc: " + normalCalc);
 
                     speed = tempSpeed;
 
@@ -319,7 +326,7 @@ public class PlayerMovement : MonoBehaviour
                 checkSpeed = localVel.z + localVel.x + Mathf.Abs(localVel.y);
             }
 
-            if (checkSpeed >= 66 && localVel.z > localVel.x)
+            if (checkSpeed >= 66 && localVel.z > localVel.x && !CantMove)
             {
                 if (!ps.isPlaying)
                 {
@@ -337,75 +344,58 @@ public class PlayerMovement : MonoBehaviour
 
         if (grounded)
         {
+            if (charStats.IsPlayer)
+            {
+                hud.UpdateSpeedText(speed);
+            }
+
             if (playerJump.JumpHold)
             {
                 if (speed > 6.5f)
                 {
                     speed -= 0.26f;
-                }
-
-                if (charStats.IsPlayer)
-                {
-                    hud.UpdateSpeedText(speed);
-                }
+                }             
 
                 return;
             }
 
+            //Weird code
+            //!(!ridingOnWall && NotOnSlowdownAngle() || ridingOnWall && rb.velocity.y < 0)
+
             //Losing speed when going up walls
-            if (!(!ridingOnWall && NotOnSlowdownAngle() || ridingOnWall && rb.velocity.y < 0))
+            if (ridingOnWall && rb.velocity.y >= 0)
             {
                 float forwardAngle = transform.GetChild(0).forward.y * 1.7f;
                 float clampDriveUpSpeed = Mathf.Clamp(forwardAngle, 0, 1);
 
-                if (speed > 0)
+                float speedLoss = 17;
+
+                if (speed < 0)
                 {
-                    speed -= 17 * AnglePercent() * clampDriveUpSpeed * Time.deltaTime;
-                }
-                else if (speed < 0)
-                {
-                    speed += 17 * AnglePercent() * clampDriveUpSpeed * Time.deltaTime;
+                    speedLoss = -speedLoss;
                 }
 
-                if (charStats.IsPlayer)
-                {
-                    hud.UpdateSpeedText(speed);
-                }
+                speed -= speedLoss * AnglePercent() * clampDriveUpSpeed * Time.deltaTime;
             }
 
             if (fallToTheGround)
             {
                 speed = transform.GetChild(0).InverseTransformDirection(rb.velocity).z;
-                //Debug.Log(speed);
+            }           
 
-                if (charStats.IsPlayer)
-                {
-                    hud.UpdateSpeedText(rb.velocity.magnitude);
-                }
-            }
-            else
-            {
-                if (charStats.IsPlayer)
-                {
-                    hud.UpdateSpeedText(speed);
-                }
-            }            
-
-            float brakeMultiplier = 1;
-
-            if (ridingOnWall && transform.GetChild(0).forward.y < -0.5f && Movement.z < 0.25f)
-            {
-                brakeMultiplier = 0.1f;
-            }
-
-            if (speed < charStats.GetCurrentLimit())
+            bool ridingDown = rb.velocity.y < 0 && ridingOnWall;
+            
+            //400 speed (in-game) is the highest limit of acceleration
+            if ((speed < charStats.GetCurrentLimit() || ridingDown) && speed < 133.33f)
             {
                 if (Drifting)
                 {
                     return;
                 }
 
-                float mov = Movement.z;
+                float mov = Movement.z;                
+
+                bool stopping = false;
 
                 if (mov < 0.25f && mov >= 0)
                 {
@@ -413,7 +403,12 @@ public class PlayerMovement : MonoBehaviour
                     {
                         mov = -0.75f;
                     }
-                    else if (speed < 0)
+                    else if (speed < 0.167f && speed > -0.167f)
+                    {
+                        stopping = true;
+                        speed = 0;
+                    }
+                    else
                     {
                         mov = 0.5f;
                     }
@@ -423,42 +418,45 @@ public class PlayerMovement : MonoBehaviour
                 {
                     mov = 0;
                 }
-                
-                speed += charStats.GetCurrentDash() * mov * brakeMultiplier * Time.deltaTime;
+
+                float speedIncrease = 0;
+
+                if (!stopping)
+                {
+                    speedIncrease = charStats.GetCurrentDash() * mov;
+
+                    if (ridingOnWall && transform.GetChild(0).forward.y < -0.5f && Movement.z < 0.25f)
+                    {
+                        speedIncrease *= 0.1f;
+                    }
+
+                    if (ridingDown)
+                    {
+                        speedIncrease *= AnglePercent();
+
+                        //Limiting increase of speed when riding down
+                        if (speedIncrease > 50)
+                        {
+                            speedIncrease = 50;
+                        }
+                    }
+
+                    speedIncrease *= Time.deltaTime;
+                }
+
+                speed += speedIncrease;
             }
             else
             {
-                if ((!playerBoost.Boosting || playerBoost.Boosting && speed > stats.Boost[charStats.Level]) && !ridingOnWall)
+                float deccMultiplier = 1;
+
+                if (charStats.OffRoad && speed > charStats.GetCurrentLimit() + 3)
                 {
-                    float deccMultiplier = 1;
-
-                    if (charStats.OffRoad && speed > charStats.GetCurrentLimit() + 3)
-                    {
-                        //Multiplier for decceleration
-                        deccMultiplier = offRoadDeccMultiplier;
-                    }
-
-                    speed -= 3 * deccMultiplier * Time.deltaTime;
+                    //Multiplier for decceleration on off road terrain
+                    deccMultiplier = offRoadDeccMultiplier;
                 }
-                else
-                {
-                    if (Drifting)
-                    {
-                        return;
-                    }
 
-                    if (speed < 100)
-                    {
-                        if (transform.GetChild(0).forward.y < -0.5f || playerBoost.Boosting)
-                        {
-                            speed += 20 * AnglePercent() * -transform.GetChild(0).forward.y * Time.deltaTime;
-                        }
-                        else if (speed > charStats.GetCurrentLimit() + 1)
-                        {
-                            speed -= 3 * Time.deltaTime;
-                        }
-                    }
-                }
+                speed -= 3 * deccMultiplier * Time.deltaTime;
             }            
         }
         else

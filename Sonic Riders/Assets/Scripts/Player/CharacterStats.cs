@@ -13,7 +13,7 @@ public class CharacterStats : MonoBehaviour
     [SerializeField] private Sprite icon;
     public Sprite Icon { get { return icon; } }
     [SerializeField] private Color color = Color.blue;
-    public Color CharColor { get { return color; } }
+    public Color CharColor { get { return color; } set { color = value; } }
     [SerializeField] private float extraY = 0;
     public float ExtraY { get { return extraY; } }
 
@@ -28,6 +28,7 @@ public class CharacterStats : MonoBehaviour
     public Vector3 CamStartPos { get; set; }
     private HUD hud;
     private PlayerAnimationHandler playerAnimation;
+    private PlayerBoost playerBoost;
 
     [SerializeField] private int level = 0;
     public int Level
@@ -214,10 +215,15 @@ public class CharacterStats : MonoBehaviour
     private SurvivalManager survivalManager;
 
     public bool SurvivalLeader { get; set; } = false;
-    public int SurvivalScore { get; set; } = 0; 
+    public int SurvivalScore { get; set; } = 0;
+
+    [SerializeField] private SkinnedMeshRenderer meshRenderer;
+    public SkinnedMeshRenderer PlayerMeshRenderer { get { return meshRenderer; } }
 
     private void Start()
-    {
+    {        
+        playerBoost = GetComponent<PlayerBoost>();
+
         if (GameManager.instance.GameMode == GameManager.gamemode.SURVIVAL)
         {
             survivalManager = FindObjectOfType<SurvivalManager>();            
@@ -287,6 +293,11 @@ public class CharacterStats : MonoBehaviour
     public float GetCurrentLimit()
     {
         float speed = 0;
+
+        if (playerBoost != null && playerBoost.Boosting)
+        {
+            return GetCurrentBoost();
+        }
 
         float multiplier = 1;
 
@@ -375,7 +386,7 @@ public class CharacterStats : MonoBehaviour
     {
         if (air <= 0)
         {
-            return 13;
+            return 16;
         }
 
         return stats.Dash + extraDash;

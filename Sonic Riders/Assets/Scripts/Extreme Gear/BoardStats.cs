@@ -41,6 +41,8 @@ public class BoardStats : ScriptableObject
     public bool RingsAsAir { get { return ringsAsAir; } }
     [SerializeField] private bool autoTrick = false;
     public bool AutoTrick { get { return autoTrick; } }
+    [SerializeField] private bool autoDrift = false;
+    public bool AutoDrift { get { return autoDrift; } }
     [SerializeField] private List<GameObject> characterRestriction = new List<GameObject>();
     public List<GameObject> CharacterRestriction { get { return characterRestriction; } }
 }

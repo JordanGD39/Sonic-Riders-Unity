@@ -15,6 +15,8 @@ public class PlayerDrift : MonoBehaviour
     public bool CantRotateCam { get; set; } = false;
 
     private float driftTimer = 0;
+    private float driftBoost = 1;
+    [SerializeField] private float autoDriftTimer = 0;
     [SerializeField] private float brakePower = 30;
 
     public void GiveAnim()
@@ -24,6 +26,12 @@ public class PlayerDrift : MonoBehaviour
         charStats = GetComponent<CharacterStats>();
 
         stats = charStats.BoardStats;
+
+        if (stats.AutoDrift)
+        {
+            driftBoost = 0.6f;
+        }
+
         audioHolder = GetComponent<AudioManagerHolder>();
         if (charStats.IsPlayer)
             canvasAnim = charStats.Canvas.GetComponent<Animator>();
@@ -35,18 +43,24 @@ public class PlayerDrift : MonoBehaviour
         if (movement == null)
         {
             return;
-        }
+        }       
 
         if (movement.Grounded && charStats.Air > 0 && !charStats.DisableAllFeatures)
         {
-            if (DriftPressed)
+            if (DriftPressed || autoDriftTimer > 1)
             {
-                if (movement.TurnAmount != 0 || driftTimer > 0)
+                if (movement.Movement.x != 0 || (driftTimer > 0 && !charStats.BoardStats.AutoDrift))
                 {
                     Drift();
                 }
                 else
                 {
+                    if (charStats.BoardStats.AutoDrift && autoDriftTimer > 1)
+                    {
+                        autoDriftTimer = 0;
+                        return;
+                    }
+
                     //Braking
                     if (movement.Speed > 0)
                     {
@@ -70,10 +84,11 @@ public class PlayerDrift : MonoBehaviour
             ResetCameraRotation();
         }
 
-        if (!DriftPressed && driftTimer > 1)
+        if ((!DriftPressed || (movement.Movement.x != 0 && charStats.BoardStats.AutoDrift)) && driftTimer > driftBoost)
         {
             //charStats.Cam.localRotation = new Quaternion(0, 0, 0, charStats.Cam.localRotation.w);
             driftTimer = 0;
+            autoDriftTimer = 0;
             movement.FallToTheGround = false;
             if (movement.Speed < charStats.GetCurrentBoost())
             {
@@ -93,8 +108,15 @@ public class PlayerDrift : MonoBehaviour
             }
         }
 
+        if (charStats.BoardStats.AutoDrift && movement.Grounded && Mathf.Abs(movement.Movement.x) >= movement.Movement.z && movement.Movement.x != 0 && !charStats.OffRoad)
+        {
+            autoDriftTimer += Time.deltaTime;
+            return;
+        }
+
         movement.Drifting = false;
         driftTimer = 0;
+        autoDriftTimer = 0;
         if (!movement.DriftBoost)
         {
             DriftDir = 0;

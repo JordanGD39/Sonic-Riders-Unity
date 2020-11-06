@@ -57,4 +57,14 @@ public class ActionOnAnimation : MonoBehaviour
     {
         playerTricks.CanLand = false;
     }
+
+    public void GotHitFalse()
+    {
+        playerAnimation.Anim.SetBool("GotHit", false);
+    }
+
+    public void HitDone()
+    {        
+        playerMovement.CantMove = false;
+    }
 }

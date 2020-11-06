@@ -36,7 +36,10 @@ public class PlayerAnimationHandler : MonoBehaviour
         playerTricks = GetComponent<PlayerTricks>();
         playerFlight = GetComponent<PlayerFlight>();
 
-        playerBoost.AttackCol.SetActive(false);
+        if (playerBoost.AttackCol != null)
+        {
+            playerBoost.AttackCol.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -70,7 +73,7 @@ public class PlayerAnimationHandler : MonoBehaviour
         anim.SetBool("Grounded", playerMovement.Grounded);
         anim.SetBool("ChargingJump", playerJump.JumpHold);        
 
-        if (!AlreadySettingAttack)
+        if (!AlreadySettingAttack && !playerBoost.AttackAnim)
         {
             playerBoost.AttackCol.SetActive(anim.GetCurrentAnimatorStateInfo(0).IsName("BoostAttack"));
         }

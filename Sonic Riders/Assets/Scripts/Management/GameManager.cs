@@ -22,6 +22,10 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private List<GameObject> playersLeft = new List<GameObject>();
     public List<GameObject> PlayersLeft { get { return playersLeft; } }
+
+    [SerializeField] private List<string> playerNames = new List<string>();
+    public List<string> PlayersNames { get { return playerNames; } }
+
     private List<Camera> cams = new List<Camera>();
     public List<Camera> Cams { get { return cams; } }
 

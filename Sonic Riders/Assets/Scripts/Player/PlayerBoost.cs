@@ -16,6 +16,8 @@ public class PlayerBoost : MonoBehaviour
     public bool Boosting { get { return boosting; } set { boosting = value; } }
     public bool Attacking { get; set; } = false;
 
+    [SerializeField] private bool attackAnim = true;
+    public bool AttackAnim { get { return attackAnim; } }
     [SerializeField] private Vector3 camPos;
     [SerializeField] private float camSpeedBoost = 5;
     [SerializeField] private float camSpeedStopBoosting = 2;
@@ -29,6 +31,10 @@ public class PlayerBoost : MonoBehaviour
     [SerializeField] private GameObject attackColShow;
     public GameObject AttackCol { get { return attackCol; } }
     [SerializeField] private float attackDelay = 0.25f;
+    [SerializeField] private float attackRadius = 2.5f;
+    [SerializeField] private float attackDistance = 1.5f;
+    private Transform prevAttackingPlayer;
+    private Transform triggerCol;
 
     public void GiveAnim()
     {
@@ -38,6 +44,7 @@ public class PlayerBoost : MonoBehaviour
         charStats = GetComponent<CharacterStats>();
         stats = charStats.BoardStats;
         audioHolder = GetComponent<AudioManagerHolder>();
+        triggerCol = GetComponentInChildren<PlayerTrigger>().transform;
         if (charStats.IsPlayer)
             canvasAnim = charStats.Canvas.GetComponent<Animator>();
     }
@@ -50,23 +57,88 @@ public class PlayerBoost : MonoBehaviour
             return;
         }
 
-        if (boosting && (!playerMovement.Grounded || charStats.OffRoad))
+        if (Input.GetKeyDown(KeyCode.O))
         {
-            boosting = false;
-            Attacking = false;
-            playerAnimation.Anim.SetBool("Boosting", false);
-            attackCol.SetActive(false);
-
-            if (attackColShow != null)
-            {
-                attackColShow.SetActive(false);
-            }
-
-            if (charStats.IsPlayer)
-            {
-                startPuttingBackCameraPos = true;
-            }
+            playerAnimation.Anim.SetTrigger("Attack");
         }
+
+        if (boosting)
+        {
+            if (!playerMovement.Grounded || charStats.OffRoad)
+            {
+                boosting = false;
+                Attacking = false;
+                prevAttackingPlayer = null;
+                playerAnimation.Anim.SetBool("Boosting", false);
+
+                if (attackCol != null)
+                {
+                    attackCol.SetActive(false);
+                }
+
+                if (attackColShow != null)
+                {
+                    attackColShow.SetActive(false);
+                }
+
+                if (charStats.IsPlayer)
+                {
+                    startPuttingBackCameraPos = true;
+                }
+            }
+
+            if (Attacking && attackAnim)
+            {
+                Vector3 localExtraPos = transform.GetChild(0).TransformVector(new Vector3(0,0, attackDistance));
+
+                int layerMask = LayerMask.GetMask("Player");
+
+                Collider[] colliders = Physics.OverlapSphere(transform.position + localExtraPos, attackRadius, layerMask);
+
+                List<Collider> colList = new List<Collider>();
+
+                //float closestDistance = 999;
+                //int closestIndex = -1;
+
+                for (int i = 0; i < colliders.Length; i++)
+                {
+                    if (colliders[i].transform != triggerCol && colliders[i].CompareTag(Constants.Tags.triggerCol) && colliders[i].transform != prevAttackingPlayer)
+                    {
+                        colList.Add(colliders[i]);
+                        /*
+                        float distance = (transform.position - colliders[i].transform.position).sqrMagnitude;
+
+                        if (distance < closestDistance)
+                        {
+                            closestDistance = distance;
+                            closestIndex = i;
+                        }*/
+                    }                    
+                }
+
+                if (colList.Count > 0)
+                {
+                    playerAnimation.Anim.SetTrigger("Attack");
+                }
+
+                /*if (closestIndex < 0)
+                {
+                    return;
+                }
+
+                Transform closestPlayer = colliders[closestIndex].transform;                
+
+                Debug.Log(closestPlayer.GetComponentInParent<CharacterStats>().gameObject.name + " col: " + closestPlayer);
+
+                prevAttackingPlayer = closestPlayer;
+
+                Vector3 dirToPlayer = (closestPlayer.position - transform.position).normalized;
+                Vector3 localDirToObject = transform.GetChild(0).TransformDirection(dirToPlayer);
+                localDirToObject.y = 0;
+
+                transform.GetChild(0).forward = transform.GetChild(0).InverseTransformDirection(localDirToObject);*/
+            }            
+        }       
 
         if (startPuttingBackCameraPos)
         {
@@ -130,14 +202,17 @@ public class PlayerBoost : MonoBehaviour
                 Invoke("ShowAttackTrigger", attackDelay);
             }
 
-            attackCol.SetActive(true);
+            if (attackCol != null)
+            {
+                attackCol.SetActive(false);
+            }
         }        
 
         playerMovement.FallToTheGround = false;
         charStats.Air -= charStats.GetCurrentBoostDepletion();
 
         StopCoroutine("BoostCooldown");
-        StartCoroutine("BoostCooldown");     
+        StartCoroutine("BoostCooldown");
 
         if (playerMovement.Speed < charStats.GetCurrentBoost())
         {
@@ -168,7 +243,12 @@ public class PlayerBoost : MonoBehaviour
 
         Attacking = false;
         boosting = false;
-        attackCol.SetActive(false);
+        prevAttackingPlayer = null;
+
+        if (attackCol != null)
+        {
+            attackCol.SetActive(false);
+        }
 
         if (attackColShow != null)
         {
@@ -181,5 +261,11 @@ public class PlayerBoost : MonoBehaviour
         {
             startPuttingBackCameraPos = true;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Vector3 localExtraPos = transform.GetChild(0).TransformVector(new Vector3(0, 0, attackDistance));
+        Gizmos.DrawWireSphere(transform.position + localExtraPos, attackRadius);
     }
 }

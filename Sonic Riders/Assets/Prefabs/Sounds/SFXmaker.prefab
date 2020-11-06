@@ -1,0 +1,137 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2255151645683171572
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8449842351189122569}
+  - component: {fileID: 2279347112351445244}
+  m_Layer: 8
+  m_Name: SFXmaker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8449842351189122569
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2255151645683171572}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2279347112351445244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2255151645683171572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f05d0bda8ed6cf40b8344d9c401ca38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Jump
+    clip: {fileID: 8300000, guid: 842af8528ea1cdc4bad6807d0c2eb9cb, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    minRange: 5
+    maxRange: 100
+    priority: 20
+    source: {fileID: 0}
+  - name: Boost
+    clip: {fileID: 8300000, guid: 671e03d222f8b27458869d099f787c8b, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    minRange: 5
+    maxRange: 100
+    priority: 20
+    source: {fileID: 0}
+  - name: Land
+    clip: {fileID: 8300000, guid: d6f493fa0e079164aa444767354c11a6, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    minRange: 5
+    maxRange: 100
+    priority: 20
+    source: {fileID: 0}
+  - name: Grind
+    clip: {fileID: 8300000, guid: 632324952e3ca234c9f57407a78f0adc, type: 3}
+    volume: 0.4
+    pitch: 1
+    loop: 1
+    spatialBlend: 0
+    minRange: 5
+    maxRange: 100
+    priority: 20
+    source: {fileID: 0}
+  - name: BounceWall
+    clip: {fileID: 8300000, guid: 0d7e672bd40d0d54799b12a46a78db92, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    minRange: 5
+    maxRange: 100
+    priority: 20
+    source: {fileID: 0}
+  - name: Punch
+    clip: {fileID: 8300000, guid: 7799756cab81fac40b7b0ffa7a8d9039, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    minRange: 5
+    maxRange: 100
+    priority: 20
+    source: {fileID: 0}
+  - name: BounceRider
+    clip: {fileID: 8300000, guid: f1de7a1af9ffe324d88b13c30ff72840, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    minRange: 5
+    maxRange: 100
+    priority: 20
+    source: {fileID: 0}
+  - name: FlightRing
+    clip: {fileID: 8300000, guid: 4ff45b5aaba364a46a49e690485beb2b, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    minRange: 5
+    maxRange: 100
+    priority: 20
+    source: {fileID: 0}
+  - name: RingLoss
+    clip: {fileID: 8300000, guid: 36ef56555bb59a74483f472174b4c21e, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    minRange: 5
+    maxRange: 100
+    priority: 20
+    source: {fileID: 0}
+  mixer: {fileID: 24300002, guid: 4d6df4263f01c194c86a7a990200a169, type: 2}

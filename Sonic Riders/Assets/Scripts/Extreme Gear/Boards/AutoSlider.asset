@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb6bd540708c2b14ca776d4c5531997c, type: 3}
+  m_Name: AutoSlider
+  m_EditorClassIdentifier: 
+  boardName: Auto-Slider
+  boardDescription: Drifts automatically when making a huge turn! Drifting uses less
+    air, but boosting costs more.
+  boardIcon: {fileID: 21300000, guid: f7b9c0190e29df14d8d87cb23b2fcf5b, type: 3}
+  dash: 13
+  limit: 52.33
+  power:
+  - 28.33
+  - 31.67
+  - 31.67
+  cornering: 60
+  boost:
+  - 66.5
+  - 76.75
+  - 83.5
+  maxAir: 6400000096000000c8000000
+  airDepletion: 1.6
+  boostDepletion:
+  - 30
+  - 35
+  - 45
+  driftDepletion:
+  - 5
+  - 7
+  - 9
+  tornadoCost:
+  - 25
+  - 30
+  - 40
+  boardType: 0
+  standard: 0
+  changeType: 0
+  ringsAsAir: 0
+  autoTrick: 0
+  autoDrift: 1
+  characterRestriction: []

@@ -36,7 +36,7 @@ public class PlayerTrigger : MonoBehaviour
     private float attackKnockbackMultiplier = 1f;
     [SerializeField] private float attackKnockbackHeight = 10;
 
-    [SerializeField] private Collider attackCol;
+    [SerializeField] private List<Collider> attackColls = new List<Collider>();
     [SerializeField] private Transform emeraldHolder;
     public Transform EmeraldHolder { get { return emeraldHolder; } }
 
@@ -69,7 +69,7 @@ public class PlayerTrigger : MonoBehaviour
         switch (collision.gameObject.layer)
         {            
             case 8:
-                if (collision.isTrigger && collision.transform != attackCol.transform && !alreadyAttacked)
+                if (collision.isTrigger && !attackColls.Contains(collision) && !alreadyAttacked)
                 {
                     AttackedByPlayer(collision);
                 }
@@ -147,23 +147,24 @@ public class PlayerTrigger : MonoBehaviour
 
     public void AttackedByPlayer(Collider collision)
     {
-        CharacterStats attackerStats = collision.GetComponentInParent<CharacterStats>();
-        PlayerBoost attackerBoost = attackerStats.GetComponent<PlayerBoost>();
+        PlayerBoost attackerBoost = collision.GetComponentInParent<PlayerBoost>();
 
-        if (!(attackerBoost.AttackCol.activeSelf || attackerBoost.Attacking))
+        if (!attackerBoost.AttackCol.activeInHierarchy && !attackerBoost.Attacking)
         {
             return;
         }
 
+        Debug.Log("Me: " + rb.gameObject.name + " attacker: " + attackerBoost.gameObject.name + " col: " + collision + " true?: " + (!attackerBoost.AttackCol.activeInHierarchy));
+
         alreadyAttacked = true;
         
-        PlayerTrigger attackerTrigger = attackerStats.GetComponentInChildren<PlayerTrigger>();
+        PlayerTrigger attackerTrigger = attackerBoost.GetComponentInChildren<PlayerTrigger>();
 
         if (emeraldHolder.childCount > 0)
         {
             charStats.Air = charStats.MaxAir;
 
-            survivalManager.MakePlayerLeader(attackerStats.gameObject);
+            survivalManager.MakePlayerLeader(attackerBoost.gameObject);
 
             Transform emerald = emeraldHolder.GetChild(0);
 
@@ -175,7 +176,7 @@ public class PlayerTrigger : MonoBehaviour
             attackerTrigger.PlayerAnimation.Anim.SetBool("Boosting", false);
         }
 
-        playerBounce.Attacked(attackCol.transform, playerMovement.Speed);
+        playerBounce.Attacked(attackColls[0].transform.position, attackerBoost.GetComponent<PlayerMovement>().Speed);
     }
 
     public void Electrocute(float timer, bool countDown)

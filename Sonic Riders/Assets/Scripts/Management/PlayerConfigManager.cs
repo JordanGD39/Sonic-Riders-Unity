@@ -118,6 +118,7 @@ public class PlayerConfigManager : MonoBehaviour
     public void SpawnPlayers(StartingLevel startingLevel)
     {
         GameManager.instance.PlayersLeft.Clear();
+        GameManager.instance.PlayersNames.Clear();
 
         for (int i = 0; i < playerConfigs.Count; i++)
         {

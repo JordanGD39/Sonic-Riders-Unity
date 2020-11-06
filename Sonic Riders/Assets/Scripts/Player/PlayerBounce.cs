@@ -6,6 +6,8 @@ public class PlayerBounce : MonoBehaviour
 {
     private Rigidbody rb;
     private PlayerMovement playerMovement;
+    private PlayerAnimationHandler playerAnimation;
+    private PlayerJump playerJump;
     private PlayerPunchObstacle playerPunch;
     private PlayerBoost playerBoost;
     private PlayerTrigger playerTrigger;
@@ -25,11 +27,21 @@ public class PlayerBounce : MonoBehaviour
     {
         rb = transform.parent.GetComponentInParent<Rigidbody>();
         playerMovement = rb.GetComponent<PlayerMovement>();
+        playerAnimation = rb.GetComponent<PlayerAnimationHandler>();
+        playerJump = rb.GetComponent<PlayerJump>();
         playerBoost = rb.GetComponent<PlayerBoost>();
         playerTrigger = rb.GetComponentInChildren<PlayerTrigger>();
         playerPunch = rb.GetComponent<PlayerPunchObstacle>();
         charStats = rb.GetComponent<CharacterStats>();
         audioHolder = rb.GetComponent<AudioManagerHolder>();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Attacked(playerMovement.transform.position + new Vector3(0,0,1), playerMovement.Speed);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -47,7 +59,9 @@ public class PlayerBounce : MonoBehaviour
                 obstacle = true;
             }
         }
-        
+
+        Debug.Log(collision.gameObject);
+
         speed = rb.velocity.magnitude;
         bounceDir = Vector3.Reflect(rb.velocity.normalized, collision.contacts[0].normal);
         attacked = false;
@@ -56,13 +70,13 @@ public class PlayerBounce : MonoBehaviour
         playerMovement.CantMove = true;       
     }
 
-    public void Attacked(Transform attacker, float attackedSpeed)
+    public void Attacked(Vector3 attackerPos, float attackedSpeed)
     {
         attacked = true;
 
         speed = attackedSpeed;
 
-        bounceDir = (transform.position - attacker.position).normalized;
+        bounceDir = (transform.position - attackerPos).normalized;
 
         StartCoroutine("Bounce");
     }
@@ -99,22 +113,36 @@ public class PlayerBounce : MonoBehaviour
             newLocalRot.z = 0;
 
             playerMovement.transform.GetChild(0).localRotation = newLocalRot;
-        }
-
-        audioHolder.SfxManager.Play(Constants.SoundEffects.bounceWall);
+        }       
 
         rb.velocity = bounceDir * Mathf.Max(speed, 0);
 
         if (attacked)
         {
+            if (charStats.Rings > 0)
+            {
+                audioHolder.SfxManager.Play(Constants.SoundEffects.ringLoss);
+            }
+
+            audioHolder.VoiceManager.Play(Constants.VoiceSounds.hit);
+
+            playerAnimation.Anim.SetBool("GotHit", true);
+            playerMovement.RaycastLength = 0.1f;
+            playerJump.StartCanDragDown();
+            playerMovement.Attacked = true;
             playerMovement.Speed = 0;
-            rb.AddForce(transform.up * 15, ForceMode.Impulse);
+            rb.AddForce(transform.up * 5, ForceMode.Impulse);
         }
 
         yield return new WaitForSeconds(time / 2);
         playerMovement.Bouncing = false;
         yield return new WaitForSeconds(time / 2);
-        playerMovement.CantMove = false;
+
+        if (!attacked)
+        {
+            audioHolder.SfxManager.Play(Constants.SoundEffects.bounceWall);
+            playerMovement.CantMove = false;
+        }
         playerTrigger.AlreadyAttacked = false;
 
         if (hitDirectly && playerMovement.Grounded)

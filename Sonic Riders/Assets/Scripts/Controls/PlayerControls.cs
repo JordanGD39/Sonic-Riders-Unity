@@ -75,11 +75,49 @@ public class PlayerControls : MonoBehaviour
         playerFlight = player.GetComponent<PlayerFlight>();
         charStats = player.GetComponent<CharacterStats>();
 
+        int playerIndex = transform.GetSiblingIndex();
+
+        if (GameManager.instance.GetComponent<TestHandleJoin>() != null)
+        {
+            playerIndex = playerInput.playerIndex;
+        }
+
+
+        if (GameManager.instance.PlayersNames.Contains(charStats.CharacterName))
+        {
+            Material mat = new Material(charStats.PlayerMeshRenderer.material);
+            mat.color = Color.gray;
+            charStats.PlayerMeshRenderer.material = mat;
+
+            Color darkerColor = new Color(charStats.CharColor.r * 0.001f, charStats.CharColor.g * 0.001f, charStats.CharColor.b * 0.001f, charStats.CharColor.a);
+
+            charStats.CharColor = darkerColor;
+
+            if (GameManager.instance.GameMode == GameManager.gamemode.SURVIVAL)
+            {
+                if (playerInputManager.playerCount >= 3)
+                {
+                    FindObjectOfType<BigCanvasUI>().ChangeSurvivalColor(playerIndex, darkerColor);
+                }
+                else
+                {
+                    HUD[] huds = FindObjectsOfType<HUD>();
+
+                    for (int i = 0; i < huds.Length; i++)
+                    {
+                        huds[i].ChangeSurvivalColor(playerIndex, darkerColor);
+                    }
+                }
+            }            
+        }
+
+        GameManager.instance.PlayersNames.Add(charStats.CharacterName);
+
         charStats.IsPlayer = true;
 
         Transform canvasHolder = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).transform;
-
-        charStats.Canvas = canvasHolder.transform.GetChild(transform.GetSiblingIndex());
+        
+        charStats.Canvas = canvasHolder.transform.GetChild(playerIndex);
 
         playerMovement.GiveCanvasHud();
         playerGrind.GiveCanvasHud();
@@ -121,9 +159,9 @@ public class PlayerControls : MonoBehaviour
         restartedScene = true;
         //inputMaster.Player.Enable();
         
-        charStats.PlayerIndex = transform.GetSiblingIndex();
+        charStats.PlayerIndex = playerIndex;
         
-        charStats.Cam = cams[transform.GetSiblingIndex()].transform.parent;
+        charStats.Cam = cams[playerIndex].transform.parent;
         charStats.CamStartPos = charStats.Cam.localPosition;
         charStats.Cam.GetComponentInChildren<CameraDeath>().GiveCanvasAnim();
 
@@ -268,9 +306,15 @@ public class PlayerControls : MonoBehaviour
 
     private void OnMove(Vector2 mov)
     {
-        playerMovement.Movement = new Vector3(0, 0, mov.y);
+        playerMovement.Movement = new Vector3(mov.x, 0, mov.y);
 
         float turnDir = mov.x + playerDrift.DriftDir;
+        float driftRate = 1.5f; 
+
+        if (charStats.BoardStats.AutoDrift)
+        {
+            driftRate = 1.2f;
+        }
 
         if (playerDrift.DriftPressed && playerMovement.Grounded)
         {
@@ -280,7 +324,7 @@ public class PlayerControls : MonoBehaviour
             }
             else if (Mathf.Abs(turnDir) > 1.5f)
             {
-                turnDir = 1.5f * playerDrift.DriftDir;
+                turnDir = driftRate * playerDrift.DriftDir;
             }
         }
         playerMovement.TurnAmount = turnDir;

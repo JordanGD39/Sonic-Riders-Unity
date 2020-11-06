@@ -127,15 +127,20 @@ public class PlayerJump : MonoBehaviour
         }
     }
 
+    public void StartCanDragDown()
+    {
+        DontDragDown = true;
+        Invoke("CanDragDown", 0.5f);
+    }
+
     private void FixedUpdate()
     {
         if (jumpRelease)
         {
-            audioHolder.SfxManager.Play(Constants.SoundEffects.jump);            
-
-            DontDragDown = true;
+            audioHolder.SfxManager.Play(Constants.SoundEffects.jump);
+            
+            StartCanDragDown();
             mov.RaycastLength = raycastJumpLength;
-            Invoke("CanDragDown", 0.5f);
 
             if (rampPower > 0 && transform.parent != null)
             {
@@ -180,8 +185,7 @@ public class PlayerJump : MonoBehaviour
                 {
                     jumpPower = maxJumpHeight;
                 }
-
-                //rb.AddForce(transform.parent.GetChild(0).forward * (jumpHeight + rampPower), ForceMode.Force);
+                
                 transform.SetParent(null);
                 rb.velocity = forward * (jumpPower * jumpMultiplier + rampPower);
 

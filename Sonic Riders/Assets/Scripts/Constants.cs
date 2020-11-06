@@ -18,6 +18,7 @@ public class Constants
         public const string scoreRing = "ScoreRing";
         public const string chaosEmerald = "ChaosEmerald";
         public const string flyPortal = "FlyPortal";
+        public const string triggerCol = "TriggerCol";
     }
 
     public class VoiceSounds
@@ -43,5 +44,6 @@ public class Constants
         public const string bounceRider = "BounceRider";
         public const string punch = "Punch";
         public const string flightRing = "FlightRing";
+        public const string ringLoss = "RingLoss";
     }
 }
