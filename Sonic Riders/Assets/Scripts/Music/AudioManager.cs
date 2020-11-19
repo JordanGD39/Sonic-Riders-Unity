@@ -16,6 +16,7 @@ public class AudioManager : MonoBehaviour
     private Sound currS;
 
     public Sound CurrSound { get { return currSound; } }
+    public Sound CurrAudio { get { return currS; } }
 
     private bool fadeIn = false;
 

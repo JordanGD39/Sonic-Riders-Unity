@@ -22,6 +22,7 @@ public class PlayerCheckpoints : MonoBehaviour
     public int LapCount { get { return lapCount; } set { lapCount = value; } }
 
     private int place = 0;
+    public int Place { get { return place; } }
 
     private int nextCheckpointIndex = 1;
 
@@ -96,10 +97,12 @@ public class PlayerCheckpoints : MonoBehaviour
 
     public void CheckCheckpoint(Transform checkpoint)
     {
+        //Checkpoint are all children of the racing manager and in order
         int checkpointIndex = checkpoint.GetSiblingIndex();
 
         currSurvivalCheckpoint = checkpointIndex;
 
+        //Checks if you completed a lap
         bool lastCheckpointReached = checkpointIndex == 0 && currCheckpoint == raceManager.transform.childCount - 1;
 
         if (checkpointIndex == currCheckpoint + 1 || lastCheckpointReached)

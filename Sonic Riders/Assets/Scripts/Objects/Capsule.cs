@@ -4,29 +4,34 @@ using UnityEngine;
 
 public class Capsule : MonoBehaviour
 {
-    //Almost same as ring later will be a lot different
-
     private AudioSource source;
     [SerializeField] private GameObject model;
-    [SerializeField] private GameObject hundredMark;
-    [SerializeField] private SpriteRenderer numberToChange;
-    [SerializeField] private SpriteRenderer itemToChange;
+    [SerializeField] private Transform questionMark;
     [SerializeField] private float respawnTime = 3;
     [SerializeField] private int ringCount = 10;
     [SerializeField] private float air = 15;
+    [SerializeField] private float rotateSpeed = 60;
 
     [SerializeField] private Sprite[] numbers;
     [SerializeField] private Sprite[] itemSprites;
+    private MeshRenderer meshRenderer;
 
     private void Start()
     {
         source = GetComponentInChildren<AudioSource>();
+        meshRenderer = GetComponentInChildren<MeshRenderer>();
 
-        if (ringCount < 100)
-        {
-            hundredMark.SetActive(false);
-            RandomizeContents();
-        }
+        //if (ringCount < 100)
+        //{
+            //hundredMark.SetActive(false);
+            //RandomizeContents();
+        //}
+    }
+
+    private void Update()
+    {
+        if (meshRenderer.isVisible)
+            questionMark.Rotate(0, rotateSpeed * Time.deltaTime, 0);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -39,7 +44,10 @@ public class Capsule : MonoBehaviour
         model.SetActive(false);
         Invoke("Respawn", respawnTime);
         CharacterStats characterStats = other.GetComponentInParent<CharacterStats>();
-        characterStats.Rings += ringCount;
+
+        DetermineRandomItem(characterStats);
+
+        /*characterStats.Rings += ringCount;
         if (!characterStats.BoardStats.RingsAsAir)
         {
             characterStats.Air += air;
@@ -50,7 +58,7 @@ public class Capsule : MonoBehaviour
             {
                 characterStats.Rings += 5;
             }
-        }
+        }*/
 
         if(characterStats.IsPlayer)
             source.Play();
@@ -58,43 +66,122 @@ public class Capsule : MonoBehaviour
 
     private void Respawn()
     {
-        RandomizeContents();
+        //RandomizeContents();
         model.SetActive(true);
     }
 
-    private void RandomizeContents()
+    private void DetermineRandomItem(CharacterStats player)
     {
-        int item = Random.Range(0, 4);       
+        int placing = player.GetComponent<PlayerCheckpoints>().Place;
+        
+        //For 8th place are default
 
-        ringCount = 0;
-        air = 0;
+        //                   |  Rings  |   Air  | Spd | Invicibilty|
+        //                    10 20 30  30 50 100                   %
+        int[] percentages = { 0, 0, 30, 0, 0, 35, 25, 10};
 
-        /*switch (item)
+        switch (placing)
         {
             case 0:
-                ringCount = randAmount * 10;
-                itemToChange.sprite = itemSprites[item];
+                percentages = new int[] { 50, 10, 0, 20, 11, 0, 8, 1};
                 break;
             case 1:
-                air = randAmount * 10;
-                itemToChange.sprite = itemSprites[item];
+                percentages = new int[] { 25, 25, 5, 15, 10, 0, 17, 3};
                 break;
-        }*/
-
-        if (item < 1)
-        {
-            int randAmount = Random.Range(1, 3);
-            numberToChange.sprite = numbers[randAmount - 1];
-
-            ringCount = randAmount * 10;
-            itemToChange.sprite = itemSprites[0];
+            case 2:
+                percentages = new int[] { 6, 25, 10, 15, 15, 5, 18, 6};
+                break;
+            case 3:
+                percentages = new int[] { 0, 17, 15, 15, 20, 5, 21, 7};
+                break;
         }
-        else
+
+        int prevPercent = 0;
+        float rand = Random.Range(0, 100);
+        int chosenIndex = -1;
+
+        for (int i = 0; i < percentages.Length; i++)
+        {            
+            prevPercent += percentages[i];
+
+            Debug.Log("Percent: " + prevPercent + " Random number: " + rand + " Current percent: " + percentages[i]);
+
+            if (rand <= prevPercent)
+            {
+                chosenIndex = i;
+                break;
+            }
+        }
+
+        if (chosenIndex < 0)
         {
-            int randAmount = Random.Range(1, 6);
-            numberToChange.sprite = numbers[randAmount - 1];
-            air = randAmount * 10;
-            itemToChange.sprite = itemSprites[1];
+            return;
+        }
+
+        chosenIndex = 7;
+
+        switch (chosenIndex)
+        {
+            case 0:
+                player.Rings += 10;
+                break;
+            case 1:
+                player.Rings += 20;
+                break;
+            case 2:
+                player.Rings += 30;
+                break;
+            case 3:
+                player.Air += 30;
+                break;
+            case 4:
+                player.Air += 50;
+                break;
+            case 5:
+                player.Air += 100;
+                break;
+            case 6:
+                player.SpeedShoesCountDown();
+                break;
+            case 7:
+                player.Invincibility();
+                break;
         }
     }
+
+    //private void RandomizeContents()
+    //{
+    //    int item = Random.Range(0, 4);       
+
+    //    ringCount = 0;
+    //    air = 0;
+
+    //    /*switch (item)
+    //    {
+    //        case 0:
+    //            ringCount = randAmount * 10;
+    //            itemToChange.sprite = itemSprites[item];
+    //            break;
+    //        case 1:
+    //            air = randAmount * 10;
+    //            itemToChange.sprite = itemSprites[item];
+    //            break;
+    //    }*/
+
+    //    if (item < 1)
+    //    {
+    //        int randAmount = Random.Range(1, 3);
+    //        //numberToChange.sprite = numbers[randAmount - 1];
+
+    //        ringCount = randAmount * 10;
+    //        //itemToChange.sprite = itemSprites[0];
+    //    }
+    //    else
+    //    {
+    //        int randAmount = Random.Range(1, 6);
+    //       // numberToChange.sprite = numbers[randAmount - 1];
+    //        air = randAmount * 10;
+    //        //itemToChange.sprite = itemSprites[1];
+    //    }
+    //}
 }

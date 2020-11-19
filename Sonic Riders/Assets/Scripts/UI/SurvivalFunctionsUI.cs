@@ -27,9 +27,7 @@ public class SurvivalFunctionsUI : MonoBehaviour
             gray.a = 0.39f;
             survivalColors[i].color = gray;
             survivalIconsRect.Add(survivalIcons[i].GetComponent<RectTransform>());
-        }
-
-        ReadyToChange = true;
+        }        
     }
 
     public void ChangeSurvivalColor(int colorIndex, Color color)
@@ -47,21 +45,9 @@ public class SurvivalFunctionsUI : MonoBehaviour
         }
     }
 
-    public void UpdateIconDistance(int charIndex, float y, float x, float xMultiplier)
+    public void UpdateIconDistance(int charIndex, float y)
     {
-        float extraDistance = Mathf.Abs(x) - (20 * xMultiplier);
-
-        if (extraDistance < 0)
-        {
-            extraDistance = 0;
-        }
-
-        if (y > 0)
-        {
-            extraDistance = -extraDistance;
-        }
-
-        survivalIconsRect[charIndex].localPosition = new Vector2(0, Mathf.Clamp(y - extraDistance, -150, 150));
+        survivalIconsRect[charIndex].localPosition = new Vector2(0, Mathf.Clamp(y, -150, 150));
     }
 
     public void UpdateLeader(Sprite leader)

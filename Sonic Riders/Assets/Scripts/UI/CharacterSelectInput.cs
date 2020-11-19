@@ -165,7 +165,7 @@ public class CharacterSelectInput : MonoBehaviour
 
     private void ShowInfo()
     {
-        if (playerSelect.InfoPanel.activeSelf)
+        if (playerSelect != null && playerSelect.InfoPanel.activeSelf)
         {
             playerSelect.InfoPanel.SetActive(false);
             return;

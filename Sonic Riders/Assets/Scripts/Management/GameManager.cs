@@ -42,6 +42,8 @@ public class GameManager : MonoBehaviour
     public enum gamemode {RACE, SURVIVAL, TUTORIAL};
     public gamemode GameMode = gamemode.RACE;
 
+    private bool loadingScene = false;
+
     void Awake()
     {
         if (instance == null)
@@ -81,6 +83,12 @@ public class GameManager : MonoBehaviour
 
     public void LoadScene(string sceneName, bool fadeMusic)
     {
+        if (loadingScene)
+        {
+            return;
+        }
+
+        loadingScene = true;
         currScene = sceneName;
         loadingScreen.SetActive(true);
         audioManager.FadeOutRate = 0.01f;
@@ -140,6 +148,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1);
 
         loadingScreen.SetActive(false);
+        loadingScene = false;
 
         if (sceneName == "CharacterSelect")
         {

@@ -75,45 +75,27 @@ public class RaceManager : MonoBehaviour
 
     private int CompareRider(PlayerCheckpoints a, PlayerCheckpoints b)
     {
-        //Checking vehicle laps
-        if (a.LapCount < b.LapCount)
+        //Checking player laps
+        if (a.LapCount != b.LapCount)
         {
-            return 1;
+            return a.LapCount < b.LapCount ? 1 : -1;
         }
 
-        if (a.LapCount > b.LapCount)
+        //Players are on the same lap so we check if one player is ahead in checkpoints
+        if (a.CurrCheckpoint != b.CurrCheckpoint)
         {
-            return -1;
-        }
-
-        //Vehicles are on the same lap so we check if one vehicle is ahead in checkpoints
-        if (a.CurrCheckpoint < b.CurrCheckpoint)
-        {
-            return 1;
-        }
-
-        if (a.CurrCheckpoint > b.CurrCheckpoint)
-        {
-            return -1;
+            return a.CurrCheckpoint < b.CurrCheckpoint ? 1 : -1;
         }
 
         //They're equal in checkpoint count so we must do a distance check
-        if (a.CurrCheckpoint == b.CurrCheckpoint)
+        Vector3 nextCheckpointDir = a.GetNextCheckpoinDir();
+        Vector3 diffDir = a.transform.position - b.transform.position;
+
+        float dot = Vector3.Dot(nextCheckpointDir, diffDir);
+
+        if (dot != 0)
         {
-            Vector3 nextCheckpointDir = a.GetNextCheckpoinDir();
-            Vector3 diffDir = a.transform.position - b.transform.position;
-
-            float dot = Vector3.Dot(nextCheckpointDir, diffDir);
-
-            if (dot < 0)
-            {
-                return 1;
-            }
-
-            if (dot > 0)
-            {
-                return -1;
-            }
+            return dot < 0 ? 1 : -1;
         }
 
         return 0;

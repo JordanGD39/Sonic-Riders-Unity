@@ -34,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
     public float RaycastLength { get { return raycastLength; } set { raycastLength = value; } }
     [SerializeField] private float startingRaycastLength = 0.8f;
     public float StartingRaycastLength { get { return startingRaycastLength; } }
+    //[SerializeField] private Transform raycastPosParent;
     [SerializeField] private float extraForceGrounded = 500;
     [SerializeField] private float offRoadDeccMultiplier = 10;
 
@@ -44,6 +45,7 @@ public class PlayerMovement : MonoBehaviour
     private float upsideDownTimer = 0;
 
     public bool DriftBoost { get; set; } = false;
+    public bool OnTrack { get; set; } = false;
 
     public bool CantMove { get; set; } = false;
     public Vector3 GrindVelocity { get; set; }
@@ -56,7 +58,7 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private LayerMask layerMask;
 
-    private ParticleSystem ps;
+    [SerializeField] private ParticleSystem ps;
 
     public void GiveCanvasHud()
     {
@@ -69,7 +71,6 @@ public class PlayerMovement : MonoBehaviour
         playerFlight = GetComponent<PlayerFlight>();
         //thirdPersonCamera = Camera.main.GetComponentInParent<ThirdPersonCamera>();
         stats = charStats.BoardStats;
-        ps = GetComponentInChildren<ParticleSystem>();
 
         if (charStats.IsPlayer)
         {
@@ -194,7 +195,7 @@ public class PlayerMovement : MonoBehaviour
 
                 if (grounded)
                 {
-                    transform.up -= (transform.up - hit.normal) * (0.1f * -(Time.deltaTime - 1.016f));                    
+                    transform.up = Vector3.Lerp(transform.up, hit.normal, Time.deltaTime * 8);               
                 }                
                 else
                 {
@@ -513,6 +514,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //Off road layer
-        charStats.OffRoad = collision.gameObject.layer == 12;     
+        //Not Off Road is a trigger check to check if not in a road
+        charStats.OffRoad = collision.gameObject.layer == 12 && !OnTrack;    
     }
 }

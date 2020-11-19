@@ -965,6 +965,36 @@ Transform:
   m_Father: {fileID: 1958541312555865961}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &839684763990246205
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8251395987709888480}
+  m_Layer: 8
+  m_Name: pos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8251395987709888480
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 839684763990246205}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 237630603674598843}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &886866358762272853
 GameObject:
   m_ObjectHideFlags: 0
@@ -3545,6 +3575,38 @@ Transform:
   - {fileID: 7043454509569947573}
   m_Father: {fileID: 5512844596088821843}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4042705251901348901
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 237630603674598843}
+  m_Layer: 8
+  m_Name: RaycastPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &237630603674598843
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4042705251901348901}
+  m_LocalRotation: {x: -0, y: 0.63419086, z: -0, w: 0.77317655}
+  m_LocalPosition: {x: 0, y: 20.4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 8251395987709888480}
+  - {fileID: 581994442193901881}
+  m_Father: {fileID: 8046198970590850972}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4081445867842656107
 GameObject:
@@ -11701,6 +11763,36 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &7988001736959875084
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 581994442193901881}
+  m_Layer: 8
+  m_Name: pos (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &581994442193901881
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7988001736959875084}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: -0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 237630603674598843}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8036751813738372407
 GameObject:
   m_ObjectHideFlags: 0
@@ -11893,6 +11985,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterName: Tails
+  fullName: Miles "Tails" Prower
   portrait: {fileID: 21300000, guid: ae59c9dbaf60eb7448ebf5e77bd0315b, type: 3}
   icon: {fileID: -8420933817393297663, guid: 94c01ff7ffdaeec45a27b211c4c07a6a, type: 3}
   color: {r: 1, g: 0.832255, b: 0, a: 0.39215687}
@@ -11918,6 +12011,7 @@ MonoBehaviour:
   - 4
   runSpeed: 44
   meshRenderer: {fileID: 4722522917811605185}
+  invincibilityParticleSystem: {fileID: 0}
 --- !u!114 &8046198970241570731
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11975,6 +12069,7 @@ MonoBehaviour:
   slowdownAngle: 50
   raycastLength: 1
   startingRaycastLength: 2
+  raycastPosParent: {fileID: 237630603674598843}
   extraForceGrounded: 600
   offRoadDeccMultiplier: 10
   hitAngle: 0
@@ -11982,6 +12077,7 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 4151
+  ps: {fileID: 6724819590949259077}
 --- !u!114 &8046198970241570734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12144,6 +12240,7 @@ Transform:
   - {fileID: 3396441943463172705}
   - {fileID: 4837570437357534126}
   - {fileID: 2604943320137515196}
+  - {fileID: 237630603674598843}
   m_Father: {fileID: 8046198970241570741}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

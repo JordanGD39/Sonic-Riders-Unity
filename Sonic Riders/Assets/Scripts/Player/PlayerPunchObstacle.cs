@@ -45,9 +45,9 @@ public class PlayerPunchObstacle : MonoBehaviour
 
         float speedPowerCalc = playerMovement.Speed / maxSpeed;
 
-        if (!CantPunch && charStats.Air > 0)
+        if ((!CantPunch && charStats.Air > 0) || charStats.Invincible)
         {
-            if (playerMovement.Grounded)
+            if (playerMovement.Grounded && charStats.Air > 0)
             {
                 playerAnimation.Anim.SetTrigger("Punch");
                 playerAnimation.Anim.SetBool("Punching", true);
@@ -61,7 +61,6 @@ public class PlayerPunchObstacle : MonoBehaviour
             }
 
             float power = punchPower * speedPowerCalc;
-            Debug.Log(power);
 
             obstacleRb.AddForce(punch.forward * power);
             

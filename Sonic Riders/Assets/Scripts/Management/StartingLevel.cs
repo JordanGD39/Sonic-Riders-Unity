@@ -135,7 +135,7 @@ public class StartingLevel : MonoBehaviour
 
             float x = i * 3;
 
-            playersInScene[i].transform.position = new Vector3(x, 0.4f, 0);
+            playersInScene[i].transform.position = new Vector3(x, transform.position.y + 0.4f, 0);
         }
 
         if (survivalManager != null)

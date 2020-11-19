@@ -51,6 +51,7 @@ public class CharacterButton : MonoBehaviour
             }
 
             playerSelect.CharacterImage.sprite = sprite.sprite;
+            playerSelect.FullName.text = someStats.FullName.ToUpper();
 
             for (int i = 0; i < playerSelect.TypeParent.childCount; i++)
             {

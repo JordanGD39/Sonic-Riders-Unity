@@ -35,6 +35,9 @@ public class PlayerSelectReferences : MonoBehaviour
     private string oldInfoText = "";
     public string OldInfoText { get { return oldInfoText; } }
 
+    [SerializeField] private Text fullName;
+    public Text FullName { get { return fullName; } }
+
     private void Start()
     {
         oldInfoText = infoText.text;

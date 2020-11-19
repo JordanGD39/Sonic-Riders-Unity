@@ -26,9 +26,7 @@ public class SurvivalManager : MonoBehaviour
     private List<GameObject> players = new List<GameObject>();
     private List<PlayerCheckpoints> playersCheckpoints = new List<PlayerCheckpoints>();
     [SerializeField] private float[] distances = { 0,0,0,0 };
-    [SerializeField] private float[] distancesX = { 0,0,0,0 };
     [SerializeField] private float distanceMultiplier = 1.5f;
-    [SerializeField] private float distanceXMultiplier = 1;
     private int playerCount = 0;
 
     private float outOfRadar = 140;
@@ -137,11 +135,6 @@ public class SurvivalManager : MonoBehaviour
         }
         else
         {
-            for (int i = 0; i < huds.Count; i++)
-            {
-                huds[i].DistanceRadar.SetActive(false);
-            }
-
             if (huds.Count > 2)
             {
                 huds[0].ReverseAirBar();
@@ -171,8 +164,6 @@ public class SurvivalManager : MonoBehaviour
         {
             return;
         }
-
-        float emeraldClosestDistance = 1 - path.path.GetClosestTimeOnPath(emerald.position);
 
         for (int i = 0; i < players.Count; i++)
         {
@@ -220,7 +211,7 @@ public class SurvivalManager : MonoBehaviour
             {
                 for (int j = 0; j < playerCount; j++)
                 {
-                    huds[i].UpdateIconDistance(j, distances[j] * distanceMultiplier, distancesX[j] * distanceXMultiplier, distanceXMultiplier);
+                    huds[i].UpdateIconDistance(j, distances[j] * distanceMultiplier);
                 }
             }
         }
@@ -228,7 +219,7 @@ public class SurvivalManager : MonoBehaviour
         {
             for (int i = 0; i < huds.Count; i++)
             {
-                bigCanvasUI.UpdateIconDistance(i, distances[i] * distanceMultiplier, distancesX[i] * distanceXMultiplier, distanceXMultiplier);
+                bigCanvasUI.UpdateIconDistance(i, distances[i] * distanceMultiplier);
             }
         }
     }

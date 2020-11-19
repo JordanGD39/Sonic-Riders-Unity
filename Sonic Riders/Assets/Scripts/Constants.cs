@@ -19,6 +19,7 @@ public class Constants
         public const string chaosEmerald = "ChaosEmerald";
         public const string flyPortal = "FlyPortal";
         public const string triggerCol = "TriggerCol";
+        public const string auto = "Auto";
     }
 
     public class VoiceSounds

@@ -96,6 +96,21 @@ public class PlayerTrigger : MonoBehaviour
                             playerFlight.IncreaseFlightSpeed(collision.transform.parent);
                         }
                         break;
+                    case Constants.Tags.auto:
+                        if (charStats.Air == 0 && path == null)
+                        {
+                            Transform spring = collision.transform.parent;
+                            path = spring.GetComponentInChildren<PathCreator>();
+
+                            SpringStats springStats = spring.GetComponent<SpringStats>();
+
+                            autoSpeed = springStats.Speed;
+                            launchForward = springStats.Forward;
+                            launchSpeed = springStats.LaunchSpeed;
+
+                            StartCoroutine("FollowPath");
+                        }
+                        break;
                 }
 
                 break;
@@ -109,21 +124,6 @@ public class PlayerTrigger : MonoBehaviour
                 {
                     BounceCol(collision);
                 }*/
-                break;
-            case 14:
-                if (charStats.Air == 0 && path == null)
-                {
-                    Transform spring = collision.transform.parent;
-                    path = spring.GetComponentInChildren<PathCreator>();
-
-                    SpringStats springStats = spring.GetComponent<SpringStats>();
-
-                    autoSpeed = springStats.Speed;
-                    launchForward = springStats.Forward;
-                    launchSpeed = springStats.LaunchSpeed;
-
-                    StartCoroutine("FollowPath");
-                }
                 break;
         }       
     }
@@ -147,14 +147,20 @@ public class PlayerTrigger : MonoBehaviour
 
     public void AttackedByPlayer(Collider collision)
     {
-        PlayerBoost attackerBoost = collision.GetComponentInParent<PlayerBoost>();
-
-        if (!attackerBoost.AttackCol.activeInHierarchy && !attackerBoost.Attacking)
+        if (charStats.Invincible)
         {
             return;
         }
 
-        Debug.Log("Me: " + rb.gameObject.name + " attacker: " + attackerBoost.gameObject.name + " col: " + collision + " true?: " + (!attackerBoost.AttackCol.activeInHierarchy));
+        PlayerBoost attackerBoost = collision.GetComponentInParent<PlayerBoost>();
+        CharacterStats attackerStats = attackerBoost.GetComponent<CharacterStats>();
+
+        if (!attackerBoost.AttackCol.activeInHierarchy && !attackerBoost.Attacking && !attackerStats.Invincible)
+        {
+            return;
+        }
+
+        //Debug.Log("Me: " + rb.gameObject.name + " attacker: " + attackerBoost.gameObject.name + " col: " + collision + " true?: " + (!attackerBoost.AttackCol.activeInHierarchy));
 
         alreadyAttacked = true;
         
@@ -204,8 +210,14 @@ public class PlayerTrigger : MonoBehaviour
     {
         if (charStats.BoardStats.RingsAsAir)
         {
-            charStats.RingsFloat = 50;
-            charStats.Air = 50;
+            if (GameManager.instance.GameMode != GameManager.gamemode.SURVIVAL)
+            {
+                charStats.Rings = 50;
+            }
+            else
+            {
+                charStats.Rings = 100;
+            }
         }
         else
         {

@@ -23,8 +23,6 @@ public class BigCanvasUI : SurvivalFunctionsUI
     private float timer = 0;
     private bool stopCounting = false;
 
-    private List<PlayerControls> controls = new List<PlayerControls>();
-
     private ChangePlace changePlace;
 
     // Start is called before the first frame update
@@ -38,12 +36,9 @@ public class BigCanvasUI : SurvivalFunctionsUI
         characterPlaceParent.gameObject.SetActive(false);
         pausePanel.SetActive(false);
         winPanel.SetActive(false);
-        Transform playersParent = GameManager.instance.transform.GetChild(0);
+        distanceRadar.SetActive(false);
 
-        for (int i = 0; i < playersParent.childCount; i++)
-        {
-            controls.Add(playersParent.GetChild(i).GetComponent<PlayerControls>());
-        }
+        ReadyToChange = true;
     }
 
     private void Update()
@@ -173,9 +168,26 @@ public class BigCanvasUI : SurvivalFunctionsUI
         if (winPanel.activeSelf || survivalWin.gameObject.activeSelf)
         {
             return;
-        }
+        }      
 
         pausePanel.SetActive(!pausePanel.activeSelf);
+
+        if (GameManager.instance.GetAudioManager.CurrAudio.name != "Invincibility")
+        {
+            GameManager.instance.GetAudioManager.CurrSound.source.volume = pausePanel.activeSelf ? 0.3f : GameManager.instance.GetAudioManager.CurrSound.volume;
+        }
+        else
+        {
+            if (pausePanel.activeSelf)
+            {
+                GameManager.instance.GetAudioManager.Pause("Invincibility");
+            }
+            else
+            {
+                GameManager.instance.GetAudioManager.UnPause("Invincibility");
+            }
+        }
+
         Time.timeScale = pausePanel.activeSelf ? 0 : 1;
 
         if (pausePanel.activeSelf)

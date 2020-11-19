@@ -21,6 +21,7 @@ public class PlayerBounce : MonoBehaviour
     [SerializeField] private float time = 0.25f;
     private bool attacked = false;
     private bool obstacle = false;
+    private ContactPoint currContactPoint;
 
     // Start is called before the first frame update
     void Start()
@@ -46,6 +47,17 @@ public class PlayerBounce : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject.layer == 14)
+        {
+            playerMovement.OnTrack = true;
+            return;
+        }
+
+        if (playerMovement.Bouncing)
+        {
+            return;
+        }
+
         obstacle = false;
 
         if (collision.gameObject.layer == 11)
@@ -60,14 +72,31 @@ public class PlayerBounce : MonoBehaviour
             }
         }
 
-        Debug.Log(collision.gameObject);
+        //Debug.Log(collision.gameObject);
 
         speed = rb.velocity.magnitude;
-        bounceDir = Vector3.Reflect(rb.velocity.normalized, collision.contacts[0].normal);
+        currContactPoint = collision.contacts[0];
+        bounceDir = Vector3.Reflect(rb.velocity.normalized, currContactPoint.normal).normalized;
         attacked = false;
         StartCoroutine("Bounce");
 
         playerMovement.CantMove = true;       
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.layer == 14)
+        {
+            playerMovement.OnTrack = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.layer == 14)
+        {
+            playerMovement.OnTrack = false;
+        }
     }
 
     public void Attacked(Vector3 attackerPos, float attackedSpeed)
@@ -90,11 +119,16 @@ public class PlayerBounce : MonoBehaviour
 
         bool hitDirectly = false;
 
-        Vector3 localBounce = transform.InverseTransformDirection(bounceDir);
+        Vector3 dirToWall = (transform.position - currContactPoint.point).normalized;
 
-        if (localBounce.z < localBounce.x)
+        Vector3 localBounce = transform.InverseTransformDirection(dirToWall);
+
+        Debug.Log(localBounce);
+
+        if (localBounce.x > -0.2f && localBounce.x < 0.2f)
         {
-            playerMovement.Speed = speed;
+            playerMovement.Speed = 0;
+
             hitDirectly = true;
         }
 
@@ -106,16 +140,25 @@ public class PlayerBounce : MonoBehaviour
 
         if (!hitDirectly && playerMovement.Grounded && !attacked && !obstacle)
         {
-            playerMovement.transform.GetChild(0).forward = bounceDir;
+            if (playerMovement.Speed > 30)
+            {
+                rb.transform.GetChild(0).forward = bounceDir;
 
-            Quaternion newLocalRot = playerMovement.transform.GetChild(0).localRotation;
-            newLocalRot.x = 0;
-            newLocalRot.z = 0;
+                Quaternion newLocalRot = rb.transform.GetChild(0).localRotation;
+                newLocalRot.x = 0;
+                newLocalRot.z = 0;
 
-            playerMovement.transform.GetChild(0).localRotation = newLocalRot;
+                rb.transform.GetChild(0).localRotation = newLocalRot;
+
+                playerMovement.Speed *= 0.75f;
+            }
+            else
+            {
+                playerMovement.Speed = 0;
+            }            
         }       
 
-        rb.velocity = bounceDir * Mathf.Max(speed, 0);
+        rb.velocity = bounceDir * Mathf.Max(speed, 0);        
 
         if (attacked)
         {
@@ -133,22 +176,26 @@ public class PlayerBounce : MonoBehaviour
             playerMovement.Speed = 0;
             rb.AddForce(transform.up * 5, ForceMode.Impulse);
         }
+        else
+        {
+            audioHolder.SfxManager.Play(Constants.SoundEffects.bounceWall);
+        }
 
         yield return new WaitForSeconds(time / 2);
         playerMovement.Bouncing = false;
         yield return new WaitForSeconds(time / 2);
-
-        if (!attacked)
-        {
-            audioHolder.SfxManager.Play(Constants.SoundEffects.bounceWall);
-            playerMovement.CantMove = false;
-        }
-        playerTrigger.AlreadyAttacked = false;
 
         if (hitDirectly && playerMovement.Grounded)
         {
             playerMovement.Speed = 0;
             rb.velocity = Vector3.zero;
         }
+
+        if (!attacked)
+        {            
+            playerMovement.CantMove = false;
+        }
+
+        playerTrigger.AlreadyAttacked = false;        
     }
 }

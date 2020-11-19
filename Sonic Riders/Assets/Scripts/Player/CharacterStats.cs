@@ -8,6 +8,8 @@ public class CharacterStats : MonoBehaviour
 {
     [SerializeField] private string characterName = "Sonic";
     public string CharacterName { get { return characterName; } }
+    [SerializeField] private string fullName = "Sonic The Hedgehog";
+    public string FullName { get { return fullName; } }
     [SerializeField] private Sprite portrait;
     public Sprite Portrait { get { return portrait; } }
     [SerializeField] private Sprite icon;
@@ -29,6 +31,7 @@ public class CharacterStats : MonoBehaviour
     private HUD hud;
     private PlayerAnimationHandler playerAnimation;
     private PlayerBoost playerBoost;
+    private PlayerMovement playerMovement;
 
     [SerializeField] private int level = 0;
     public int Level
@@ -84,16 +87,13 @@ public class CharacterStats : MonoBehaviour
 
     public bool OffRoad { get; set; } = false;
 
-    private float ringsFloat = 0;
-    public float RingsFloat { get { return ringsFloat; } set { Rings = Mathf.RoundToInt(value);  ringsFloat = value; } }
-
     public int Rings
     {
         get { return rings; }
 
         set
         {
-            if (survivalManager != null)
+            if (survivalManager != null && !stats.RingsAsAir)
             {
                 return;
             }
@@ -165,7 +165,7 @@ public class CharacterStats : MonoBehaviour
 
             if (stats.RingsAsAir)
             {
-                RingsFloat = value;
+                Rings = Mathf.RoundToInt(value);
             }
 
             if (alreadyRunning && value > 0)
@@ -217,12 +217,19 @@ public class CharacterStats : MonoBehaviour
     public bool SurvivalLeader { get; set; } = false;
     public int SurvivalScore { get; set; } = 0;
 
+    private bool speedShoes = false;
+    private bool invincible = false;
+    public bool Invincible { get { return invincible; } }
+
     [SerializeField] private SkinnedMeshRenderer meshRenderer;
     public SkinnedMeshRenderer PlayerMeshRenderer { get { return meshRenderer; } }
+
+    [SerializeField] private ParticleSystem invincibilityParticleSystem;
 
     private void Start()
     {        
         playerBoost = GetComponent<PlayerBoost>();
+        playerMovement = GetComponent<PlayerMovement>();
 
         if (GameManager.instance.GameMode == GameManager.gamemode.SURVIVAL)
         {
@@ -247,10 +254,14 @@ public class CharacterStats : MonoBehaviour
 
             if (GameManager.instance.GameMode == GameManager.gamemode.SURVIVAL)
             {
-                level = 2;
+                if (!stats.RingsAsAir)
+                {
+                    level = 2;
+                    maxAir = 200;
+                }
+
                 rings = 100;
-                maxRings = 100;
-                maxAir = 200;
+                maxRings = 100;                
                 air = 0;
 
                 if (hud != null)
@@ -261,9 +272,16 @@ public class CharacterStats : MonoBehaviour
                 }
             }
 
-            if (hud != null && stats.RingsAsAir)
+            if (hud != null)
             {
-                hud.UpdateAirBar(0, 0);
+                if (!stats.RingsAsAir)
+                {
+                    hud.UpdateAirBar(air, maxAir);
+                }
+                else
+                {
+                    hud.UpdateAirBar(0, 0);
+                }
             }
         }
     }
@@ -292,11 +310,22 @@ public class CharacterStats : MonoBehaviour
 
     public float GetCurrentLimit()
     {
+        if (invincible)
+        {
+            return 100;
+        }
+
         float speed = 0;
+        float shoesSpeed = 0;        
+
+        if (speedShoes)
+        {
+            shoesSpeed = 33;
+        }        
 
         if (playerBoost != null && playerBoost.Boosting)
         {
-            return GetCurrentBoost();
+            return GetCurrentBoost() + shoesSpeed;
         }
 
         float multiplier = 1;
@@ -310,10 +339,10 @@ public class CharacterStats : MonoBehaviour
 
         if (OffRoad)
         {
-            speed = stats.Power[level] + extraPower;
+            speed = stats.Power[level] + extraPower + shoesSpeed;
 
             return speed * multiplier;
-        }
+        }        
 
         if (air <= 0)
         {
@@ -324,7 +353,7 @@ public class CharacterStats : MonoBehaviour
             speed = limit;
         }
 
-        return speed * multiplier;
+        return (speed + shoesSpeed) * multiplier;
     }
 
     public float GetCurrentBoost()
@@ -432,5 +461,47 @@ public class CharacterStats : MonoBehaviour
     public float GetCurrentTornadoCost()
     {
         return stats.TornadoCost[level];
+    }
+
+    public void SpeedShoesCountDown()
+    {
+        if (speedShoes)
+        {
+            return;
+        }
+
+        if (playerMovement.Speed < GetCurrentLimit() + 33)
+        {
+            playerMovement.Speed = GetCurrentLimit() + 33;
+        }
+
+        speedShoes = true;
+        Invoke("SpeedShoesOver", 1);
+    }
+
+    private void SpeedShoesOver()
+    {
+        speedShoes = false;
+    }
+    private void InvincibilityOver()
+    {
+        invincible = false;
+        invincibilityParticleSystem.Stop();
+        GameManager.instance.GetAudioManager.UnPause(GameManager.instance.GetAudioManager.CurrSound.name);
+    }
+
+    public void Invincibility()
+    {
+        if (invincible)
+        {
+            return;
+        }
+
+        invincibilityParticleSystem.Play();
+        AudioManager audioManager = GameManager.instance.GetAudioManager;
+        audioManager.Pause(audioManager.CurrSound.name);
+        audioManager.Play("Invincibility");
+        invincible = true;
+        Invoke("InvincibilityOver", 10);
     }
 }

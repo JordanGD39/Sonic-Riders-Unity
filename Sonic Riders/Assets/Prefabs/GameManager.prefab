@@ -58,8 +58,10 @@ MonoBehaviour:
   loadingScreenAnim: {fileID: 2483427750232401705}
   trail: {fileID: 865522905269971900}
   playersLeft: []
+  playerNames: []
   gravityMultiplier: 2
   testAir: 0
+  GameMode: 0
 --- !u!114 &6533027374955564108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,6 +115,16 @@ MonoBehaviour:
     maxRange: 1
     priority: 10
     source: {fileID: 0}
+  - name: Invincibility
+    clip: {fileID: 8300000, guid: 6c142dfff41b0f04483becf76e1de3c7, type: 3}
+    volume: 0.6
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    minRange: 1
+    maxRange: 1
+    priority: 10
+    source: {fileID: 0}
   mixer: {fileID: 24300002, guid: c76eeab121fcd10499c4f1f0cc727d39, type: 2}
 --- !u!114 &3383933174484632716
 MonoBehaviour:
@@ -149,6 +161,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3383933174484632716}
+        m_TargetAssemblyTypeName: 
         m_MethodName: HandlePlayerJoin
         m_Mode: 0
         m_Arguments:

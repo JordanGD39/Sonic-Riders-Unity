@@ -54,9 +54,9 @@ public class CameraDeath : MonoBehaviour
         canvasAnim.Play("DeathFadeOut");
         followPlayer = false;
         Transform checkPoint = playerCheckpoints.RaceManagerScript.transform.GetChild(playerCheckpoints.CurrCheckpoint).GetChild(0);
+        player.transform.GetChild(0).forward = checkPoint.parent.forward;
         player.position = checkPoint.position;
         playerRb.velocity = Vector3.zero;
-        player.transform.forward = checkPoint.forward;
         transform.parent = prevParent;
         transform.localPosition = startPos;
         transform.localRotation = new Quaternion(0, 0, 0, transform.localRotation.w);

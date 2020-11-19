@@ -36,8 +36,9 @@ public class HUD : SurvivalFunctionsUI
     {
         base.Start();
 
-        Transform airBarParent = transform.GetChild(0);
-        UpdateAirBar(200, 200);        
+        distanceRadar.SetActive(false);
+
+        ReadyToChange = true;
     }
 
     private void Update()
