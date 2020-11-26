@@ -15,16 +15,18 @@ public class CameraDeath : MonoBehaviour
     private Animator canvasAnim;
 
     [SerializeField] private float timeToRespawn = 3;
+    private PlayerAnimationHandler playerAnimation;
 
     public void GiveCanvasAnim()
     {
         playerMovement = GetComponentInParent<PlayerMovement>();
-        playerCheckpoints = GetComponentInParent<PlayerCheckpoints>();
         charStats = GetComponentInParent<CharacterStats>();
         player = playerMovement.transform;
+        playerCheckpoints = player.GetComponent<PlayerCheckpoints>();
         startPos = transform.localPosition;
         prevParent = transform.parent;
         playerRb = player.GetComponent<Rigidbody>();
+        playerAnimation = player.GetComponent<PlayerAnimationHandler>();
         canvasAnim = charStats.Canvas.GetComponent<Animator>();
     }
 
@@ -44,6 +46,9 @@ public class CameraDeath : MonoBehaviour
     {
         transform.parent = null;
         followPlayer = true;
+        charStats.DisableAllFeatures = true;
+        playerAnimation.Anim.SetBool("Dying", true);
+        playerAnimation.Anim.SetBool("GotHit", true);
         canvasAnim.Play("DeathFadeIn");
         StartCoroutine("WaitForRespawn");
     }
@@ -51,15 +56,19 @@ public class CameraDeath : MonoBehaviour
     private IEnumerator WaitForRespawn()
     {
         yield return new WaitForSeconds(timeToRespawn);
+        playerAnimation.Anim.SetBool("Dying", false);
         canvasAnim.Play("DeathFadeOut");
         followPlayer = false;
         Transform checkPoint = playerCheckpoints.RaceManagerScript.transform.GetChild(playerCheckpoints.CurrCheckpoint).GetChild(0);
         player.transform.GetChild(0).forward = checkPoint.parent.forward;
         player.position = checkPoint.position;
         playerRb.velocity = Vector3.zero;
+        playerMovement.Speed = 0;
         transform.parent = prevParent;
         transform.localPosition = startPos;
         transform.localRotation = new Quaternion(0, 0, 0, transform.localRotation.w);
+        
+        playerMovement.AboveSea();
 
         if (!charStats.BoardStats.RingsAsAir)
         {

@@ -26,8 +26,8 @@ public class PlayerBounce : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rb = transform.parent.GetComponentInParent<Rigidbody>();
-        playerMovement = rb.GetComponent<PlayerMovement>();
+        playerMovement = GetComponentInParent<PlayerMovement>();
+        rb = playerMovement.GetComponent<Rigidbody>();
         playerAnimation = rb.GetComponent<PlayerAnimationHandler>();
         playerJump = rb.GetComponent<PlayerJump>();
         playerBoost = rb.GetComponent<PlayerBoost>();
@@ -47,20 +47,14 @@ public class PlayerBounce : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == 14)
-        {
-            playerMovement.OnTrack = true;
-            return;
-        }
-
-        if (playerMovement.Bouncing)
+        if (playerMovement.Bouncing || collision.gameObject.layer == 14)
         {
             return;
         }
 
         obstacle = false;
 
-        if (collision.gameObject.layer == 11)
+        if (collision.gameObject.CompareTag(Constants.Tags.obstacle))
         {
             if (!playerPunch.CantPunch && charStats.Air > 0)
             {
@@ -82,22 +76,7 @@ public class PlayerBounce : MonoBehaviour
 
         playerMovement.CantMove = true;       
     }
-
-    private void OnCollisionStay(Collision collision)
-    {
-        if (collision.gameObject.layer == 14)
-        {
-            playerMovement.OnTrack = true;
-        }
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.layer == 14)
-        {
-            playerMovement.OnTrack = false;
-        }
-    }
+    
 
     public void Attacked(Vector3 attackerPos, float attackedSpeed)
     {

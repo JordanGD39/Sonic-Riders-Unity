@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     private CharacterStats charStats;
     private BoardStats stats;
     private PlayerBoost playerBoost;
+    private PlayerAnimationHandler playerAnimation;
     private PlayerJump playerJump;
     private PlayerDrift playerDrift;
     private PlayerTricks playerTricks;
@@ -46,6 +47,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool DriftBoost { get; set; } = false;
     public bool OnTrack { get; set; } = false;
+    public bool OnWater { get; set; } = false;
 
     public bool CantMove { get; set; } = false;
     public Vector3 GrindVelocity { get; set; }
@@ -57,14 +59,28 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float highestFallSpeed;
 
     [SerializeField] private LayerMask layerMask;
+    [SerializeField] private LayerMask noWaterLayerMask;
+    private LayerMask currentLayerMask;
+
+    public Transform Sea { get; set; }
 
     [SerializeField] private ParticleSystem ps;
+
+    private Transform model;
+
+    private void Start()
+    {
+        model = transform.GetChild(0).GetChild(0);
+        currentLayerMask = layerMask;
+        Sea = GameObject.FindGameObjectWithTag(Constants.Tags.sea).transform;
+    }
 
     public void GiveCanvasHud()
     {
         rb = GetComponent<Rigidbody>();
         charStats = GetComponent<CharacterStats>();
         playerBoost = GetComponent<PlayerBoost>();
+        playerAnimation = GetComponent<PlayerAnimationHandler>();
         playerJump = GetComponent<PlayerJump>();
         playerDrift = GetComponent<PlayerDrift>();
         playerTricks = GetComponent<PlayerTricks>();
@@ -137,13 +153,13 @@ public class PlayerMovement : MonoBehaviour
 
             if (Drifting && charStats.Air > 0)
             {
-                transform.GetChild(0).GetChild(0).localRotation = new Quaternion(0, TurnAmount * 0.1f, 0, transform.GetChild(0).GetChild(0).localRotation.w);
+                model.localRotation = new Quaternion(0, TurnAmount * 0.1f, 0, transform.GetChild(0).GetChild(0).localRotation.w);
             }  
             else
             {
                 if (!playerTricks.CanDoTricks)
                 {
-                    transform.GetChild(0).GetChild(0).localRotation = new Quaternion(0, 0, 0, 0);
+                    model.localRotation = new Quaternion(0, 0, 0, 0);
                 }                
             }
         }
@@ -185,7 +201,7 @@ public class PlayerMovement : MonoBehaviour
         RaycastHit hit;
         Debug.DrawRay(transform.position, -transform.up, Color.red);
         
-        if (Physics.Raycast(transform.position, -transform.GetChild(0).up, out hit, raycastLength, layerMask))
+        if (Physics.Raycast(transform.position, -transform.GetChild(0).up, out hit, raycastLength, currentLayerMask))
         {
             if (!hit.collider.isTrigger)
             {
@@ -193,9 +209,26 @@ public class PlayerMovement : MonoBehaviour
 
                 hitAngle = Vector3.Angle(Vector3.up, hit.normal);
 
+                OnWater = hit.collider.gameObject.layer == 4;
+
+                if (hit.collider.gameObject.layer == 4)
+                {
+                    if (charStats.Air <= 0)
+                    {
+                        speed -= 18 * Time.deltaTime;
+                    }
+
+                    if (Mathf.Abs(speed) < 20)
+                    {
+                        currentLayerMask = noWaterLayerMask;
+                        model.gameObject.layer = 11;
+                        raycastLength = 0;
+                    }                    
+                }               
+
                 if (grounded)
                 {
-                    transform.up = Vector3.Lerp(transform.up, hit.normal, Time.deltaTime * 8);               
+                    transform.up = Vector3.Lerp(transform.up, hit.normal, Time.deltaTime * 8);                    
                 }                
                 else
                 {
@@ -244,6 +277,8 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
+            //OnWater = false;
+
             transform.rotation = Quaternion.RotateTowards(transform.rotation, new Quaternion(0, 0, 0, transform.rotation.w), 625 * Time.deltaTime);
 
             if (transform.rotation.x == 1 || transform.rotation.z == 1)
@@ -500,6 +535,12 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    public void AboveSea()
+    {
+        currentLayerMask = layerMask;
+        model.gameObject.layer = 8;
+    }
+
     private void OnCollisionStay(Collision collision)
     {
         if (charStats == null)
@@ -514,7 +555,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //Off road layer
-        //Not Off Road is a trigger check to check if not in a road
+        //On Track is true when touching a trigger with the OnTrack layer
         charStats.OffRoad = collision.gameObject.layer == 12 && !OnTrack;    
     }
 }

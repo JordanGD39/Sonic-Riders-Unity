@@ -21,9 +21,9 @@ public class PlayerDrift : MonoBehaviour
 
     public void GiveAnim()
     {
+        charStats = GetComponent<CharacterStats>();
         movement = GetComponent<PlayerMovement>();
         playerTricks = GetComponent<PlayerTricks>();
-        charStats = GetComponent<CharacterStats>();
 
         stats = charStats.BoardStats;
 

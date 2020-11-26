@@ -29,6 +29,7 @@ public class CharacterStats : MonoBehaviour
     public Transform Canvas { get; set; }
     public Vector3 CamStartPos { get; set; }
     private HUD hud;
+    public HUD Hud { get { return hud; } }
     private PlayerAnimationHandler playerAnimation;
     private PlayerBoost playerBoost;
     private PlayerMovement playerMovement;

@@ -20,6 +20,9 @@ public class Constants
         public const string flyPortal = "FlyPortal";
         public const string triggerCol = "TriggerCol";
         public const string auto = "Auto";
+        public const string obstacle = "Obstacle";
+        public const string sea = "Sea";
+        public const string enemy = "Enemy";
     }
 
     public class VoiceSounds

@@ -10,6 +10,7 @@ public class ActionOnAnimation : MonoBehaviour
     private PlayerTricks playerTricks;
     private PlayerAnimationHandler playerAnimation;
     private PlayerPunchObstacle playerPunchObstacle;
+    private CharacterStats characterStats;
     
     private void Start()
     {
@@ -18,6 +19,7 @@ public class ActionOnAnimation : MonoBehaviour
         playerTricks = playerMovement.GetComponent<PlayerTricks>();
         playerAnimation = playerMovement.GetComponent<PlayerAnimationHandler>();
         playerPunchObstacle = playerMovement.GetComponent<PlayerPunchObstacle>();
+        characterStats = playerMovement.GetComponent<CharacterStats>();
     }
 
     public void BoostNow()
@@ -66,5 +68,6 @@ public class ActionOnAnimation : MonoBehaviour
     public void HitDone()
     {        
         playerMovement.CantMove = false;
+        characterStats.DisableAllFeatures = false;
     }
 }

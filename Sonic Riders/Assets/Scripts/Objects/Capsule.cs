@@ -118,35 +118,49 @@ public class Capsule : MonoBehaviour
             return;
         }
 
-        chosenIndex = 7;
+        int amount = 0;
+        int itemIndex = 0;
 
         switch (chosenIndex)
         {
             case 0:
                 player.Rings += 10;
+                amount = 10;
                 break;
             case 1:
                 player.Rings += 20;
+                amount = 20;
                 break;
             case 2:
                 player.Rings += 30;
+                amount = 30;
                 break;
             case 3:
                 player.Air += 30;
+                amount = 30;
+                itemIndex = 1;
                 break;
             case 4:
                 player.Air += 50;
+                amount = 50;
+                itemIndex = 1;
                 break;
             case 5:
                 player.Air += 100;
+                amount = 100;
+                itemIndex = 1;
                 break;
             case 6:
                 player.SpeedShoesCountDown();
+                itemIndex = 2;
                 break;
             case 7:
                 player.Invincibility();
+                itemIndex = 3;
                 break;
         }
+
+        player.Hud.ShowItem(itemIndex, amount);
     }
 
     //private void RandomizeContents()

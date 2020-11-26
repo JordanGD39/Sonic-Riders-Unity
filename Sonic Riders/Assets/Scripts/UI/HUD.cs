@@ -31,6 +31,10 @@ public class HUD : SurvivalFunctionsUI
     public RaceManager raceManager { get; set; }
     public int Place { get; set; } = 0;
 
+    [SerializeField] private Sprite[] itemSprites;
+    public Sprite[] ItemSprites { get { return itemSprites; } }
+    [SerializeField] private ItemUI[] itemUis;
+
     // Start is called before the first frame update
     public override void Start()
     {
@@ -144,4 +148,10 @@ public class HUD : SurvivalFunctionsUI
         lapText.text = lap.ToString("00") + "/";
         maxLapText.text = maxLap.ToString("00");
     }    
+
+    public void ShowItem(int index, int amount)
+    {
+        itemUis[0].gameObject.SetActive(true);
+        itemUis[0].UpdateText(index, amount);
+    }
 }

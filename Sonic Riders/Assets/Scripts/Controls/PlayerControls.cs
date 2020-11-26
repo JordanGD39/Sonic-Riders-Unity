@@ -82,7 +82,6 @@ public class PlayerControls : MonoBehaviour
             playerIndex = playerInput.playerIndex;
         }
 
-
         if (GameManager.instance.PlayersNames.Contains(charStats.CharacterName))
         {
             Material mat = new Material(charStats.PlayerMeshRenderer.material);

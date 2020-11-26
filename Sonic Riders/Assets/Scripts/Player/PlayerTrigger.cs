@@ -66,8 +66,14 @@ public class PlayerTrigger : MonoBehaviour
     {
         //Debug.Log(collision.gameObject);
 
+        if (collision.gameObject.CompareTag(Constants.Tags.obstacle))
+        {
+            playerPunch.Punch(collision.attachedRigidbody);
+            return;
+        }
+
         switch (collision.gameObject.layer)
-        {            
+        {
             case 8:
                 if (collision.isTrigger && !attackColls.Contains(collision) && !alreadyAttacked)
                 {
@@ -118,14 +124,20 @@ public class PlayerTrigger : MonoBehaviour
                 GotChaosEmerald(collision.transform.parent);
                 break;
             case 11:
-                playerPunch.Punch(collision.GetComponentInParent<Rigidbody>());
-
-                /*if (playerPunch.CantPunch || charStats.Air <= 0)
+                if (collision.CompareTag(Constants.Tags.enemy) && collision.isTrigger)
                 {
-                    BounceCol(collision);
-                }*/
+                    playerBounce.Attacked(collision.transform.position, playerMovement.Speed + 3);
+                }
                 break;
         }       
+    }
+
+    private void OnTriggerExit(Collider collider)
+    {
+        if (collider.gameObject.layer == 4 && transform.position.y > playerMovement.Sea.position.y)
+        {
+            playerMovement.AboveSea();
+        }
     }
 
     private void GotChaosEmerald(Transform chaosEmerald)
@@ -152,7 +164,7 @@ public class PlayerTrigger : MonoBehaviour
             return;
         }
 
-        PlayerBoost attackerBoost = collision.GetComponentInParent<PlayerBoost>();
+        PlayerBoost attackerBoost = collision.attachedRigidbody.GetComponent<PlayerBoost>();
         CharacterStats attackerStats = attackerBoost.GetComponent<CharacterStats>();
 
         if (!attackerBoost.AttackCol.activeInHierarchy && !attackerBoost.Attacking && !attackerStats.Invincible)
