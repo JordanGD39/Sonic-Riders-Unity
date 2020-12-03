@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1657291952087558138}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Cylinder_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 8230755169957421213}
   - component: {fileID: 3831823020929306928}
   - component: {fileID: 792215984246635773}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: node14
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,7 +121,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2473849762324369211}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -154,7 +154,7 @@ GameObject:
   - component: {fileID: 2327030929281505149}
   - component: {fileID: 2677730442386137632}
   - component: {fileID: 2125587866128926741}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: node8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -233,7 +233,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 633078735282710193}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Torus_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -268,7 +268,8 @@ GameObject:
   - component: {fileID: 2099367507742478301}
   - component: {fileID: 2099367507742478275}
   - component: {fileID: 2099367507742478274}
-  m_Layer: 11
+  - component: {fileID: 168551037156097898}
+  m_Layer: 0
   m_Name: Speed boat
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
@@ -333,8 +334,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   depthBeforeSubmerged: 1
   displacementAmount: 3
-  extraForce: 2
+  forceMultiplier: 2
+  deeperForceMultiplier: 2
   dragInWater: 3
+  angularDragInWater: 1
+  extraSeaY: 0
+  extraDeep: 0
+--- !u!205 &168551037156097898
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2099367507742478302}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: -0.00000047683716, y: 4.4987965, z: 2.395791}
+  m_Size: 28.457968
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.083287194
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 2677730442386137632}
+    - renderer: {fileID: 7454829233708532025}
+    - renderer: {fileID: 3831823020929306928}
+    - renderer: {fileID: 6882363466105779386}
+    - renderer: {fileID: 3184052373448243613}
+    - renderer: {fileID: 2387085130283079998}
+    - renderer: {fileID: 2350502371238204615}
+    - renderer: {fileID: 6841803185346045771}
+    - renderer: {fileID: 1254693419471711240}
+    - renderer: {fileID: 5485701845745887064}
+  m_Enabled: 1
 --- !u!1 &2679583609541901101
 GameObject:
   m_ObjectHideFlags: 0
@@ -344,7 +377,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1026500904798784727}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Cube.001_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -377,7 +410,7 @@ GameObject:
   - component: {fileID: 4124010838742358974}
   - component: {fileID: 1254693419471711240}
   - component: {fileID: 521363715534429119}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: node19
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -456,7 +489,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3973105410752495289}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Cylinder.001_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -487,7 +520,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4849186028966538224}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: scene
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -520,7 +553,7 @@ GameObject:
   - component: {fileID: 2475271546271512617}
   - component: {fileID: 6882363466105779386}
   - component: {fileID: 612663649777169504}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: node16
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -601,7 +634,7 @@ GameObject:
   - component: {fileID: 3089788298528830483}
   - component: {fileID: 3184052373448243613}
   - component: {fileID: 6556824903807157591}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: node17
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -682,7 +715,7 @@ GameObject:
   - component: {fileID: 4712758807654244361}
   - component: {fileID: 5485701845745887064}
   - component: {fileID: 4117319343988371080}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: node20
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -761,7 +794,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 907189491130433584}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: GLTF_SceneRootNode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -794,7 +827,7 @@ GameObject:
   - component: {fileID: 2161520067437894221}
   - component: {fileID: 2387085130283079998}
   - component: {fileID: 5288410915750397395}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: node12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -873,7 +906,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8947748790069750148}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Cylinder.002_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -905,7 +938,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7818061168011529827}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Boat_6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -945,7 +978,7 @@ GameObject:
   - component: {fileID: 6985449058549749686}
   - component: {fileID: 7454829233708532025}
   - component: {fileID: 2675332071296022502}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: node10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1026,8 +1059,9 @@ GameObject:
   - component: {fileID: 3657026606785650079}
   - component: {fileID: 2350502371238204615}
   - component: {fileID: 6254155452578198869}
-  - component: {fileID: 2099367508692420445}
-  m_Layer: 11
+  - component: {fileID: 7512222518125967022}
+  - component: {fileID: 707149709522369450}
+  m_Layer: 0
   m_Name: node5
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
@@ -1097,8 +1131,8 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6886013813378261779}
   m_Mesh: {fileID: -8870886256725475529, guid: 01cbf923cd86386498f6a000a6a5f2d8, type: 3}
---- !u!65 &2099367508692420445
-BoxCollider:
+--- !u!64 &7512222518125967022
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1107,9 +1141,22 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2, y: 1.6124094, z: 6.8282647}
-  m_Center: {x: 0.00000008940697, y: -0.1937955, z: -0.4558346}
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -8870886256725475529, guid: 01cbf923cd86386498f6a000a6a5f2d8, type: 3}
+--- !u!114 &707149709522369450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6886013813378261779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e0defa4b9093346bbbd51a47a53491, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8051329742458005226
 GameObject:
   m_ObjectHideFlags: 0
@@ -1119,7 +1166,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4199906562052398228}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Cube.002_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1152,7 +1199,7 @@ GameObject:
   - component: {fileID: 1901128654404510733}
   - component: {fileID: 6841803185346045771}
   - component: {fileID: 5832365719225721435}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: node6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1231,7 +1278,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8227959833208136926}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: RootNode (model correction matrix)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

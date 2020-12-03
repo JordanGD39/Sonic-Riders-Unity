@@ -11,6 +11,7 @@ public class RespawnObstacle : MonoBehaviour
     [SerializeField] private float timeToRespawn = 3;
     private Floater floater;
     private float startForce = 2;
+    private float startDeeperForce = 2;
 
     // Start is called before the first frame update
     void Start()
@@ -20,7 +21,10 @@ public class RespawnObstacle : MonoBehaviour
         floater = GetComponent<Floater>();
 
         if (floater != null)
+        {
             startForce = floater.ForceMultiplier;
+            startDeeperForce = floater.DeeperForceMultiplier;
+        }            
     }
     
     public void Punched()
@@ -33,6 +37,7 @@ public class RespawnObstacle : MonoBehaviour
         if (floater != null)
         {
             floater.ForceMultiplier = 1;
+            floater.DeeperForceMultiplier = 1;
         }
 
         invoking = true;
@@ -42,6 +47,7 @@ public class RespawnObstacle : MonoBehaviour
     private void ReturnToPos()
     {
         floater.ForceMultiplier = startForce;
+        floater.DeeperForceMultiplier = startDeeperForce;
         transform.position = startPos;
         transform.rotation = startRot;
         invoking = false;

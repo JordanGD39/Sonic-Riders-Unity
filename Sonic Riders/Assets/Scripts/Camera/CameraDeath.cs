@@ -16,6 +16,7 @@ public class CameraDeath : MonoBehaviour
 
     [SerializeField] private float timeToRespawn = 3;
     private PlayerAnimationHandler playerAnimation;
+    private bool wasOnWater = false;
 
     public void GiveCanvasAnim()
     {
@@ -47,6 +48,7 @@ public class CameraDeath : MonoBehaviour
         transform.parent = null;
         followPlayer = true;
         charStats.DisableAllFeatures = true;
+        wasOnWater = playerMovement.OnWater;
         playerAnimation.Anim.SetBool("Dying", true);
         playerAnimation.Anim.SetBool("GotHit", true);
         canvasAnim.Play("DeathFadeIn");
@@ -62,8 +64,23 @@ public class CameraDeath : MonoBehaviour
         Transform checkPoint = playerCheckpoints.RaceManagerScript.transform.GetChild(playerCheckpoints.CurrCheckpoint).GetChild(0);
         player.transform.GetChild(0).forward = checkPoint.parent.forward;
         player.position = checkPoint.position;
-        playerRb.velocity = Vector3.zero;
-        playerMovement.Speed = 0;
+
+        if (!wasOnWater)
+        {
+            playerRb.velocity = Vector3.zero;
+            playerMovement.Speed = 0;
+        }
+        else
+        {
+            charStats.DisableAllFeatures = false;
+            playerRb.AddForce(player.GetChild(0).forward * 30, ForceMode.Impulse);
+        }
+
+        if (charStats.IsPlayer)
+        {
+            charStats.Hud.UpdateSpeedText(0);
+        }
+
         transform.parent = prevParent;
         transform.localPosition = startPos;
         transform.localRotation = new Quaternion(0, 0, 0, transform.localRotation.w);

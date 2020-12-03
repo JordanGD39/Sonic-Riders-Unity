@@ -75,6 +75,11 @@ public class PlayerPunchObstacle : MonoBehaviour
             obstacleRb.AddForce((obstacleRb.transform.position - transform.position).normalized * (punchPower * cantPunchMultiplier * speedPowerCalc));
         }
 
-        obstacleRb.GetComponent<RespawnObstacle>().Punched();
+        RespawnObstacle respawn = obstacleRb.GetComponent<RespawnObstacle>();
+
+        if (respawn != null)
+        {
+            respawn.Punched();
+        }
     }
 }

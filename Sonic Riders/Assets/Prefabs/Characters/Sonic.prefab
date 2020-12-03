@@ -17967,7 +17967,7 @@ MonoBehaviour:
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 32768
   m_VolumeTrigger: {fileID: 0}
   m_RenderPostProcessing: 1
   m_Antialiasing: 2
@@ -25898,6 +25898,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8449842351189122569, guid: 3274a3e809f063b44afbb82971206377,
         type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8449842351189122569, guid: 3274a3e809f063b44afbb82971206377,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -25913,6 +25918,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8449842351189122569, guid: 3274a3e809f063b44afbb82971206377,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8449842351189122569, guid: 3274a3e809f063b44afbb82971206377,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
@@ -25925,16 +25935,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8449842351189122569, guid: 3274a3e809f063b44afbb82971206377,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8449842351189122569, guid: 3274a3e809f063b44afbb82971206377,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8449842351189122569, guid: 3274a3e809f063b44afbb82971206377,
         type: 3}

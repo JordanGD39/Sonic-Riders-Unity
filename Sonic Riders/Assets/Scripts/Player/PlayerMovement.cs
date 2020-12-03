@@ -211,7 +211,7 @@ public class PlayerMovement : MonoBehaviour
 
                 OnWater = hit.collider.gameObject.layer == 4;
 
-                if (hit.collider.gameObject.layer == 4)
+                if (OnWater && !playerTricks.CanDoTricks)
                 {
                     if (charStats.Air <= 0)
                     {
@@ -237,6 +237,12 @@ public class PlayerMovement : MonoBehaviour
                         speed = 0;
                         rb.velocity = Vector3.zero;
                         Attacked = false;
+
+                        if (OnWater)
+                        {
+                            charStats.DisableAllFeatures = false;
+                        }
+
                         return true;
                     }
 

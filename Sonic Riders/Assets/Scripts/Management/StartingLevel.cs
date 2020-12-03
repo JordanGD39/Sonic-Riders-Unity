@@ -104,6 +104,13 @@ public class StartingLevel : MonoBehaviour
 
     public void PlacePlayersInOrder()
     {
+        ChopperAI chopper = FindObjectOfType<ChopperAI>();
+
+        if (chopper != null)
+        {
+            chopper.SearchPlayers();
+        }
+
         if (noStart)
         {
             for (int i = 0; i < countdownTexts.Count; i++)
@@ -136,7 +143,7 @@ public class StartingLevel : MonoBehaviour
             float x = i * 3;
 
             playersInScene[i].transform.position = new Vector3(x, transform.position.y + 0.4f, 0);
-        }
+        }        
 
         if (survivalManager != null)
         {

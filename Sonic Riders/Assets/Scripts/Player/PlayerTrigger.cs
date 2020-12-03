@@ -71,6 +71,11 @@ public class PlayerTrigger : MonoBehaviour
             playerPunch.Punch(collision.attachedRigidbody);
             return;
         }
+        else if (collision.CompareTag(Constants.Tags.enemy) && collision.isTrigger)
+        {
+            playerBounce.Attacked(collision.transform.position, playerMovement.Speed + 3);
+            return;
+        }
 
         switch (collision.gameObject.layer)
         {
@@ -122,12 +127,6 @@ public class PlayerTrigger : MonoBehaviour
                 break;
             case 10:
                 GotChaosEmerald(collision.transform.parent);
-                break;
-            case 11:
-                if (collision.CompareTag(Constants.Tags.enemy) && collision.isTrigger)
-                {
-                    playerBounce.Attacked(collision.transform.position, playerMovement.Speed + 3);
-                }
                 break;
         }       
     }

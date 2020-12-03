@@ -91,7 +91,15 @@ public class PlayerBounce : MonoBehaviour
 
     private IEnumerator Bounce()
     {
-        playerMovement.CantMove = true;
+        if (!attacked)
+        {
+            playerMovement.CantMove = true;
+        }
+        else
+        {
+            charStats.DisableAllFeatures = true;
+        }
+
         playerMovement.Bouncing = true;
 
         //Debug.Log(transform.InverseTransformDirection(bounceDir).z);

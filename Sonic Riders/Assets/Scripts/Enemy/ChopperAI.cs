@@ -22,9 +22,13 @@ public class ChopperAI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        players.AddRange(FindObjectsOfType<PlayerMovement>());
+        rb = GetComponent<Rigidbody>();        
         transform.position = new Vector3(0, -50, 0);
+    }
+
+    public void SearchPlayers()
+    {
+        players.AddRange(FindObjectsOfType<PlayerMovement>());
     }
 
     // Update is called once per frame

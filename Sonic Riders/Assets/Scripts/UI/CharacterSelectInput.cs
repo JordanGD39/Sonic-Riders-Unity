@@ -312,6 +312,11 @@ public class CharacterSelectInput : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            GameManager.instance.TrackToLoad = "Island";
+        }
+
         if (eventSystem != null && eventSystem.currentSelectedGameObject != null && !selectingBoard && !leaving)
         {            
             playerText.transform.SetParent(eventSystem.currentSelectedGameObject.transform, false);
