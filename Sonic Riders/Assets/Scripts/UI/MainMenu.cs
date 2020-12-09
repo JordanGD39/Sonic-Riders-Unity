@@ -9,16 +9,22 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private GameObject fadePanel;
     [SerializeField] private GameObject mainMenuPanel;
     [SerializeField] private GameObject selectionPanel;
+    [SerializeField] private GameObject optionsPanel;
     [SerializeField] private GameObject raceButton;
+    [SerializeField] private GameObject qualityButton;
     [SerializeField] private ButtonSounds sound;
     private bool alreadyStarted = false;
+    private bool showOptions = false;
+    private bool fading = false;
 
     private void Start()
     {
+        QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("Quality", 5));
         anim = GetComponent<Animator>();
         fadePanel.SetActive(true);
         mainMenuPanel.SetActive(true);
         selectionPanel.SetActive(false);
+        optionsPanel.SetActive(false);
     }
 
     // Update is called once per frame
@@ -26,20 +32,21 @@ public class MainMenu : MonoBehaviour
     {
         if (Input.GetButtonDown("Submit") && !alreadyStarted)
         {
-            alreadyStarted = true;
-            sound.Pressed();
-            anim.Play("FadeIn");
-            Invoke("RemoveMainMenuPanel", 0.5f);
+            RemovePanel("RemoveMainMenuPanel", true);
         }
 
         if (Input.GetButtonDown("Cancel"))
         {
             if (alreadyStarted)
             {
-                alreadyStarted = false;
-                sound.Cancel();
-                anim.Play("FadeIn");
-                Invoke("RemoveSelectPanel", 0.5f);
+                if (optionsPanel.activeSelf)
+                {
+                    Options(false);
+                }
+                else
+                {
+                    RemovePanel("RemoveSelectPanel", false);
+                }
             }
             else
             {
@@ -48,11 +55,59 @@ public class MainMenu : MonoBehaviour
         }
     }
 
+    private void RemovePanel(string function, bool started)
+    {
+        if (fading)
+        {
+            return;
+        }
+
+        fading = true;
+
+        alreadyStarted = started;
+
+        if (!(function == "OptionsPanel" && showOptions))
+        {
+           sound.Cancel();
+        }
+
+        anim.Play("FadeIn");
+        
+        Invoke(function, 0.5f);
+        Invoke("StopFading", 0.5f);
+    }
+
+    private void StopFading()
+    {
+        fading = false;
+    }
+
     private void RemoveMainMenuPanel()
     {
         mainMenuPanel.SetActive(false);
         selectionPanel.SetActive(true);
         EventSystem.current.SetSelectedGameObject(raceButton);
+    }
+
+    private void OptionsPanel()
+    {
+        selectionPanel.SetActive(!showOptions);
+        optionsPanel.SetActive(showOptions);
+
+        if (showOptions)
+        {
+            EventSystem.current.SetSelectedGameObject(qualityButton);
+        }
+        else
+        {
+            EventSystem.current.SetSelectedGameObject(raceButton);
+        }
+    }
+
+    public void Options(bool show)
+    {
+        showOptions = show;
+        RemovePanel("OptionsPanel", true);
     }
 
     private void RemoveSelectPanel()
