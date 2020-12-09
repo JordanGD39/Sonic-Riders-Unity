@@ -86,10 +86,7 @@ public class BigCanvasUI : SurvivalFunctionsUI
 
     public void PostPlacings(List<PlayerCheckpoints> players)
     {
-        if (changePlace == null)
-        {
-            changePlace = FindObjectOfType<ChangePlace>();
-        }
+        changePlace = gameObject.AddComponent<ChangePlace>();
 
         stopCounting = true;
         characterPlaceParent.gameObject.SetActive(true);

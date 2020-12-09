@@ -117,6 +117,7 @@ public class PlayerControls : MonoBehaviour
         Transform canvasHolder = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).transform;
         
         charStats.Canvas = canvasHolder.transform.GetChild(playerIndex);
+        charStats.Canvas.gameObject.SetActive(true);
 
         playerMovement.GiveCanvasHud();
         playerGrind.GiveCanvasHud();

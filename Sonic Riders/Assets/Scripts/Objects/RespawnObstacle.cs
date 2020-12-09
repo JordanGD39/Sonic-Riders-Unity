@@ -9,6 +9,7 @@ public class RespawnObstacle : MonoBehaviour
     private bool invoking = false;
     public bool Invoking { get { return invoking; } }
     [SerializeField] private float timeToRespawn = 3;
+    [SerializeField] private bool freezeRb = false;
     private Floater floater;
     private float startForce = 2;
     private float startDeeperForce = 2;
@@ -18,7 +19,7 @@ public class RespawnObstacle : MonoBehaviour
     {
         startPos = transform.position;
         startRot = transform.rotation;
-        floater = GetComponent<Floater>();
+        floater = GetComponent<Floater>();        
 
         if (floater != null)
         {
@@ -46,8 +47,12 @@ public class RespawnObstacle : MonoBehaviour
 
     private void ReturnToPos()
     {
-        floater.ForceMultiplier = startForce;
-        floater.DeeperForceMultiplier = startDeeperForce;
+        if (floater != null)
+        {
+            floater.ForceMultiplier = startForce;
+            floater.DeeperForceMultiplier = startDeeperForce;
+        }
+        
         transform.position = startPos;
         transform.rotation = startRot;
         invoking = false;

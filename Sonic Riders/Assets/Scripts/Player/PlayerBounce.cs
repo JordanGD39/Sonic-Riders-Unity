@@ -37,17 +37,9 @@ public class PlayerBounce : MonoBehaviour
         audioHolder = rb.GetComponent<AudioManagerHolder>();
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Attacked(playerMovement.transform.position + new Vector3(0,0,1), playerMovement.Speed);
-        }
-    }
-
     private void OnCollisionEnter(Collision collision)
     {
-        if (playerMovement.Bouncing || collision.gameObject.layer == 14)
+        if (playerMovement.Bouncing || collision.gameObject.layer == 14 || collision.gameObject.CompareTag(Constants.Tags.eggPawn))
         {
             return;
         }

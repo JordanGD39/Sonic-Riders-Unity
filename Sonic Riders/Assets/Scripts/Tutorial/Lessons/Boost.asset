@@ -12,13 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd0dde44a7cb4164e9027fd1146e1344, type: 3}
   m_Name: Boost
   m_EditorClassIdentifier: 
-  inputField: You can boost by pressing the Shift key or B on a Gamepad!
-  advancement: 1
-  secondAdvancement: 4
+  inputField: 'You can boost by pressing the Shift key or B on a Gamepad!
+
+
+    This
+    makes you faster for a couple of seconds! You can also attack players by hitting
+    them while boosting!'
   inputAction: {fileID: 4526547105228188980, guid: 92328359cd2242b479c4b18480b2929a,
     type: 3}
   destination: {x: 0, y: 0, z: 0}
   falling: 0
   freezeTime: 0
+  jumpingOfRamp: 0
   indexSkip: 0
   startCountdown: 0

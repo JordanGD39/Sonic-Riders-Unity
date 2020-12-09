@@ -43,6 +43,8 @@ public class HUD : SurvivalFunctionsUI
         distanceRadar.SetActive(false);
 
         ReadyToChange = true;
+
+        gameObject.SetActive(false);
     }
 
     private void Update()

@@ -3317,7 +3317,7 @@ MonoBehaviour:
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 32768
   m_VolumeTrigger: {fileID: 0}
   m_RenderPostProcessing: 1
   m_Antialiasing: 2
@@ -16886,17 +16886,12 @@ MonoBehaviour:
   rings: 0
   maxRings: 30
   startRings: 0
-  speedLoss: 4.67
+  extraSpeed: -4
   extraPower: -2.67
   extraDash: 1.33
   extraCornering: 9.33
-  lessAirLoss: 0.1
   charType: 1
   stats: {fileID: 11400000, guid: cccfd161fcb39714a9103fe27e95fd36, type: 2}
-  boostTime:
-  - 3
-  - 3.5
-  - 4
   runSpeed: 44
   meshRenderer: {fileID: 4722522917811605185}
   invincibilityParticleSystem: {fileID: 0}
@@ -16964,9 +16959,10 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 4151
+  noWaterLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   ps: {fileID: 6724819590949259077}
-  groundCol: {fileID: 0}
-  wallCol: {fileID: 0}
 --- !u!114 &8046198970241570734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27871,6 +27867,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8449842351189122569, guid: 3274a3e809f063b44afbb82971206377,
         type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8449842351189122569, guid: 3274a3e809f063b44afbb82971206377,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -27886,6 +27887,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8449842351189122569, guid: 3274a3e809f063b44afbb82971206377,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8449842351189122569, guid: 3274a3e809f063b44afbb82971206377,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
@@ -27898,16 +27904,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8449842351189122569, guid: 3274a3e809f063b44afbb82971206377,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8449842351189122569, guid: 3274a3e809f063b44afbb82971206377,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8449842351189122569, guid: 3274a3e809f063b44afbb82971206377,
         type: 3}

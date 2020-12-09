@@ -45,10 +45,10 @@ public class PlayerSelectReferences : MonoBehaviour
         notJoinedPanel.SetActive(true);
         joinedPanel.SetActive(false);
         charImage.gameObject.SetActive(true);
-        boardImage.gameObject.SetActive(true);
+        boardImage.gameObject.SetActive(false);
         //boardImage.transform.parent.gameObject.SetActive(false);
         boardImageFinal.gameObject.SetActive(false);
-        pointersParent.SetActive(true);
-        boardText.gameObject.SetActive(true);
+        pointersParent.SetActive(false);
+        boardText.gameObject.SetActive(false);
     }
 }

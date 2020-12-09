@@ -31,8 +31,15 @@ public class PlayerPunchObstacle : MonoBehaviour
         }
     }
 
-    public void Punch(Rigidbody obstacleRb)
+    public void Punch(Rigidbody obstacleRb, float upperPower)
     {
+        EggPawnAI ai = obstacleRb.GetComponent<EggPawnAI>();
+
+        if (ai != null)
+        {
+            ai.Die();
+        }
+
         float powerCalc = charStats.ExtraPower * extraPowerMultiplier;
 
         if (powerCalc < 0)
@@ -41,7 +48,7 @@ public class PlayerPunchObstacle : MonoBehaviour
         }
 
         //Removing speed loss in formula so that slower characters punch less hard but adding power so that Powerful characters punch harder
-        float maxSpeed = charStats.GetCurrentLimit() + powerCalc + charStats.SpeedLoss;
+        float maxSpeed = charStats.GetCurrentLimit() + powerCalc - charStats.ExtraSpeed;
 
         float speedPowerCalc = playerMovement.Speed / maxSpeed;
 
@@ -63,6 +70,12 @@ public class PlayerPunchObstacle : MonoBehaviour
             float power = punchPower * speedPowerCalc;
 
             obstacleRb.AddForce(punch.forward * power);
+
+            if (upperPower > 0)
+            {
+                Debug.Log(upperPower);
+                obstacleRb.AddForce(obstacleRb.transform.up * upperPower, ForceMode.Impulse);
+            }
             
             audioHolder.SfxManager.Play(Constants.SoundEffects.punch);
 
@@ -72,10 +85,12 @@ public class PlayerPunchObstacle : MonoBehaviour
         else
         {
             audioHolder.SfxManager.Play(Constants.SoundEffects.bounceWall);
+
+
             obstacleRb.AddForce((obstacleRb.transform.position - transform.position).normalized * (punchPower * cantPunchMultiplier * speedPowerCalc));
         }
 
-        RespawnObstacle respawn = obstacleRb.GetComponent<RespawnObstacle>();
+        RespawnObstacle respawn = obstacleRb.GetComponent<RespawnObstacle>();        
 
         if (respawn != null)
         {

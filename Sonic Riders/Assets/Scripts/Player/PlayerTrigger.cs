@@ -66,14 +66,37 @@ public class PlayerTrigger : MonoBehaviour
     {
         //Debug.Log(collision.gameObject);
 
-        if (collision.gameObject.CompareTag(Constants.Tags.obstacle))
+        bool tagFound = false;
+
+        switch (collision.gameObject.tag)
         {
-            playerPunch.Punch(collision.attachedRigidbody);
-            return;
+            case Constants.Tags.obstacle:
+                if (!playerPunch.CantPunch && charStats.Air > 0)
+                {
+                    tagFound = true;
+                    playerPunch.Punch(collision.attachedRigidbody, 0);
+                }
+                break;
+            case Constants.Tags.eggPawn:
+                tagFound = true;
+
+                if (!playerPunch.CantPunch && charStats.Air > 0 || playerBoost.Attacking)
+                {
+                    playerPunch.Punch(collision.attachedRigidbody, 5);
+                }
+                else
+                {
+                    playerBounce.Attacked(collision.transform.position, rb.velocity.magnitude);
+                }
+                break;
+            case Constants.Tags.enemy:
+                tagFound = true;
+                playerBounce.Attacked(collision.transform.position, rb.velocity.magnitude);
+                break;
         }
-        else if (collision.CompareTag(Constants.Tags.enemy) && collision.isTrigger)
+
+        if (tagFound)
         {
-            playerBounce.Attacked(collision.transform.position, playerMovement.Speed + 3);
             return;
         }
 
@@ -133,7 +156,7 @@ public class PlayerTrigger : MonoBehaviour
 
     private void OnTriggerExit(Collider collider)
     {
-        if (collider.gameObject.layer == 4 && transform.position.y > playerMovement.Sea.position.y)
+        if (collider.gameObject.layer == 4 && playerMovement.Sea != null && transform.position.y > playerMovement.Sea.position.y)
         {
             playerMovement.AboveSea();
         }

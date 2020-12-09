@@ -23,6 +23,9 @@ public class Constants
         public const string obstacle = "Obstacle";
         public const string sea = "Sea";
         public const string enemy = "Enemy";
+        public const string eggPawn = "Egg Pawn";
+        public const string eggPawnArea = "EggPawnArea";
+        public const string eggPawnCheckPoints = "EggPawnCheckPoints";
     }
 
     public class VoiceSounds

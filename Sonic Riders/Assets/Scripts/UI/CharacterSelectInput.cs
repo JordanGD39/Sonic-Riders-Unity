@@ -77,8 +77,6 @@ public class CharacterSelectInput : MonoBehaviour
 
         playerSelect = canvas.GetComponentInChildren<GridLayoutGroup>().transform.GetChild(playerInput.playerIndex).GetComponent<PlayerSelectReferences>();
 
-        playerSelect.BoardImage.transform.parent.gameObject.SetActive(false);
-
         GameObject textPlayer = Instantiate(playerTextPref, button.transform, false);
 
         playerText = textPlayer.GetComponent<Text>();
@@ -136,6 +134,9 @@ public class CharacterSelectInput : MonoBehaviour
             return;
         }
 
+        canCancel = false;
+        canSelect = false;
+
         InputMaster inputMaster = new InputMaster();
         playerInput.actions.FindAction(inputMaster.UI.Leave.id).Disable();
 
@@ -155,11 +156,13 @@ public class CharacterSelectInput : MonoBehaviour
     {
         playerSelect.JoinedPanel.SetActive(false);
         playerSelect.NotJoinedPanel.SetActive(true);
-        playerSelect.BoardImage.transform.parent.gameObject.SetActive(false);
+        playerSelect.BoardImage.gameObject.SetActive(false);
+        playerSelect.CharacterImage.gameObject.SetActive(true);
         playerSelect.BoardImageFinal.gameObject.SetActive(false);
+        playerSelect.BoardText.gameObject.SetActive(false);
         playerSelect.PointersParent.SetActive(false);
         playerSelect.InfoPanel.SetActive(false);
-        eventSystem.currentSelectedGameObject.GetComponent<CharacterButton>().RemovePlayer(playerIndex);
+        prevButton.GetComponent<CharacterButton>().RemovePlayer(playerIndex);
         Destroy(playerText.gameObject);
     }
 
@@ -222,9 +225,6 @@ public class CharacterSelectInput : MonoBehaviour
         }
         else if (selectingBoard)
         {
-            RectTransform boardTransform = playerSelect.BoardImage.GetComponent<RectTransform>();
-            boardTransform.localPosition = new Vector2(-45, -10);
-            boardTransform.localRotation = new Quaternion(0, 0, 0.27f, 0);
             playerSelect.CharacterImage.gameObject.SetActive(true);
             playerSelect.PointersParent.SetActive(false);
             playerSelect.BoardText.gameObject.SetActive(false);
@@ -312,10 +312,15 @@ public class CharacterSelectInput : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T))
+        /*if (Input.GetKeyDown(KeyCode.T))
         {
             GameManager.instance.TrackToLoad = "Island";
         }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            GameManager.instance.FishPhobia = !GameManager.instance.FishPhobia;
+        }*/
 
         if (eventSystem != null && eventSystem.currentSelectedGameObject != null && !selectingBoard && !leaving)
         {            
@@ -336,13 +341,23 @@ public class CharacterSelectInput : MonoBehaviour
     public void ConfirmCharacter(GameObject prefab)
     {
         currPrefab = prefab;
-        currPrefabInstance = Instantiate(prefab);
-        currPrefabInstance.SetActive(false);
-        charStats = currPrefabInstance.GetComponent<CharacterStats>();
+        charStats = gameObject.AddComponent<CharacterStats>();
+        charStats.StopCounting = true;
+        CharacterStats prefStats = prefab.GetComponent<CharacterStats>();
+        charStats.BoardImage = prefStats.BoardImage;
+        charStats.BoardName = prefStats.BoardName;
+        charStats.RunSpeed = prefStats.RunSpeed;
+        charStats.ExtraSpeed = prefStats.ExtraSpeed;
+        charStats.ExtraDash = prefStats.ExtraDash;
+        charStats.ExtraPower = prefStats.ExtraPower;
+        charStats.ExtraCornering = prefStats.ExtraCornering;
+
         playerText.gameObject.SetActive(false);
         playerSelect.CharacterImage.gameObject.SetActive(false);
-        playerSelect.BoardImage.transform.parent.gameObject.SetActive(true);
+        playerSelect.BoardImage.gameObject.SetActive(true);
         playerSelect.BoardText.gameObject.SetActive(true);
+        playerSelect.PointersParent.SetActive(true);
+
         CheckBoard(0);
         selectingBoard = true;
     }
@@ -368,24 +383,26 @@ public class CharacterSelectInput : MonoBehaviour
         {
             if (!playerReady && selectingBoard)
             {
-                Destroy(currPrefabInstance);
+                Destroy(charStats);
                 prevButton.GetComponent<CharacterButton>().DisabledImage.SetActive(false);
                 playerText.gameObject.SetActive(true);
-                playerSelect.BoardImage.transform.parent.gameObject.SetActive(false);
+                playerSelect.BoardImage.gameObject.SetActive(false);
                 playerSelect.CharacterImage.gameObject.SetActive(true);
                 eventSystem.SetSelectedGameObject(prevButton);
                 eventSystem.currentSelectedGameObject.GetComponent<CharacterButton>().ShowSelectedCharacter(playerIndex, false, null);
                 playerConfigManager.PlayerReady(transform.GetSiblingIndex(), false);
                 playerSelect.BoardText.gameObject.SetActive(false);
+                playerSelect.PointersParent.SetActive(false);
                 selectingBoard = false;
             }
-            else if(playerReady & !selectingBoard)
+            else if(playerReady & selectingBoard)
             {
-                playerSelect.BoardImageFinal.gameObject.SetActive(false);
+                playerSelect.BoardImage.gameObject.SetActive(true);
                 playerSelect.BoardText.gameObject.SetActive(true);
+                playerSelect.PointersParent.SetActive(true);
+                playerSelect.BoardImageFinal.gameObject.SetActive(false);
+                playerSelect.CharacterImage.gameObject.SetActive(false);
             }
-
-            playerSelect.PointersParent.SetActive(true);
 
             playerReady = false;
         }

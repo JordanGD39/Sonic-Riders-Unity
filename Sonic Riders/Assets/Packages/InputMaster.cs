@@ -406,7 +406,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""name"": """",
                     ""id"": ""34b04ed1-b115-4247-a87d-339dc3202fc0"",
                     ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
+                    ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": ""GamePad"",
                     ""action"": ""Movement"",

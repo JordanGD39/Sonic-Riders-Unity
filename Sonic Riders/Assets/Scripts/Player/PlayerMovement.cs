@@ -72,7 +72,12 @@ public class PlayerMovement : MonoBehaviour
     {
         model = transform.GetChild(0).GetChild(0);
         currentLayerMask = layerMask;
-        Sea = GameObject.FindGameObjectWithTag(Constants.Tags.sea).transform;
+        GameObject sea = GameObject.FindGameObjectWithTag(Constants.Tags.sea);
+
+        if (sea != null)
+        {
+            Sea = sea.transform;
+        }
     }
 
     public void GiveCanvasHud()

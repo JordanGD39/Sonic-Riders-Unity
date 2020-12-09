@@ -20,9 +20,9 @@ public class CharacterStats : MonoBehaviour
     public float ExtraY { get { return extraY; } }
 
     [SerializeField] private string boardName = "Blue Star";
-    public string BoardName { get { return boardName; } }
+    public string BoardName { get { return boardName; } set { boardName = value; } }
     [SerializeField] private Sprite boardImage;
-    public Sprite BoardImage { get { return boardImage; } }
+    public Sprite BoardImage { get { return boardImage; } set { boardImage = value; } }
 
     public int PlayerIndex { get; set; } = 4;
     public Transform Cam { get; set; }
@@ -186,25 +186,23 @@ public class CharacterStats : MonoBehaviour
 
     public float MaxAir { get { return maxAir; } }
 
-    [SerializeField] private float speedLoss = 0;
-    public float SpeedLoss { get { return speedLoss; } }
+    [SerializeField] private float extraSpeed = 0;
+    public float ExtraSpeed { get { return extraSpeed; } set { extraSpeed = value; } }
     [SerializeField] private float extraPower = 0;
-    public float ExtraPower { get { return extraPower; } }
+    public float ExtraPower { get { return extraPower; } set { extraPower = value; } }
     [SerializeField] private float extraDash = 0;
-    public float ExtraDash { get { return extraDash; } }
+    public float ExtraDash { get { return extraDash; } set { extraDash = value; } }
     [SerializeField] private float extraCornering = 0;
-    public float ExtraCornering { get { return extraCornering; } }
-    [SerializeField] private float lessAirLoss = 0;
-    public float LessAirLoss { get { return lessAirLoss; } }
+    public float ExtraCornering { get { return extraCornering; } set { extraCornering = value; } }
     [SerializeField] private type charType;
-    public type CharType { get { return charType; } }
+    public type CharType { get { return charType; } set { charType = value; } }
     [SerializeField] private BoardStats stats;
     public BoardStats BoardStats { get { return stats; } set { stats = value; } }
 
-    [SerializeField] private float[] boostTime = { 2, 3.5f, 4f };
+    private float[] boostTime = { 2, 3.5f, 4f };
 
     [SerializeField] private float runSpeed = 30;
-    public float RunSpeed { get { return runSpeed; } }
+    public float RunSpeed { get { return runSpeed; } set { runSpeed = value; } }
 
     private bool alreadyRunning = false;
 
@@ -336,7 +334,7 @@ public class CharacterStats : MonoBehaviour
             multiplier = SurvivalLeader ? 0.8f : 1.2f;
         }
 
-        float limit = stats.Limit + (4.3f * level) - speedLoss;
+        float limit = stats.Limit + (4.3f * level) + extraSpeed;
 
         if (OffRoad)
         {
@@ -444,12 +442,7 @@ public class CharacterStats : MonoBehaviour
             }
         }
 
-        float airLoss = stats.AirDepletion - lessAirLoss;
-
-        if (BoardStats.RingsAsAir)
-        {
-            airLoss += lessAirLoss;
-        }
+        float airLoss = stats.AirDepletion;
 
         if (airLoss < 0)
         {

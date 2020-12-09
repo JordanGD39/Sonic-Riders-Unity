@@ -10,6 +10,9 @@ public class TutorialManager : MonoBehaviour
 
     private PlayerMovement player;
     private PlayerTricks playerTricks;
+    private PlayerFlight playerFlight;
+    private PlayerGrind playerGrind;
+    private CharacterStats charStats;
     public PlayerMovement Player { set { player = value; } }
 
     public StartingLevel StartLevel { get; set; }
@@ -36,13 +39,20 @@ public class TutorialManager : MonoBehaviour
 
         bigCanvasUI = GameObject.FindGameObjectWithTag(Constants.Tags.bigCanvas).GetComponent<BigCanvasUI>();
 
-        handler = (InputAction.CallbackContext ctx) => LessonDone();
+        handler = (InputAction.CallbackContext ctx) => CheckLessonDone();
         AddActionPerformed();
     }
 
     public void GivePlayerComponents(PlayerMovement movement)
     {
         player = movement;
+        charStats = player.GetComponent<CharacterStats>();
+        charStats.CharType = type.ALL;
+        playerFlight = player.GetComponent<PlayerFlight>();
+        playerGrind = player.GetComponent<PlayerGrind>();
+        playerGrind.enabled = true;
+        player.GetComponent<PlayerPunchObstacle>().CantPunch = false;
+        playerFlight.enabled = true;
         playerTricks = player.GetComponent<PlayerTricks>();
     }
 
@@ -77,6 +87,18 @@ public class TutorialManager : MonoBehaviour
         bigCanvasUI.ShowTutorialText(currLesson.TextField);
     }
 
+    private void CheckLessonDone()
+    {
+        if (lessons[lessonIndex].Falling && !player.Grounded)
+        {
+            LessonDone();
+        }
+        else if (!lessons[lessonIndex].Falling)
+        {
+            LessonDone();
+        }
+    }
+
     private void LessonDone()
     {
         if (alreadyIncrementing)
@@ -91,6 +113,7 @@ public class TutorialManager : MonoBehaviour
         if (prevInputAction != null)
         {            
             prevInputAction.performed -= handler;
+            prevInputAction = null;
         }
 
         bigCanvasUI.RemovePopup();
@@ -102,14 +125,16 @@ public class TutorialManager : MonoBehaviour
 
         if (lessonIndex >= lessons.Length - 1)
         {
+            player.GetComponent<PlayerCheckpoints>().LockPlacing();
             return;
-        }
+        }        
 
         lessonIndex++;
 
-        if (lessonIndex == removeWall)
+        if (lessonIndex >= removeWall)
         {
             invisibleWall.SetActive(false);
+            charStats.Air = charStats.MaxAir;
         }       
 
         Time.timeScale = lessons[lessonIndex].FreezeTime ? 0 : 1;
@@ -132,7 +157,7 @@ public class TutorialManager : MonoBehaviour
             return;
         }
 
-        if (lessons[lessonIndex].Falling && !player.Grounded)
+        if (lessons[lessonIndex].Falling && !player.Grounded && prevInputAction == null)
         {
             LessonDone();
         }
@@ -143,6 +168,15 @@ public class TutorialManager : MonoBehaviour
         }
 
         if (lessons[lessonIndex].JumpingOfRamp && playerTricks.CanDoTricks)
+        {
+            LessonDone();
+        }
+
+        if (lessons[lessonIndex].Flying && playerFlight.Flying)
+        {
+            LessonDone();
+        }
+        else if (lessons[lessonIndex].Grinding && playerGrind.Grinding)
         {
             LessonDone();
         }

@@ -36,11 +36,17 @@ public class ChangePlace : MonoBehaviour
             return;
         }
 
-        int place = hud.Place;
+        int place = 0;
 
         if (updatePlacingBoard)
         {
             place = placeOnBoard;
+            numberImage.sprite = FindObjectOfType<RaceManager>().NumberSprites[place];
+        }
+        else
+        {
+            place = hud.Place;
+            numberImage.sprite = hud.raceManager.NumberSprites[place];
         }
 
         if (place == 0)
@@ -51,8 +57,7 @@ public class ChangePlace : MonoBehaviour
         {
             glow.SetActive(false);
         }
-
-        numberImage.sprite = hud.raceManager.NumberSprites[place];
+        
 
         if (place > 3)
         {

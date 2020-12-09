@@ -98,7 +98,7 @@ public class Capsule : MonoBehaviour
 
         int prevPercent = 0;
         float rand = Random.Range(0, 100);
-        int chosenIndex = -1;
+        int chosenIndex = 0;
 
         for (int i = 0; i < percentages.Length; i++)
         {            
@@ -111,11 +111,6 @@ public class Capsule : MonoBehaviour
                 chosenIndex = i;
                 break;
             }
-        }
-
-        if (chosenIndex < 0)
-        {
-            return;
         }
 
         int amount = 0;

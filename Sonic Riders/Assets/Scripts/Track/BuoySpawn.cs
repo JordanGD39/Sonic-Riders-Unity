@@ -20,8 +20,6 @@ public class BuoySpawn : MonoBehaviour
             {
                 Vector3 spawnPos = path.path.GetPointAtTime(timePerBuoy * i, EndOfPathInstruction.Stop);
 
-                Debug.Log(spawnPos);
-
                 GameObject buoy = Instantiate(buoyPref, spawnPos, Quaternion.identity);
                 buoy.transform.forward = path.path.GetDirection(timePerBuoy * i, EndOfPathInstruction.Stop);
                 buoy.transform.SetParent(transform, true);

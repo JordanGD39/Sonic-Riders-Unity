@@ -12,6 +12,8 @@ public class ChopperAI : MonoBehaviour
     [SerializeField] private float attackHeight = 7;
     [SerializeField] private float lerpSpeed = 7;
     [SerializeField] private float distanceToPlayer = 5;
+    [SerializeField] private GameObject chopper;
+    [SerializeField] private GameObject sub;
     private Rigidbody rb;
     private Vector3 targetPos;
     private Vector3 lookPos;
@@ -22,6 +24,12 @@ public class ChopperAI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (GameManager.instance.FishPhobia)
+        {
+            chopper.SetActive(false);
+            sub.SetActive(true);
+        }
+
         rb = GetComponent<Rigidbody>();        
         transform.position = new Vector3(0, -50, 0);
     }

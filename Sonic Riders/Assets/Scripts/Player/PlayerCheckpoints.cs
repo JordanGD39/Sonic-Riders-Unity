@@ -122,22 +122,7 @@ public class PlayerCheckpoints : MonoBehaviour
 
                 if (lapCount > raceManager.Laps)
                 {
-                    if (CharStats.IsPlayer)
-                    {
-                        if (place == 0)
-                        {
-                            audioHolder.VoiceManager.Play(Constants.VoiceSounds.win);
-                        }
-                        else
-                        {
-                            audioHolder.VoiceManager.Play(Constants.VoiceSounds.lose);
-                        }
-                    }                    
-
-                    currCheckpoint = 100 - place;
-                    CharStats.DisableAllFeatures = true;
-                    CharStats.StopCounting = true;
-                    raceManager.CheckRaceEnd(this);                    
+                    LockPlacing();             
                 }
 
                 if (hud != null)
@@ -146,5 +131,25 @@ public class PlayerCheckpoints : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void LockPlacing()
+    {
+        if (CharStats.IsPlayer)
+        {
+            if (place == 0)
+            {
+                audioHolder.VoiceManager.Play(Constants.VoiceSounds.win);
+            }
+            else
+            {
+                audioHolder.VoiceManager.Play(Constants.VoiceSounds.lose);
+            }
+        }
+
+        currCheckpoint = 100 - place;
+        CharStats.DisableAllFeatures = true;
+        CharStats.StopCounting = true;
+        raceManager.CheckRaceEnd(this);
     }
 }

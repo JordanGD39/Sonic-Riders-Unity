@@ -24,6 +24,12 @@ public class Lesson : ScriptableObject
     [SerializeField] private bool jumpingOfRamp = false;
     public bool JumpingOfRamp { get { return jumpingOfRamp; } }
 
+    [SerializeField] private bool flying = false;
+    public bool Flying { get { return flying; } }
+
+    [SerializeField] private bool grinding = false;
+    public bool Grinding { get { return grinding; } }
+
     [SerializeField] private int indexSkip = 0;
     public int IndexSkip { get { return indexSkip; } }
 

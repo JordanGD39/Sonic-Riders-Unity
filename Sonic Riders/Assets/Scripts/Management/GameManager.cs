@@ -44,6 +44,8 @@ public class GameManager : MonoBehaviour
 
     private bool loadingScene = false;
 
+    public bool FishPhobia { get; set; } = false;
+
     void Awake()
     {
         if (instance == null)
