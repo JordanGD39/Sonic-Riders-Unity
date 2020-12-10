@@ -11345,6 +11345,9 @@ GameObject:
   - component: {fileID: 5544327344426692917}
   - component: {fileID: 6842053744667499443}
   - component: {fileID: 579455609024313466}
+  - component: {fileID: 8885157417452594861}
+  - component: {fileID: 7290979756988005692}
+  - component: {fileID: 4905252547472427740}
   m_Layer: 8
   m_Name: Sonic
   m_TagString: Player
@@ -11434,17 +11437,12 @@ MonoBehaviour:
   rings: 0
   maxRings: 30
   startRings: 0
-  speedLoss: 0
+  extraSpeed: 0
   extraPower: 0
   extraDash: 0
   extraCornering: 0
-  lessAirLoss: 0
   charType: 0
   stats: {fileID: 11400000, guid: cccfd161fcb39714a9103fe27e95fd36, type: 2}
-  boostTime:
-  - 2
-  - 3.5
-  - 4
   runSpeed: 50
   meshRenderer: {fileID: 4647243101772084873}
   invincibilityParticleSystem: {fileID: 4468770465542625855}
@@ -11549,7 +11547,6 @@ MonoBehaviour:
   airGain: 21
   extraCharHeight: 0.5
   jumpHeightOfRail: -5
-  velocity: {x: 0, y: 0, z: 0}
 --- !u!114 &2005097834745034065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11645,6 +11642,51 @@ MonoBehaviour:
   currCheckpoint: 0
   currSurvivalCheckpoint: 0
   lapCount: 1
+--- !u!114 &8885157417452594861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005097834745034059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7589790d000c914383e3aa0dd1c57ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distanceToGeneratePath: 10
+  maxPoints: 20
+  trailTime: 10
+  checkRadius: 5
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 256
+  pathPositions: []
+--- !u!114 &7290979756988005692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005097834745034059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 027af58bba5efd841a9b3d5da3df2d4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inTurbulence: 0
+--- !u!114 &4905252547472427740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005097834745034059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd8e48ff628c5004a9bef0e576870bca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2124796381605978053
 GameObject:
   m_ObjectHideFlags: 0
@@ -25953,12 +25995,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3274a3e809f063b44afbb82971206377, type: 3}
---- !u!4 &3579198571832961013 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8449842351189122569, guid: 3274a3e809f063b44afbb82971206377,
-    type: 3}
-  m_PrefabInstance: {fileID: 4965219664396139004}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &6578033806410287360 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2279347112351445244, guid: 3274a3e809f063b44afbb82971206377,
@@ -25971,3 +26007,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f05d0bda8ed6cf40b8344d9c401ca38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &3579198571832961013 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8449842351189122569, guid: 3274a3e809f063b44afbb82971206377,
+    type: 3}
+  m_PrefabInstance: {fileID: 4965219664396139004}
+  m_PrefabAsset: {fileID: 0}

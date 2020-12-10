@@ -15,6 +15,7 @@ public class PlayerControls : MonoBehaviour
     public GameObject Player { get { return player; } }
     private PlayerMovement playerMovement;
     private PlayerBoost playerBoost;
+    private TurbulenceRider turbulenceRider;
     private PlayerDrift playerDrift;
     private PlayerJump playerJump;
     private PlayerTricks playerTricks;
@@ -73,6 +74,7 @@ public class PlayerControls : MonoBehaviour
         playerJump = player.GetComponent<PlayerJump>();
         playerTricks = player.GetComponent<PlayerTricks>();
         playerFlight = player.GetComponent<PlayerFlight>();
+        turbulenceRider = player.GetComponent<TurbulenceRider>();
         charStats = player.GetComponent<CharacterStats>();
 
         int playerIndex = transform.GetSiblingIndex();
@@ -341,9 +343,11 @@ public class PlayerControls : MonoBehaviour
 
     private void CheckGrindJump()
     {
+        turbulenceRider.CheckTurbulence();
+
         if (playerGrind.enabled)
         {
-            playerGrind.CheckGrind();
+            playerGrind.CheckGrind(true);
         }
     }
 

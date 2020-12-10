@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerBoost : MonoBehaviour
 {
     private PlayerMovement playerMovement;
+    private TurbulenceGenerator turbulenceGenerator;
     private AudioManagerHolder audioHolder;
     private PlayerAnimationHandler playerAnimation;
     private PlayerGrind playerGrind;
@@ -44,6 +45,7 @@ public class PlayerBoost : MonoBehaviour
         charStats = GetComponent<CharacterStats>();
         stats = charStats.BoardStats;
         audioHolder = GetComponent<AudioManagerHolder>();
+        turbulenceGenerator = GetComponent<TurbulenceGenerator>();
         triggerCol = GetComponentInChildren<PlayerTrigger>().transform;
         if (charStats.IsPlayer)
             canvasAnim = charStats.Canvas.GetComponent<Animator>();
@@ -55,11 +57,6 @@ public class PlayerBoost : MonoBehaviour
         if (charStats == null)
         {
             return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            playerAnimation.Anim.SetTrigger("Attack");
         }
 
         if (boosting)
@@ -224,6 +221,8 @@ public class PlayerBoost : MonoBehaviour
         }
 
         audioHolder.SfxManager.Play(Constants.SoundEffects.boost);
+
+        turbulenceGenerator.StartPathGeneration();
 
         if (charStats.IsPlayer)
         {
