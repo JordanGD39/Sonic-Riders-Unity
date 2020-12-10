@@ -138,7 +138,7 @@ public class CharacterStats : MonoBehaviour
 
             if (hud != null)
             {
-                hud.UpdateRings(rings, maxRings);
+                hud.UpdateRings(rings, maxRings, stats.RingsAsAir);
             }
         }
     }
@@ -265,7 +265,7 @@ public class CharacterStats : MonoBehaviour
 
                 if (hud != null)
                 {
-                    hud.UpdateRings(rings, maxRings);
+                    hud.UpdateRings(rings, maxRings, false);
                     hud.UpdateLevel(level);
                     hud.UpdateAirBar(air, maxAir);
                 }

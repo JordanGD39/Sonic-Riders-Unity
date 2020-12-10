@@ -131,19 +131,46 @@ public class Capsule : MonoBehaviour
                 amount = 30;
                 break;
             case 3:
-                player.Air += 30;
-                amount = 30;
-                itemIndex = 1;
+                if (!player.BoardStats.RingsAsAir)
+                {
+                    player.Air += 30;
+                    amount = 30;
+                    itemIndex = 1;
+                }
+                else
+                {
+                    player.Rings += 15;
+                    amount = 15;
+                }                
+                
                 break;
             case 4:
-                player.Air += 50;
-                amount = 50;
-                itemIndex = 1;
+                if (!player.BoardStats.RingsAsAir)
+                {
+                    player.Air += 50;
+                    amount = 50;
+                    itemIndex = 1;
+                }
+                else
+                {
+                    player.Rings += 15;
+                    amount = 15;
+                }
+
                 break;
             case 5:
-                player.Air += 100;
-                amount = 100;
-                itemIndex = 1;
+                if (!player.BoardStats.RingsAsAir)
+                {
+                    player.Air += 100;
+                    amount = 100;
+                    itemIndex = 1;
+                }
+                else
+                {
+                    player.Rings += 30;
+                    amount = 30;
+                }
+
                 break;
             case 6:
                 player.SpeedShoesCountDown();

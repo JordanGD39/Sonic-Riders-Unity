@@ -69,11 +69,11 @@ public class HUD : SurvivalFunctionsUI
         placingAnim.SetTrigger("UpdatePlacing");
     }
 
-    public void UpdateRings(int rings, int maxRings)
+    public void UpdateRings(int rings, int maxRings, bool ringsAsAir)
     {
         string slash = "";
 
-        if (rings < 60)
+        if (rings < 60 && !ringsAsAir)
         {
             slash = "/";
             maxRingsText.text = maxRings.ToString("000");

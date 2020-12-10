@@ -32,7 +32,8 @@ public class MainMenu : MonoBehaviour
     {
         if (Input.GetButtonDown("Submit") && !alreadyStarted)
         {
-            RemovePanel("RemoveMainMenuPanel", true);
+            sound.Pressed();
+            RemovePanel("RemoveMainMenuPanel", true, false);
         }
 
         if (Input.GetButtonDown("Cancel"))
@@ -45,7 +46,7 @@ public class MainMenu : MonoBehaviour
                 }
                 else
                 {
-                    RemovePanel("RemoveSelectPanel", false);
+                    RemovePanel("RemoveSelectPanel", false, true);
                 }
             }
             else
@@ -55,7 +56,7 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    private void RemovePanel(string function, bool started)
+    private void RemovePanel(string function, bool started, bool cancelSound)
     {
         if (fading)
         {
@@ -66,7 +67,7 @@ public class MainMenu : MonoBehaviour
 
         alreadyStarted = started;
 
-        if (!(function == "OptionsPanel" && showOptions))
+        if (cancelSound)
         {
            sound.Cancel();
         }
@@ -107,7 +108,7 @@ public class MainMenu : MonoBehaviour
     public void Options(bool show)
     {
         showOptions = show;
-        RemovePanel("OptionsPanel", true);
+        RemovePanel("OptionsPanel", true, !show);
     }
 
     private void RemoveSelectPanel()
