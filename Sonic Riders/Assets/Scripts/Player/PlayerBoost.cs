@@ -222,7 +222,7 @@ public class PlayerBoost : MonoBehaviour
 
         audioHolder.SfxManager.Play(Constants.SoundEffects.boost);
 
-        turbulenceGenerator.StartPathGeneration();
+        //turbulenceGenerator.StartPathGeneration();
 
         if (charStats.IsPlayer)
         {

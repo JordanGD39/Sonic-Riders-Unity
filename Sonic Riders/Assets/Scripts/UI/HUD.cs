@@ -35,6 +35,8 @@ public class HUD : SurvivalFunctionsUI
     public Sprite[] ItemSprites { get { return itemSprites; } }
     [SerializeField] private ItemUI[] itemUis;
 
+    public bool AlreadyOn { get; set; } = false;
+
     // Start is called before the first frame update
     public override void Start()
     {
@@ -44,7 +46,10 @@ public class HUD : SurvivalFunctionsUI
 
         ReadyToChange = true;
 
-        gameObject.SetActive(false);
+        if (!AlreadyOn)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void Update()

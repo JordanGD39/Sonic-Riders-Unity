@@ -11,8 +11,6 @@ public class PlayerFollowPath : MonoBehaviour
     public Vector3 Velocity { get { return velocity; } }
     private Vector3 previousPos;
     private PlayerMovement movement;
-    private float speed;
-    public float Speed { get { return speed; } set { speed = value; } }
 
     // Start is called before the first frame update
     void Start()
@@ -35,14 +33,11 @@ public class PlayerFollowPath : MonoBehaviour
             {
                 movement.Speed = -4;
             }
+        }
 
-            speed = movement.Speed;
-        }        
-
-
-        closestDistance += speed * Time.deltaTime;
+        closestDistance += movement.Speed * Time.deltaTime;
         Vector3 desiredPos = vertexPath.GetPointAtDistance(closestDistance, EndOfPathInstruction.Stop);
-        desiredPos += transform.up * extraCharHeight;
+        desiredPos += transform.GetChild(0).up * extraCharHeight;
         transform.position = desiredPos;
         transform.GetChild(0).localRotation = vertexPath.GetRotationAtDistance(closestDistance, EndOfPathInstruction.Stop);
     }

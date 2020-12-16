@@ -162,7 +162,7 @@ public class TutorialManager : MonoBehaviour
             LessonDone();
         }
 
-        if (destination != Vector3.zero && (destination - player.transform.position).sqrMagnitude < 6)
+        if (destination != Vector3.zero && (destination - player.transform.position).sqrMagnitude < 15)
         {
             LessonDone();
         }

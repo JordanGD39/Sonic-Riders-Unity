@@ -25,6 +25,12 @@ public class TurbulenceGenerator : MonoBehaviour
 
     private float timer = 0;
 
+    [SerializeField] private int objectsBetweenPoints = 4;
+    [SerializeField] private int poolIndex = 0;
+    private TurbulenceObjects turbulenceObjects;
+
+    private List<GameObject> placedTurObjects = new List<GameObject>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,6 +42,7 @@ public class TurbulenceGenerator : MonoBehaviour
 
         rb = GetComponent<Rigidbody>();
         playerCheckpoints = GetComponent<PlayerCheckpoints>();
+        turbulenceObjects = FindObjectOfType<TurbulenceObjects>();
 
         GameObject[] players = GameObject.FindGameObjectsWithTag(Constants.Tags.player);
 
@@ -58,13 +65,15 @@ public class TurbulenceGenerator : MonoBehaviour
             if (timer < trailTime)
             {
                 timer += Time.deltaTime;
-                AddPoint();
-                CheckCollision();
+                AddPoint();                
             }
             else if (DistanceToPoint() && pathPositions.Count > 0)
             {
-                pathPositions.RemoveAt(0);
+                prevPos = transform.position;
+                RemoveFirstPoint();
             }
+
+            CheckCollision();
         }        
     }
 
@@ -80,12 +89,30 @@ public class TurbulenceGenerator : MonoBehaviour
                 {
                     if (colliders[j].transform.root != transform)
                     {
-                        Debug.Log("Player in turbulence: " + colliders[j].transform.root.gameObject.name + " in pos: " + i);
+                        //Debug.Log("Player in turbulence: " + colliders[j].transform.root.gameObject.name + " in pos: " + i);
 
-                        turbulencePlayers[colliders[j].transform.root].Path = vertexPath;
+                        Transform playerTransform = colliders[j].transform.root;
+
+                        if (!colliders[j].transform.root.gameObject.CompareTag(Constants.Tags.player))
+                        {
+                            playerTransform = colliders[j].transform.root.GetComponentInChildren<PlayerMovement>().transform;
+                        }
+
+                        turbulencePlayers[playerTransform].SetTurbulencePoints(pathPositions, i);
                     }
                 }
             }
+        }
+    }
+
+    private void RemoveFirstPoint()
+    {
+        pathPositions.RemoveAt(0);
+
+        for (int i = objectsBetweenPoints; i > 0; i--)
+        {
+            placedTurObjects[i].SetActive(false);
+            placedTurObjects.Remove(placedTurObjects[i]);
         }
     }
 
@@ -98,15 +125,36 @@ public class TurbulenceGenerator : MonoBehaviour
     {
         if (DistanceToPoint())
         {
+            Vector3 oldPos = prevPos;
             prevPos = transform.position;
             pathPositions.Add(prevPos);
 
-            if (pathPositions.Count > maxPoints)
+            for (int i = 0; i < objectsBetweenPoints; i++)
             {
-                pathPositions.RemoveAt(0);
+                GameObject turObject = turbulenceObjects.TurbulenceList[poolIndex];
+
+                float percent = 1 / (float)objectsBetweenPoints;
+
+                turObject.transform.position = Vector3.Lerp(oldPos, prevPos, percent * i);
+                turObject.transform.LookAt(prevPos);
+                turObject.SetActive(true);
+
+                placedTurObjects.Add(turObject);
+
+                poolIndex++;
+
+                if (poolIndex == turbulenceObjects.TurbulenceList.Count)
+                {
+                    poolIndex = 0;
+                }
             }
 
-            vertexPath = GeneratePath(pathPositions.ToArray(), false);
+            if (pathPositions.Count > maxPoints)
+            {
+                RemoveFirstPoint();
+            }
+
+            //vertexPath = GeneratePath(pathPositions.ToArray(), false);
         }
     }
 

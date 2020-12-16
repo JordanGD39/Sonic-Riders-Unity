@@ -40,8 +40,9 @@ public class Ramp : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         PlayerTricks player = other.transform.GetComponentInParent<PlayerTricks>();
+        PlayerGrind playerGrind = player.GetComponent<PlayerGrind>();
 
-        if (player != null && !player.CanDoTricks)
+        if (player != null && !player.CanDoTricks && !playerGrind.Grinding)
         {
             player.transform.parent = transform;
         }
@@ -50,8 +51,9 @@ public class Ramp : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         PlayerTricks player = other.transform.GetComponentInParent<PlayerTricks>();
+        PlayerGrind playerGrind = player.GetComponent<PlayerGrind>();
 
-        if (player != null && !player.CanDoTricks)
+        if (player != null && !player.CanDoTricks && !playerGrind.Grinding)
         {
             if (flightRamp)
             {

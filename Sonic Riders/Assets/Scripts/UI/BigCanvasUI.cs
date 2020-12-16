@@ -196,14 +196,11 @@ public class BigCanvasUI : SurvivalFunctionsUI
 
     public void Restart()
     {
-        Time.timeScale = 1;
         GameManager.instance.LoadScene(GameManager.instance.CurrScene, true);
     }
 
     public void LoadDifferentScene(string scene)
     {
-        Time.timeScale = 1;
-
         GameManager.instance.LoadScene(scene, true);
     }
 }

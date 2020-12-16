@@ -315,11 +315,6 @@ public class CharacterSelectInput : MonoBehaviour
         /*if (Input.GetKeyDown(KeyCode.T))
         {
             GameManager.instance.TrackToLoad = "Island";
-        }
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            GameManager.instance.FishPhobia = !GameManager.instance.FishPhobia;
         }*/
 
         if (eventSystem != null && eventSystem.currentSelectedGameObject != null && !selectingBoard && !leaving)

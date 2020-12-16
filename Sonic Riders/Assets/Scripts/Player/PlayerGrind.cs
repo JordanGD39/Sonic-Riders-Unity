@@ -17,7 +17,6 @@ public class PlayerGrind : MonoBehaviour
     //public bool JumpPressed { get; set; } = false;
 
     [SerializeField] private PathCreator path;
-    public VertexPath PathVertex { get; set; }
     public PathCreator Path { get { return path; } set { path = value; } }
     public Quaternion StartingRotation { get; set; }
 
@@ -29,8 +28,7 @@ public class PlayerGrind : MonoBehaviour
     [SerializeField] private float extraCharHeight = 0.2f;
     [SerializeField] private float jumpHeightOfRail = 30;
     private float distanceMultiplier = 5;
-
-    public bool GrindPhysics { get; set; } = false;
+    
 
     private HUD hud;
 
@@ -69,16 +67,16 @@ public class PlayerGrind : MonoBehaviour
                     charStats.Air += airGain * Time.deltaTime;
                 }
 
-                playerFollowPath.FollowPath(PathVertex, GrindPhysics, extraCharHeight);
+                playerFollowPath.FollowPath(path.path, true, extraCharHeight);
 
-                hud.UpdateSpeedText(playerFollowPath.Speed);
+                hud.UpdateSpeedText(movement.Speed);
 
-                if (PathVertex.GetClosestTimeOnPath(transform.position) == 0 && playerFollowPath.Speed < 0)
+                if (movement.Speed < 0 && path.path.GetClosestTimeOnPath(transform.position) == 0)
                 {
                     movement.Speed = 20;
                 }
 
-                if (PathVertex.GetClosestTimeOnPath(transform.position) > 0.99f)
+                if (path.path.GetClosestTimeOnPath(transform.position) > 0.99f)
                 {
                     OffRail(false);                    
                 }
@@ -86,35 +84,42 @@ public class PlayerGrind : MonoBehaviour
         }        
     }
 
-    public void CheckGrind(bool grind)
+    public void CheckGrind()
     {
-        if (grind && path != null)
-        {
-            PathVertex = path.path;
-            GrindPhysics = true;
-        }
-
         //Jumping on Rail
-        if (!movement.Grounded && !grinding && PathVertex != null && PathVertex.GetClosestTimeOnPath(transform.position) < 0.99f)
+        if (!movement.Grounded && !grinding && path != null && path.path.GetClosestTimeOnPath(transform.position) < 0.99f)
         {
             if (playerTricks.CanDoTricks)
             {
                 playerTricks.Landed(false);
             }
             transform.GetChild(0).GetChild(0).localRotation = new Quaternion(0, 0, 0, 0);
-            rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
-            rb.isKinematic = true;
-            movement.CantMove = true;
-            playerFollowPath.Speed = movement.Speed;
-            playerFollowPath.ClosestDistance = PathVertex.GetClosestDistanceAlongPath(transform.position);
-            transform.GetChild(0).localRotation = Quaternion.LookRotation(PathVertex.GetDirectionAtDistance(playerFollowPath.ClosestDistance, EndOfPathInstruction.Stop));
-            transform.position = PathVertex.GetClosestPointOnPath(transform.position);
+
+            ChangeRbMode(true);
+            
+            playerFollowPath.ClosestDistance = path.path.GetClosestDistanceAlongPath(transform.position);
+            transform.GetChild(0).localRotation = Quaternion.LookRotation(path.path.GetDirectionAtDistance(playerFollowPath.ClosestDistance, EndOfPathInstruction.Stop));
+            transform.position = path.path.GetPointAtDistance(playerFollowPath.ClosestDistance, EndOfPathInstruction.Stop);
             grinding = true;
         }
-        else if (grinding)
+        else if (grinding && path != null)
         {
             OffRail(true);
         }
+    }
+
+    public void ChangeRbMode(bool mode)
+    {
+        if (mode)
+        {
+            rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+        }
+        else
+        {
+            rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        }
+        rb.isKinematic = mode;
+        movement.CantMove = mode;
     }
 
     public void OffRail(bool jumpPressed)
@@ -122,8 +127,7 @@ public class PlayerGrind : MonoBehaviour
         Debug.Log("OffRail " + jumpPressed);
         grinding = false;
         transform.GetChild(0).localRotation = new Quaternion(0, transform.GetChild(0).localRotation.y, 0, transform.GetChild(0).localRotation.w);
-        rb.isKinematic = false;
-        rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        ChangeRbMode(false);
 
         if (!jumpPressed)
         {
@@ -134,15 +138,13 @@ public class PlayerGrind : MonoBehaviour
         {
             int dir = 1;
 
-            if (playerFollowPath.Speed < 0)
+            if (movement.Speed < 0)
             {
                 dir = -1;
             }
 
             rb.velocity = transform.GetChild(0).forward * (jumpSpeed * dir);
         }
-
-        movement.CantMove = false;
 
         audioHolder.SfxManager.StopPlaying(Constants.SoundEffects.grind);
 

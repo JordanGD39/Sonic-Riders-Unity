@@ -142,14 +142,16 @@ public class PlayerMovement : MonoBehaviour
             if (DriftBoost)
             {
                 Quaternion camRot = charStats.Cam.rotation;
+                Quaternion camLocalRot = charStats.Cam.localRotation;
 
                 Vector3 camLook = transform.GetChild(0).TransformVector(new Vector3(playerDrift.DriftDir * 0.8f, 0, 1));
 
                 Vector3 pos = transform.position + camLook;
 
-                transform.GetChild(0).LookAt(pos);
+                transform.GetChild(0).LookAt(pos);                
 
                 charStats.Cam.rotation = camRot;
+                charStats.Cam.localRotation = new Quaternion(camLocalRot.x, charStats.Cam.localRotation.y, camLocalRot.z, charStats.Cam.localRotation.w);
 
                 transform.GetChild(0).localRotation = new Quaternion(0, transform.GetChild(0).localRotation.y, 0, transform.GetChild(0).localRotation.w);
 
@@ -204,15 +206,28 @@ public class PlayerMovement : MonoBehaviour
         bool onGround = false;
         
         RaycastHit hit;
+        RaycastHit hitFront;
+        RaycastHit hitBack;
+
         Debug.DrawRay(transform.position, -transform.up, Color.red);
-        
+
         if (Physics.Raycast(transform.position, -transform.GetChild(0).up, out hit, raycastLength, currentLayerMask))
         {
             if (!hit.collider.isTrigger)
             {
+                //Off road layer
+                //On Track is true when touching a trigger with the OnTrack layer
+                charStats.OffRoad = hit.collider.gameObject.layer == 12 && !OnTrack;
+
                 onGround = true;
 
-                hitAngle = Vector3.Angle(Vector3.up, hit.normal);
+                Physics.Raycast(transform.position + transform.GetChild(0).forward * 0.4f, -transform.GetChild(0).up, out hitFront, raycastLength, currentLayerMask);
+                Physics.Raycast(transform.position - transform.GetChild(0).forward * 0.4f, -transform.GetChild(0).up, out hitBack, raycastLength, currentLayerMask);
+
+                Vector3 averagedNormals = hit.normal + hitFront.normal + hitBack.normal;
+                averagedNormals.Normalize();                
+
+                hitAngle = Vector3.Angle(Vector3.up, averagedNormals);
 
                 OnWater = hit.collider.gameObject.layer == 4;
 
@@ -233,7 +248,7 @@ public class PlayerMovement : MonoBehaviour
 
                 if (grounded)
                 {
-                    transform.up = Vector3.Lerp(transform.up, hit.normal, Time.deltaTime * 8);                    
+                    transform.up = Vector3.Lerp(transform.up, averagedNormals, Time.deltaTime * 8);                    
                 }                
                 else
                 {
@@ -251,9 +266,9 @@ public class PlayerMovement : MonoBehaviour
                         return true;
                     }
 
-                    transform.up = hit.normal;
+                    transform.up = averagedNormals;
 
-                    float normalCalc = -(hit.normal.y - 1);
+                    float normalCalc = -(averagedNormals.y - 1);
 
                     if (normalCalc > 0.1f)
                     {
@@ -563,10 +578,6 @@ public class PlayerMovement : MonoBehaviour
         {
             highestFallSpeed = 0;
             raycastLength = startingRaycastLength;
-        }
-
-        //Off road layer
-        //On Track is true when touching a trigger with the OnTrack layer
-        charStats.OffRoad = collision.gameObject.layer == 12 && !OnTrack;    
+        }        
     }
 }

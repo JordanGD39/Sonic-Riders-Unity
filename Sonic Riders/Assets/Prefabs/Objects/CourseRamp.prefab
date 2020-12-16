@@ -56,6 +56,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -80,6 +81,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &4474549421233642186
 GameObject:
   m_ObjectHideFlags: 0
@@ -122,7 +124,7 @@ GameObject:
   - component: {fileID: 5671415161636836634}
   - component: {fileID: 5671415161636836633}
   - component: {fileID: 5671415161636836632}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: RampModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -166,6 +168,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -190,6 +193,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &5671415161636836632
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -300,3 +304,5 @@ MonoBehaviour:
   jumpMultiplier: 1
   flightRamp: 0
   differentForward: {fileID: 0}
+  jumpRotationZ: -0.5
+  survivalException: 0

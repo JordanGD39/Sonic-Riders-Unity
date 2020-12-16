@@ -119,6 +119,7 @@ public class PlayerControls : MonoBehaviour
         Transform canvasHolder = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).transform;
         
         charStats.Canvas = canvasHolder.transform.GetChild(playerIndex);
+        charStats.Canvas.GetComponent<HUD>().AlreadyOn = true;
         charStats.Canvas.gameObject.SetActive(true);
 
         playerMovement.GiveCanvasHud();
@@ -230,7 +231,8 @@ public class PlayerControls : MonoBehaviour
 
     private void CheckBigCanvas()
     {
-        if (bigCanvasUI != null)
+        //Debug.Log(GameManager.instance.LoadingScreen.activeInHierarchy);
+        if (bigCanvasUI != null && !GameManager.instance.LoadingScreen.gameObject.activeInHierarchy)
         {
             bigCanvasUI.PauseToggle();
         }
@@ -343,11 +345,11 @@ public class PlayerControls : MonoBehaviour
 
     private void CheckGrindJump()
     {
-        turbulenceRider.CheckTurbulence();
+        //turbulenceRider.CheckTurbulence();
 
         if (playerGrind.enabled)
         {
-            playerGrind.CheckGrind(true);
+            playerGrind.CheckGrind();
         }
     }
 

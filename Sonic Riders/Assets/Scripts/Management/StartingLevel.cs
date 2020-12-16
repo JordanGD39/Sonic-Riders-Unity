@@ -163,7 +163,7 @@ public class StartingLevel : MonoBehaviour
 
         if (tutorialManager == null)
         {
-            Invoke("StartCountdown", 0.5f);
+            Invoke("StartCountdown", 1.5f);
         }
         else
         {
@@ -174,7 +174,7 @@ public class StartingLevel : MonoBehaviour
 
     public void StartCountDownTutorial()
     {
-        Invoke("StartCountdown", 0.5f);
+        Invoke("StartCountdown", 1.5f);
     }
 
     private void StartCountdown()

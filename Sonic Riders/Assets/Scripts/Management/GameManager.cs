@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject playerInputPref;
     [SerializeField] private Transform playersParent;
     [SerializeField] private GameObject loadingScreen;
+    [SerializeField] private Image loadingScreenImage;
+    public GameObject LoadingScreen { get { return loadingScreen; } }
     [SerializeField] private Animator loadingScreenAnim;
     private PlayerConfigManager playerConfigManager;
     [SerializeField] private Image trail;
@@ -44,7 +46,8 @@ public class GameManager : MonoBehaviour
 
     private bool loadingScene = false;
 
-    public bool FishPhobia { get; set; } = false;
+    [SerializeField] private bool fishPhobia = false;
+    public bool FishPhobia { get { return fishPhobia; } }
 
     void Awake()
     {
@@ -105,10 +108,16 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator LoadSceneAsync(string sceneName, bool fadeMusic)
     {
+        while (loadingScreenImage.color.a != 1)
+        {
+            yield return null;
+        }
+
+        yield return new WaitForSecondsRealtime(0.5f);
+
         AsyncOperation ao = SceneManager.LoadSceneAsync(sceneName);
 
         float prevProgress = 0;
-        bool sonicOnScreen = false;
         //ao.allowSceneActivation = false;
         //loadingScreenAnim.Play("SonicFadeIn");
 
@@ -119,36 +128,25 @@ public class GameManager : MonoBehaviour
             float diff = progress - prevProgress;
             Debug.Log(diff);
 
-            if (sonicOnScreen)
-            {
-                loadingScreenAnim.SetFloat("Speed", diff);
-                trail.fillAmount = progress;
-            }
-            else if(diff < 0.016f && diff > 0)
-            {
-                loadingScreenAnim.Play("SonicFadeIn");
-                sonicOnScreen = true;
-            }
+            loadingScreenAnim.SetFloat("Speed", diff);
+            trail.fillAmount = progress;
 
             prevProgress = progress;
             
             yield return null;
         }
 
-        if (sonicOnScreen)
-        {
-            loadingScreenAnim.Play("LoadFadeOut");
-        }
-        else
-        {
-            loadingScreenAnim.Play("LoadFadeOutNoSonic");
-        }
-
         if (fadeMusic)
             audioManager.StartFadeVoid(true);
 
+        Time.timeScale = 1;
         yield return new WaitForSeconds(1);
 
+        loadingScreenAnim.Play("LoadFadeOut");
+
+        yield return new WaitForSeconds(1);        
+
+        trail.fillAmount = 0;
         loadingScreen.SetActive(false);
         loadingScene = false;
 
