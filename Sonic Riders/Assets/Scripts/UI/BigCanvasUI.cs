@@ -196,11 +196,19 @@ public class BigCanvasUI : SurvivalFunctionsUI
 
     public void Restart()
     {
-        GameManager.instance.LoadScene(GameManager.instance.CurrScene, true);
+        if (!GameManager.instance.LoadingScene)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            GameManager.instance.LoadScene(GameManager.instance.CurrScene, true);
+        }        
     }
 
     public void LoadDifferentScene(string scene)
     {
-        GameManager.instance.LoadScene(scene, true);
+        if (!GameManager.instance.LoadingScene)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            GameManager.instance.LoadScene(scene, true);
+        }
     }
 }

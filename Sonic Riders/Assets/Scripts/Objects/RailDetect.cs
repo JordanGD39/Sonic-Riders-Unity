@@ -5,11 +5,14 @@ using PathCreation;
 
 public class RailDetect : MonoBehaviour
 {
-    private PathCreator path;
+    [SerializeField] private PathCreator path;
 
     private void Start()
     {
-        path = GetComponentInParent<PathCreator>();
+        if (path == null)
+        {
+            path = GetComponentInParent<PathCreator>();
+        }
     }
 
     private void OnTriggerStay(Collider other)

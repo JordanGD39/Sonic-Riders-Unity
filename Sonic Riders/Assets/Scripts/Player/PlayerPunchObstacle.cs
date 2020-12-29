@@ -86,7 +86,6 @@ public class PlayerPunchObstacle : MonoBehaviour
         {
             audioHolder.SfxManager.Play(Constants.SoundEffects.bounceWall);
 
-
             obstacleRb.AddForce((obstacleRb.transform.position - transform.position).normalized * (punchPower * cantPunchMultiplier * speedPowerCalc));
         }
 

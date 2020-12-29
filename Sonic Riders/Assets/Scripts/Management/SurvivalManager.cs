@@ -324,7 +324,6 @@ public class SurvivalManager : MonoBehaviour
         Transform checkpoint = currPlayerCheckpoints.RaceManagerScript.transform.GetChild(currPlayerCheckpoints.CalcNextCheckpoint(2));
 
         Vector3 checkpointPos = checkpoint.GetChild(0).position;
-        checkpointPos.y = 1.5f;
         emerald.SetParent(transform);
         chaosEmerald.FlyToPos(checkpointPos, checkpoint.forward);
         emerald.GetChild(0).localScale = new Vector3(2, 2, 2);       

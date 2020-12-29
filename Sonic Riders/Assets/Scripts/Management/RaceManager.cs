@@ -61,8 +61,10 @@ public class RaceManager : MonoBehaviour
         if (!playingVictory)
         {
             playingVictory = true;
+            Debug.Log("Playing victory");
             GameManager.instance.GetAudioManager.StopPlaying(GameManager.instance.GetAudioManager.CurrSound.name);
             GameManager.instance.GetAudioManager.Play("Victory");
+            GameManager.instance.GetAudioManager.CurrSound.source.volume = 0.6f;
         }
 
         playersLeft.Remove(player);

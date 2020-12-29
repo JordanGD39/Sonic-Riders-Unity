@@ -403,7 +403,7 @@ public class CharacterSelectInput : MonoBehaviour
         }
         else
         {
-            GameManager.instance.LoadScene("MainMenu", false);
+            GameManager.instance.LoadScene("TrackSelect", false);
         }
 
         Invoke("CanCancelInput", 0.25f);

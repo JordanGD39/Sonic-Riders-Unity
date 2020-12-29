@@ -71,7 +71,7 @@ public class PlayerTrigger : MonoBehaviour
         switch (collision.gameObject.tag)
         {
             case Constants.Tags.obstacle:
-                if (!playerPunch.CantPunch && charStats.Air > 0)
+                if ((!playerPunch.CantPunch && charStats.Air > 0) || charStats.Invincible)
                 {
                     tagFound = true;
                     playerPunch.Punch(collision.attachedRigidbody, 0);
@@ -80,7 +80,7 @@ public class PlayerTrigger : MonoBehaviour
             case Constants.Tags.eggPawn:
                 tagFound = true;
 
-                if (!playerPunch.CantPunch && charStats.Air > 0 || playerBoost.Attacking)
+                if ((!playerPunch.CantPunch && charStats.Air > 0) || playerBoost.Attacking || charStats.Invincible)
                 {
                     playerPunch.Punch(collision.attachedRigidbody, 5);
                 }

@@ -48,7 +48,7 @@ public class PlayerBounce : MonoBehaviour
 
         if (collision.gameObject.CompareTag(Constants.Tags.obstacle))
         {
-            if (!playerPunch.CantPunch && charStats.Air > 0)
+            if ((!playerPunch.CantPunch && charStats.Air > 0) || charStats.Invincible)
             {
                 return;
             }
@@ -72,6 +72,11 @@ public class PlayerBounce : MonoBehaviour
 
     public void Attacked(Vector3 attackerPos, float attackedSpeed)
     {
+        if (charStats.Invincible)
+        {
+            return;
+        }
+
         attacked = true;
 
         speed = attackedSpeed;
@@ -143,6 +148,7 @@ public class PlayerBounce : MonoBehaviour
         {
             if (charStats.Rings > 0)
             {
+                charStats.Rings -= 20;
                 audioHolder.SfxManager.Play(Constants.SoundEffects.ringLoss);
             }
 

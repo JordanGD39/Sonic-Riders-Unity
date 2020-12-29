@@ -113,6 +113,8 @@ public class Capsule : MonoBehaviour
             }
         }
 
+        chosenIndex = 7;
+
         int amount = 0;
         int itemIndex = 0;
 

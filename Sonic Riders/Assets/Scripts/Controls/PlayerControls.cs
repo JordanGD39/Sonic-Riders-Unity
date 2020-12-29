@@ -14,6 +14,7 @@ public class PlayerControls : MonoBehaviour
     private GameObject player;
     public GameObject Player { get { return player; } }
     private PlayerMovement playerMovement;
+    private PlayerAnimationHandler playerAnim;
     private PlayerBoost playerBoost;
     private TurbulenceRider turbulenceRider;
     private PlayerDrift playerDrift;
@@ -22,6 +23,7 @@ public class PlayerControls : MonoBehaviour
     private PlayerFlight playerFlight;
     private CharacterStats charStats;
     private PlayerGrind playerGrind;
+    private ActionOnAnimation actionOnAnim;
 
     private InputAction moveAction;
     private InputAction jumpAction;
@@ -68,6 +70,7 @@ public class PlayerControls : MonoBehaviour
         bigCanvasUI = GameObject.FindGameObjectWithTag(Constants.Tags.bigCanvas).GetComponent<BigCanvasUI>();
 
         playerMovement = player.GetComponent<PlayerMovement>();
+        playerAnim = player.GetComponent<PlayerAnimationHandler>();
         playerBoost = player.GetComponent<PlayerBoost>();
         playerDrift = player.GetComponent<PlayerDrift>();
         playerGrind = player.GetComponent<PlayerGrind>();
@@ -76,6 +79,7 @@ public class PlayerControls : MonoBehaviour
         playerFlight = player.GetComponent<PlayerFlight>();
         turbulenceRider = player.GetComponent<TurbulenceRider>();
         charStats = player.GetComponent<CharacterStats>();
+        actionOnAnim = player.GetComponentInChildren<ActionOnAnimation>();
 
         int playerIndex = transform.GetSiblingIndex();
 
@@ -128,7 +132,13 @@ public class PlayerControls : MonoBehaviour
         charStats.GiveCanvasHud();
         playerDrift.GiveAnim();
         playerBoost.GiveAnim();
-        player.GetComponent<PlayerCheckpoints>().GiveHud(charStats.Canvas.GetComponent<HUD>());        
+        player.GetComponent<PlayerCheckpoints>().GiveHud(charStats.Canvas.GetComponent<HUD>());
+
+        //Change trail glow color
+        TrailRenderer trail = player.GetComponentInChildren<TrailRenderer>();
+        Material trailMat = new Material(trail.material);
+        trailMat.SetColor("_EmissionColor", trail.startColor * 1.5f);
+        trail.material = trailMat;
 
         if (playerInputManager.playerCount > 1)
         {
@@ -136,6 +146,8 @@ public class PlayerControls : MonoBehaviour
             {
                 cams[0].rect = new Rect(0, 0.5f, 1, 0.5f);
                 cams[1].rect = new Rect(0, 0, 1, 0.5f);
+                //canvasHolder.GetChild(0).GetComponent<HUD>().TwoPlayersHud();
+                //canvasHolder.GetChild(1).GetComponent<HUD>().TwoPlayersHud();
             }
             else if (playerInputManager.playerCount > 2)
             {
@@ -143,12 +155,6 @@ public class PlayerControls : MonoBehaviour
                 cams[1].rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
                 cams[2].rect = new Rect(0, 0, 0.5f, 0.5f);
                 cams[3].rect = new Rect(0.5f, 0, 0.5f, 0.5f);
-            }
-
-            for (int i = 0; i < playerInputManager.playerCount; i++)
-            {
-                CanvasScaler scaler = canvasHolder.GetChild(i).GetComponent<CanvasScaler>();
-                scaler.referenceResolution = new Vector2(1600, 1200);
             }
         }       
 
@@ -311,6 +317,12 @@ public class PlayerControls : MonoBehaviour
     private void OnMove(Vector2 mov)
     {
         playerMovement.Movement = new Vector3(mov.x, 0, mov.y);
+
+        if (playerMovement.JustDied && playerAnim.Anim.GetCurrentAnimatorStateInfo(0).IsName("Swimming") && moveAction.ReadValue<Vector2>().magnitude > 0.3f)
+        {            
+            actionOnAnim.StopSwimming();
+            playerAnim.Anim.SetTrigger("Moved");
+        }
 
         float turnDir = mov.x + playerDrift.DriftDir;
         float driftRate = 1.5f; 

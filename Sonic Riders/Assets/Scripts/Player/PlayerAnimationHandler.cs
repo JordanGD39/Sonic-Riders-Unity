@@ -70,7 +70,12 @@ public class PlayerAnimationHandler : MonoBehaviour
         }
         anim.SetFloat("Direction", playerMovement.TurnAmount);
         anim.SetBool("Grinding", playerGrind.Grinding);
-        anim.SetBool("Grounded", playerMovement.Grounded);
+
+        if (!anim.GetBool("Dying"))
+        {
+            anim.SetBool("Grounded", playerMovement.Grounded);
+        }
+
         anim.SetBool("ChargingJump", playerJump.JumpHold);        
 
         if (!AlreadySettingAttack && !playerBoost.AttackAnim)

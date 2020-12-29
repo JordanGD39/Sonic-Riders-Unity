@@ -16,10 +16,15 @@ public class CameraDeath : MonoBehaviour
 
     [SerializeField] private float timeToRespawn = 3;
     private PlayerAnimationHandler playerAnimation;
-    private bool wasOnWater = false;
+    private SurvivalManager survivalManager;
 
     public void GiveCanvasAnim()
     {
+        if (GameManager.instance.GameMode == GameManager.gamemode.SURVIVAL)
+        {
+            survivalManager = FindObjectOfType<SurvivalManager>();
+        }
+
         playerMovement = GetComponentInParent<PlayerMovement>();
         charStats = GetComponentInParent<CharacterStats>();
         player = playerMovement.transform;
@@ -48,10 +53,16 @@ public class CameraDeath : MonoBehaviour
         transform.parent = null;
         followPlayer = true;
         charStats.DisableAllFeatures = true;
-        wasOnWater = playerMovement.OnWater;
         playerAnimation.Anim.SetBool("Dying", true);
         playerAnimation.Anim.SetBool("GotHit", true);
+        playerMovement.JustDied = true;
         canvasAnim.Play("DeathFadeIn");
+
+        if (survivalManager != null)
+        {
+            survivalManager.MoveChaosEmerald(player.gameObject);
+        }
+
         StartCoroutine("WaitForRespawn");
     }
 
@@ -61,20 +72,22 @@ public class CameraDeath : MonoBehaviour
         playerAnimation.Anim.SetBool("Dying", false);
         canvasAnim.Play("DeathFadeOut");
         followPlayer = false;
-        Transform checkPoint = playerCheckpoints.RaceManagerScript.transform.GetChild(playerCheckpoints.CurrCheckpoint).GetChild(0);
-        player.transform.GetChild(0).forward = checkPoint.parent.forward;
+        int checkPointIndex = playerCheckpoints.CurrCheckpoint;
+
+        bool checkpointOutOfBounds = checkPointIndex > playerCheckpoints.RaceManagerScript.transform.childCount - 1;
+
+        if (checkpointOutOfBounds)
+        {
+            checkPointIndex = 0;
+        }
+
+        Transform checkPoint = playerCheckpoints.RaceManagerScript.transform.GetChild(checkPointIndex).GetChild(0);
+        player.GetChild(0).up = Vector3.up;
+        player.GetChild(0).forward = checkPoint.parent.forward;
         player.position = checkPoint.position;
 
-        if (!wasOnWater)
-        {
-            playerRb.velocity = Vector3.zero;
-            playerMovement.Speed = 0;
-        }
-        else
-        {
-            charStats.DisableAllFeatures = false;
-            playerRb.AddForce(player.GetChild(0).forward * 30, ForceMode.Impulse);
-        }
+        playerRb.velocity = Vector3.zero;
+        playerMovement.Speed = 0;
 
         if (charStats.IsPlayer)
         {

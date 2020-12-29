@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class HUD : SurvivalFunctionsUI
 {
+    [SerializeField] private RectTransform airBarTransform;
+    [SerializeField] private RectTransform ringTransform;
+    [SerializeField] private RectTransform distanceTransform;
     [SerializeField] private Text speedText;
     [SerializeField] private Image airBar;
     [SerializeField] private Image underAir;
@@ -55,6 +58,13 @@ public class HUD : SurvivalFunctionsUI
     private void Update()
     {
         timer += Time.deltaTime;
+    }
+
+    public void TwoPlayersHud()
+    {
+        airBarTransform.anchoredPosition = new Vector2(0, airBarTransform.anchoredPosition.y);
+        ringTransform.anchoredPosition = new Vector2(0, airBarTransform.anchoredPosition.y);
+        distanceTransform.anchoredPosition = new Vector2(0, airBarTransform.anchoredPosition.y);
     }
 
     public void GiveRaceManager(RaceManager aRaceManager)

@@ -63,6 +63,7 @@ public class PlayerMovement : MonoBehaviour
     private LayerMask currentLayerMask;
 
     public Transform Sea { get; set; }
+    public bool JustDied { get; set; } = false;
 
     [SerializeField] private ParticleSystem ps;
 
@@ -229,11 +230,19 @@ public class PlayerMovement : MonoBehaviour
 
                 hitAngle = Vector3.Angle(Vector3.up, averagedNormals);
 
-                OnWater = hit.collider.gameObject.layer == 4;
-
-                if (OnWater && !playerTricks.CanDoTricks)
+                if (currentLayerMask != noWaterLayerMask)
                 {
-                    if (charStats.Air <= 0)
+                    OnWater = hit.collider.gameObject.layer == 4;
+                }
+
+                if (JustDied)
+                {
+                    playerAnimation.Anim.SetBool("OnWater", OnWater);
+                }
+
+                if (!JustDied && OnWater && !playerTricks.CanDoTricks)
+                {
+                    if (charStats.Air <= 0 && !charStats.Invincible)
                     {
                         speed -= 18 * Time.deltaTime;
                     }
@@ -260,11 +269,12 @@ public class PlayerMovement : MonoBehaviour
 
                         if (OnWater)
                         {
+                            playerAnimation.Anim.SetBool("OnWater", false);
                             charStats.DisableAllFeatures = false;
                         }
 
                         return true;
-                    }
+                    }                    
 
                     transform.up = averagedNormals;
 

@@ -13,9 +13,11 @@ public class ChaosEmerald : MonoBehaviour
     private Transform raceCheckpointsParent;
     [SerializeField] private float spinSpeed = 15;
 
-    private Vector3 posToFlyTo;
+    [SerializeField] private Vector3 posToFlyTo;
     [SerializeField] private float speed = 10;
     [SerializeField] private float pathSpeed = 10;
+    [SerializeField] private float extraY = 1;
+    [SerializeField] private bool equals = false;
 
     private Vector3 checkpointForward;
     private Transform survivalParent;
@@ -47,6 +49,16 @@ public class ChaosEmerald : MonoBehaviour
     {
         CanCatch = false;
         posToFlyTo = pos;
+
+        if (equals)
+        {
+            posToFlyTo.y = extraY;
+        }
+        else
+        {
+            posToFlyTo.y += extraY;
+        }
+
         checkpointForward = forward;
 
         StartCoroutine("FlyingToPos");
@@ -55,7 +67,7 @@ public class ChaosEmerald : MonoBehaviour
     private IEnumerator FlyingToPos()
     {
         Vector3 closestPointPath = path.path.GetClosestPointOnPath(transform.position);
-        closestPointPath.y = 1.5f;
+        closestPointPath.y += extraY;
 
         while (closestPointPath != transform.position)
         {
@@ -73,7 +85,7 @@ public class ChaosEmerald : MonoBehaviour
 
             closestDistance += step;
             Vector3 desiredPos = path.path.GetPointAtDistance(closestDistance, EndOfPathInstruction.Loop);
-            desiredPos.y = transform.position.y;
+            desiredPos.y += extraY;
             transform.position = desiredPos;
 
             int extraLook = 1;

@@ -8,6 +8,7 @@ public class ChopperAI : MonoBehaviour
     [SerializeField] private List<PlayerMovement> players = new List<PlayerMovement>();
     [SerializeField] private int currTarget = -1;
     [SerializeField] private float rotateSpeed = 5;
+    [SerializeField] private float slowdownSpeed = 8;
     [SerializeField] private float approachRate = 3;
     [SerializeField] private float attackHeight = 7;
     [SerializeField] private float lerpSpeed = 7;
@@ -20,6 +21,7 @@ public class ChopperAI : MonoBehaviour
     private bool backUnderWater = false;
     private bool aboveWater = false;
     private bool move = false;
+    private bool delaySearch = false;
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +46,11 @@ public class ChopperAI : MonoBehaviour
     {
         if (currTarget < 0)
         {
+            if (transform.position.y > attackHeight)
+            {
+                transform.position = new Vector3(transform.position.x, attackHeight, transform.position.z);
+            }
+
             if (backUnderWater)
             {
                 rb.isKinematic = false;
@@ -63,10 +70,27 @@ public class ChopperAI : MonoBehaviour
                 }
             }
 
-            SearchForPlayerOffRoadWater();
+            if (!delaySearch)
+            {
+                SearchForPlayerOffRoadWater();
+            }            
         }
         else
         {
+            if (delaySearch)
+            {
+                AttackCheck(true);
+
+                if (transform.localPosition.z < -distanceToPlayer)
+                {
+                    currTarget = -1;
+                    transform.SetParent(null);
+                    delaySearch = false;
+                }
+
+                return;
+            }
+
             if (!aboveWater)
             {
                 lookPos = players[currTarget].transform.position;
@@ -89,7 +113,7 @@ public class ChopperAI : MonoBehaviour
                     return;
                 }
 
-                AttackCheck();
+                AttackCheck(false);
             }            
         }
     }
@@ -120,17 +144,36 @@ public class ChopperAI : MonoBehaviour
 
         if (!player.OnWater || player.OnTrack || Mathf.Abs(player.Speed) < 20 || player.Attacked)
         {
-            transform.SetParent(null);
-            backUnderWater = true;
-            aboveWater = false;
-            currTarget = -1;
+            TargetInvalid(false);
         }
     }
 
-    private void AttackCheck()
+    private void TargetInvalid(bool delay)
+    {
+        if (delay)
+        {
+            delaySearch = true;
+        }
+        else
+        {
+            currTarget = -1;
+            transform.SetParent(null);
+        }
+
+        backUnderWater = true;
+        aboveWater = false;    
+    }
+
+    private void AttackCheck(bool back)
     {
         Vector3 approach = new Vector3(0, 0, approachRate * Time.deltaTime);
-        transform.localPosition += approach;  
+
+        transform.localPosition += back ? -approach : approach;
+
+        if (transform.localPosition.z > 0)
+        {
+            TargetInvalid(true);
+        }
     }
 
     private void SearchForPlayerOffRoadWater()
@@ -139,7 +182,7 @@ public class ChopperAI : MonoBehaviour
 
         for (int i = 0; i < players.Count; i++)
         {
-            if (players[i].OnWater && !players[i].OnTrack && Mathf.Abs(players[i].Speed) > 20 && !players[i].Attacked)
+            if (players[i].OnWater && !players[i].OnTrack && Mathf.Abs(players[i].Speed) > 20 && players[i].transform.position.y >= attackHeight && !players[i].Attacked)
             {
                 target = i;
                 break;

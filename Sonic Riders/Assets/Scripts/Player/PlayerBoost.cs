@@ -211,7 +211,7 @@ public class PlayerBoost : MonoBehaviour
         StopCoroutine("BoostCooldown");
         StartCoroutine("BoostCooldown");
 
-        if (playerMovement.Speed < charStats.GetCurrentBoost())
+        if (playerMovement.Speed < charStats.GetCurrentBoost() || playerGrind.Grinding)
         {
             playerMovement.Speed = charStats.GetCurrentBoost();
         }

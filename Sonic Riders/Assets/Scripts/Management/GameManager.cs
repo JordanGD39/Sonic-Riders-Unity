@@ -45,9 +45,12 @@ public class GameManager : MonoBehaviour
     public gamemode GameMode = gamemode.RACE;
 
     private bool loadingScene = false;
+    public bool LoadingScene { get { return loadingScene; } }
 
     [SerializeField] private bool fishPhobia = false;
     public bool FishPhobia { get { return fishPhobia; } }
+    
+    private bool fadeTheMusic = false;
 
     void Awake()
     {
@@ -93,8 +96,11 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        Debug.Log("Loading new scene");
+
         loadingScene = true;
         currScene = sceneName;
+        fadeTheMusic = fadeMusic;
         loadingScreen.SetActive(true);
         audioManager.FadeOutRate = 0.01f;
 
@@ -103,10 +109,11 @@ public class GameManager : MonoBehaviour
             audioManager.StartFadeVoid(false);
         }
 
-        StartCoroutine(LoadSceneAsync(sceneName, fadeMusic));
+        //StopCoroutine("LoadSceneAsync");
+        StartCoroutine("LoadSceneAsync");
     }
 
-    private IEnumerator LoadSceneAsync(string sceneName, bool fadeMusic)
+    private IEnumerator LoadSceneAsync()
     {
         while (loadingScreenImage.color.a != 1)
         {
@@ -115,7 +122,7 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(0.5f);
 
-        AsyncOperation ao = SceneManager.LoadSceneAsync(sceneName);
+        AsyncOperation ao = SceneManager.LoadSceneAsync(currScene);
 
         float prevProgress = 0;
         //ao.allowSceneActivation = false;
@@ -136,7 +143,7 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        if (fadeMusic)
+        if (fadeTheMusic)
             audioManager.StartFadeVoid(true);
 
         Time.timeScale = 1;
@@ -147,10 +154,10 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1);        
 
         trail.fillAmount = 0;
-        loadingScreen.SetActive(false);
+        loadingScreen.SetActive(false);        
         loadingScene = false;
 
-        if (sceneName == "CharacterSelect")
+        if (currScene == "CharacterSelect")
         {
             if (GameMode == gamemode.TUTORIAL)
             {
@@ -187,7 +194,7 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < cams.Count; i++)
         {
-            canvasHolder.GetChild(i).GetComponent<Canvas>().worldCamera = cams[i];
+            canvasHolder.GetChild(i).GetComponent<Canvas>().worldCamera = cams[i].transform.GetChild(0).GetComponent<Camera>();
             cams[i].GetComponent<AudioListener>().enabled = i == 0;
             cams[i].depth = -i;
             //cams[i].transform.parent.parent = null;

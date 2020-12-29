@@ -120,23 +120,24 @@ public class MainMenu : MonoBehaviour
 
     public void LoadCharacterSelect(int mode)
     {
-        GameManager.instance.GameMode = (GameManager.gamemode)mode;
-
-        switch ((GameManager.gamemode)mode)
+        if (GameManager.instance.LoadingScene)
         {
-            case GameManager.gamemode.RACE:
-                GameManager.instance.TrackToLoad = "SampleScene 1";
-                break;
-            case GameManager.gamemode.SURVIVAL:
-                GameManager.instance.TrackToLoad = "SampleScene 1";
-                break;
-            case GameManager.gamemode.TUTORIAL:
-                GameManager.instance.TrackToLoad = "Tutorial";
-                break;
-            default:
-                break;
+            return;
         }
 
-        GameManager.instance.LoadScene("CharacterSelect", false);
+        EventSystem.current.SetSelectedGameObject(null);
+
+        GameManager.instance.GameMode = (GameManager.gamemode)mode;
+
+        if (GameManager.instance.GameMode != GameManager.gamemode.TUTORIAL)
+        {
+            GameManager.instance.LoadScene("TrackSelect", false);
+        }
+        else
+        {
+            GameManager.instance.TrackToLoad = "Tutorial";
+            GameManager.instance.LoadScene("CharacterSelect", false);
+        }
+
     }
 }

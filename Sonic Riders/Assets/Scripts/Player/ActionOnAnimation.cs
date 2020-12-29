@@ -11,7 +11,11 @@ public class ActionOnAnimation : MonoBehaviour
     private PlayerAnimationHandler playerAnimation;
     private PlayerPunchObstacle playerPunchObstacle;
     private CharacterStats characterStats;
-    
+    private Rigidbody rb;
+
+    private bool gainAir = false;
+    private float airGainSpeed = 32;
+
     private void Start()
     {
         playerMovement = GetComponentInParent<PlayerMovement>();
@@ -20,6 +24,34 @@ public class ActionOnAnimation : MonoBehaviour
         playerAnimation = playerMovement.GetComponent<PlayerAnimationHandler>();
         playerPunchObstacle = playerMovement.GetComponent<PlayerPunchObstacle>();
         characterStats = playerMovement.GetComponent<CharacterStats>();
+        rb = playerMovement.GetComponent<Rigidbody>();
+    }
+
+    private void Update()
+    {
+        if (gainAir)
+        {
+            if (!playerAnimation.Anim.GetCurrentAnimatorStateInfo(0).IsName("Swimming"))
+            {
+                gainAir = false;
+            }
+
+            characterStats.Air += airGainSpeed * Time.deltaTime;
+        }
+    }
+
+    public void Swimming()
+    {        
+        gainAir = true;
+    }
+
+    public void StopSwimming()
+    {
+        characterStats.DisableAllFeatures = false;
+        playerMovement.Speed = 30;
+        rb.velocity = playerMovement.transform.GetChild(0).forward * 30;
+        playerMovement.JustDied = false;
+        gainAir = false;
     }
 
     public void BoostNow()
@@ -62,11 +94,13 @@ public class ActionOnAnimation : MonoBehaviour
 
     public void GotHitFalse()
     {
+        playerAnimation.Anim.ResetTrigger("Moved");
         playerAnimation.Anim.SetBool("GotHit", false);
     }
 
     public void HitDone()
     {        
+        playerMovement.JustDied = false;
         playerMovement.CantMove = false;
         characterStats.DisableAllFeatures = false;
     }
