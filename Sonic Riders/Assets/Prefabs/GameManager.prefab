@@ -127,6 +127,16 @@ MonoBehaviour:
     maxRange: 1
     priority: 10
     source: {fileID: 0}
+  - name: JungleJoyride
+    clip: {fileID: 8300000, guid: 24c7c0bc36754c846a6e174d23cb6b84, type: 3}
+    volume: 0.7
+    pitch: 1
+    loop: 1
+    spatialBlend: 0
+    minRange: 1
+    maxRange: 1
+    priority: 10
+    source: {fileID: 0}
   mixer: {fileID: 24300002, guid: c76eeab121fcd10499c4f1f0cc727d39, type: 2}
 --- !u!114 &3383933174484632716
 MonoBehaviour:
@@ -245,6 +255,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_UpdateMode
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3222059400559280483, guid: 6bd01286eabad5b4fb6e05b973e33821,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 6.2000732
       objectReference: {fileID: 0}
     - target: {fileID: 4022869753014421718, guid: 6bd01286eabad5b4fb6e05b973e33821,
         type: 3}

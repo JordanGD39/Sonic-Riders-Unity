@@ -8,6 +8,7 @@ public class HUD : SurvivalFunctionsUI
     [SerializeField] private RectTransform airBarTransform;
     [SerializeField] private RectTransform ringTransform;
     [SerializeField] private RectTransform distanceTransform;
+    [SerializeField] private RectTransform placingTransform;
     [SerializeField] private Text speedText;
     [SerializeField] private Image airBar;
     [SerializeField] private Image underAir;
@@ -60,11 +61,35 @@ public class HUD : SurvivalFunctionsUI
         timer += Time.deltaTime;
     }
 
-    public void TwoPlayersHud()
+    public void TwoPlayersHud(int playerNum)
     {
+
         airBarTransform.anchoredPosition = new Vector2(0, airBarTransform.anchoredPosition.y);
-        ringTransform.anchoredPosition = new Vector2(0, airBarTransform.anchoredPosition.y);
-        distanceTransform.anchoredPosition = new Vector2(0, airBarTransform.anchoredPosition.y);
+        if (playerNum == 0)
+        {
+            ringTransform.anchoredPosition = new Vector2(-263, ringTransform.anchoredPosition.y);
+        }
+        else
+        {
+            ringTransform.anchoredPosition = new Vector2(263, ringTransform.anchoredPosition.y);
+        }
+        distanceTransform.anchoredPosition = new Vector2(0, distanceTransform.anchoredPosition.y);
+        placingTransform.anchoredPosition = new Vector2(-223, placingTransform.anchoredPosition.y);
+    }
+
+    public void UndoTwoPlayersHud(int playerNum)
+    {
+        airBarTransform.anchoredPosition = new Vector2(-400, airBarTransform.anchoredPosition.y);
+        if (playerNum == 0)
+        {
+            ringTransform.anchoredPosition = new Vector2(163, ringTransform.anchoredPosition.y);
+        }
+        else
+        {
+            ringTransform.anchoredPosition = new Vector2(-140, ringTransform.anchoredPosition.y);
+        }
+        distanceTransform.anchoredPosition = new Vector2(134, distanceTransform.anchoredPosition.y);
+        placingTransform.anchoredPosition = new Vector2(128, placingTransform.anchoredPosition.y);
     }
 
     public void GiveRaceManager(RaceManager aRaceManager)

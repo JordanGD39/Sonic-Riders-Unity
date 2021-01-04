@@ -146,8 +146,8 @@ public class PlayerControls : MonoBehaviour
             {
                 cams[0].rect = new Rect(0, 0.5f, 1, 0.5f);
                 cams[1].rect = new Rect(0, 0, 1, 0.5f);
-                //canvasHolder.GetChild(0).GetComponent<HUD>().TwoPlayersHud();
-                //canvasHolder.GetChild(1).GetComponent<HUD>().TwoPlayersHud();
+                canvasHolder.GetChild(0).GetComponent<HUD>().TwoPlayersHud(0);
+                canvasHolder.GetChild(1).GetComponent<HUD>().TwoPlayersHud(1);
             }
             else if (playerInputManager.playerCount > 2)
             {
@@ -155,6 +155,8 @@ public class PlayerControls : MonoBehaviour
                 cams[1].rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
                 cams[2].rect = new Rect(0, 0, 0.5f, 0.5f);
                 cams[3].rect = new Rect(0.5f, 0, 0.5f, 0.5f);
+                canvasHolder.GetChild(0).GetComponent<HUD>().UndoTwoPlayersHud(0);
+                canvasHolder.GetChild(1).GetComponent<HUD>().UndoTwoPlayersHud(1);
             }
         }       
 

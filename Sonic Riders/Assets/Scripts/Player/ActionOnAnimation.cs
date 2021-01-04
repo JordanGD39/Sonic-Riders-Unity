@@ -27,22 +27,28 @@ public class ActionOnAnimation : MonoBehaviour
         rb = playerMovement.GetComponent<Rigidbody>();
     }
 
-    private void Update()
+    private IEnumerator StartGainingAir()
     {
-        if (gainAir)
+        while (gainAir)
         {
-            if (!playerAnimation.Anim.GetCurrentAnimatorStateInfo(0).IsName("Swimming"))
+            if (!playerMovement.OnWater)
             {
                 gainAir = false;
             }
 
             characterStats.Air += airGainSpeed * Time.deltaTime;
+
+            yield return null;
         }
     }
 
     public void Swimming()
-    {        
-        gainAir = true;
+    {
+        if (!gainAir)
+        {
+            gainAir = true;
+            StartCoroutine("StartGainingAir");
+        }
     }
 
     public void StopSwimming()
@@ -52,6 +58,7 @@ public class ActionOnAnimation : MonoBehaviour
         rb.velocity = playerMovement.transform.GetChild(0).forward * 30;
         playerMovement.JustDied = false;
         gainAir = false;
+        StopCoroutine("StartGainingAir");
     }
 
     public void BoostNow()
