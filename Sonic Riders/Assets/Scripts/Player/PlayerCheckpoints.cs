@@ -26,6 +26,8 @@ public class PlayerCheckpoints : MonoBehaviour
 
     private int nextCheckpointIndex = 1;
 
+    public bool FinishedAllLaps { get; set; } = false;
+
     public void GiveHud(HUD aHud)
     {
         raceManager = GameObject.FindGameObjectWithTag(Constants.Tags.raceManager).GetComponent<RaceManager>();
@@ -150,6 +152,7 @@ public class PlayerCheckpoints : MonoBehaviour
         currCheckpoint = 100 - place;
         CharStats.DisableAllFeatures = true;
         CharStats.StopCounting = true;
+        FinishedAllLaps = true;
         raceManager.CheckRaceEnd(this);
     }
 }

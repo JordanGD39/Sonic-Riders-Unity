@@ -186,7 +186,7 @@ public class EggPawnAI : MonoBehaviour
 
         Vector3 potentialSpot = new Vector3(pivot.x + Random.Range(-x, x), transform.position.y + 1, pivot.z + Random.Range(-z, z));
 
-        Debug.Log("Potential spot " + potentialSpot);
+        //Debug.Log("Potential spot " + potentialSpot);
 
         spot = Vector3.zero;
         RaycastHit hit;
@@ -216,7 +216,7 @@ public class EggPawnAI : MonoBehaviour
             return;
         }
 
-        Debug.Log("Found spot " + spot);
+        //Debug.Log("Found spot " + spot);
         foundSpot = true;
         searchingSpot = false;
     }

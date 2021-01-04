@@ -15,7 +15,7 @@ public class PlayerPunchObstacle : MonoBehaviour
     [SerializeField] private float extraPowerMultiplier = 50;
 
     public bool CantPunch { get; set; } = true;
-    public bool RightPunch { get; set; } = true;
+    private bool rightPunch = true;
 
     // Start is called before the first frame update
     void Start()
@@ -56,20 +56,28 @@ public class PlayerPunchObstacle : MonoBehaviour
         {
             if (playerMovement.Grounded && charStats.Air > 0)
             {
-                playerAnimation.Anim.SetTrigger("Punch");
+                if (rightPunch)
+                {
+                    playerAnimation.Anim.SetTrigger("Punch");
+                }
+                else
+                {
+                    playerAnimation.Anim.SetTrigger("LeftPunch");
+                }
+
                 playerAnimation.Anim.SetBool("Punching", true);
             }
 
             Transform punch = rightPunchAngle;
 
-            if (!RightPunch)
+            if (!rightPunch)
             {
                 punch = leftPunchAngle;
             }
 
             float power = punchPower * speedPowerCalc;
 
-            obstacleRb.AddForce(punch.forward * power);
+            obstacleRb.AddForce(punch.forward * power, ForceMode.VelocityChange);
 
             if (upperPower > 0)
             {
@@ -78,6 +86,8 @@ public class PlayerPunchObstacle : MonoBehaviour
             }
             
             audioHolder.SfxManager.Play(Constants.SoundEffects.punch);
+
+            rightPunch = !rightPunch;
 
             if (!charStats.BoardStats.RingsAsAir)
                 charStats.Air += 20;

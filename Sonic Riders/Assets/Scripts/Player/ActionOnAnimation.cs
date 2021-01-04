@@ -10,6 +10,7 @@ public class ActionOnAnimation : MonoBehaviour
     private PlayerTricks playerTricks;
     private PlayerAnimationHandler playerAnimation;
     private PlayerPunchObstacle playerPunchObstacle;
+    private PlayerCheckpoints playerCheckpoints;
     private CharacterStats characterStats;
     private Rigidbody rb;
 
@@ -23,6 +24,7 @@ public class ActionOnAnimation : MonoBehaviour
         playerTricks = playerMovement.GetComponent<PlayerTricks>();
         playerAnimation = playerMovement.GetComponent<PlayerAnimationHandler>();
         playerPunchObstacle = playerMovement.GetComponent<PlayerPunchObstacle>();
+        playerCheckpoints = playerMovement.GetComponent<PlayerCheckpoints>();
         characterStats = playerMovement.GetComponent<CharacterStats>();
         rb = playerMovement.GetComponent<Rigidbody>();
     }
@@ -72,16 +74,6 @@ public class ActionOnAnimation : MonoBehaviour
         playerBoost.Boost(); 
     }
 
-    public void TriggerRightPunch()
-    {
-        playerPunchObstacle.RightPunch = true;
-    }
-
-    public void TriggerLeftPunch()
-    {
-        playerPunchObstacle.RightPunch = false;
-    }
-
     public void PunchDone()
     {
         playerAnimation.Anim.SetBool("Punching", false);
@@ -106,7 +98,13 @@ public class ActionOnAnimation : MonoBehaviour
     }
 
     public void HitDone()
-    {        
+    {
+        //If player won the race
+        if (playerCheckpoints.FinishedAllLaps)
+        {
+            return;
+        }
+
         playerMovement.JustDied = false;
         playerMovement.CantMove = false;
         characterStats.DisableAllFeatures = false;

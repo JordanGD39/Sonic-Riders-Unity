@@ -79,9 +79,9 @@ public class PlayerBounce : MonoBehaviour
 
         attacked = true;
 
-        speed = attackedSpeed;
+        speed = 20; //attackedSpeed;
 
-        bounceDir = (transform.position - attackerPos).normalized;
+        bounceDir = -transform.forward; //(transform.position - attackerPos).normalized;
 
         StartCoroutine("Bounce");
     }
@@ -103,13 +103,11 @@ public class PlayerBounce : MonoBehaviour
 
         bool hitDirectly = false;
 
-        Vector3 dirToWall = (transform.position - currContactPoint.point).normalized;
+        float diffAngle = Vector3.Angle(transform.forward, bounceDir);
 
-        Vector3 localBounce = transform.InverseTransformDirection(dirToWall);
+        Debug.Log("Forward: " + transform.forward + " Bounce dir: " + bounceDir + " diff: " + diffAngle);
 
-        Debug.Log(localBounce);
-
-        if (localBounce.x > -0.2f && localBounce.x < 0.2f)
+        if (diffAngle > 70)
         {
             playerMovement.Speed = 0;
 
@@ -117,10 +115,6 @@ public class PlayerBounce : MonoBehaviour
         }
 
         float knockback = speed;
-
-        localBounce.y = 0;
-
-        bounceDir = transform.TransformDirection(localBounce);
 
         if (!hitDirectly && playerMovement.Grounded && !attacked && !obstacle)
         {

@@ -74,6 +74,13 @@ public class PlayerMovement : MonoBehaviour
         model = transform.GetChild(0).GetChild(0);
         currentLayerMask = layerMask;
         GameObject sea = GameObject.FindGameObjectWithTag(Constants.Tags.sea);
+        playerBoost = GetComponent<PlayerBoost>();
+        playerAnimation = GetComponent<PlayerAnimationHandler>();
+        playerJump = GetComponent<PlayerJump>();
+        playerDrift = GetComponent<PlayerDrift>();
+        playerTricks = GetComponent<PlayerTricks>();
+        playerFlight = GetComponent<PlayerFlight>();
+        rb = GetComponent<Rigidbody>();
 
         if (sea != null)
         {
@@ -82,15 +89,9 @@ public class PlayerMovement : MonoBehaviour
     }
 
     public void GiveCanvasHud()
-    {
-        rb = GetComponent<Rigidbody>();
+    {        
         charStats = GetComponent<CharacterStats>();
-        playerBoost = GetComponent<PlayerBoost>();
-        playerAnimation = GetComponent<PlayerAnimationHandler>();
-        playerJump = GetComponent<PlayerJump>();
-        playerDrift = GetComponent<PlayerDrift>();
-        playerTricks = GetComponent<PlayerTricks>();
-        playerFlight = GetComponent<PlayerFlight>();
+        
         //thirdPersonCamera = Camera.main.GetComponentInParent<ThirdPersonCamera>();
         stats = charStats.BoardStats;
 
@@ -247,7 +248,7 @@ public class PlayerMovement : MonoBehaviour
                         speed -= 18 * Time.deltaTime;
                     }
 
-                    if (Mathf.Abs(speed) < 20)
+                    if (Mathf.Abs(speed) < 20 && currentLayerMask != noWaterLayerMask)
                     {
                         currentLayerMask = noWaterLayerMask;
                         model.gameObject.layer = 11;
@@ -261,15 +262,21 @@ public class PlayerMovement : MonoBehaviour
                 }                
                 else
                 {
+                    if (playerTricks != null && playerTricks.CanDoTricks)
+                    {
+                        playerTricks.Landed(true);
+                    }
+
                     if (Attacked)
                     {
                         speed = 0;
                         rb.velocity = Vector3.zero;
                         Attacked = false;
 
+                        playerAnimation.Anim.SetBool("OnWater", false);
+
                         if (OnWater)
-                        {
-                            playerAnimation.Anim.SetBool("OnWater", false);
+                        {                            
                             charStats.DisableAllFeatures = false;
                         }
 
@@ -302,12 +309,7 @@ public class PlayerMovement : MonoBehaviour
                         tempSpeed = localLandingVelocity.z;
                     }
 
-                    speed = tempSpeed;
-
-                    if (playerTricks != null && playerTricks.CanDoTricks)
-                    {
-                        playerTricks.Landed(true);
-                    }                    
+                    speed = tempSpeed;                                       
                 }
             }
         }
@@ -384,34 +386,48 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void ShowSpeedLines()
+    {
+        if (CantMove)
+        {
+            if (!ps.isStopped)
+            {
+                ps.Stop();
+            }
+
+            return;
+        }
+
+        Vector3 localVel = transform.GetChild(0).InverseTransformDirection(rb.velocity);
+
+        float checkSpeed = localVel.z + localVel.x;
+
+        if (playerTricks.CanDoTricks)
+        {
+            checkSpeed += Mathf.Abs(localVel.y);
+        }
+
+        if (checkSpeed >= 66 && localVel.z > localVel.x)
+        {
+            if (!ps.isPlaying)
+            {
+                ps.Play();
+            }
+        }
+        else
+        {
+            if (!ps.isStopped)
+            {
+                ps.Stop();
+            }
+        }
+    }
+
     private void Acceleration()
     {
         if (charStats.IsPlayer)
         {
-            //Debug.Log(ps.isPlaying);
-            Vector3 localVel = transform.GetChild(0).InverseTransformDirection(rb.velocity);
-
-            float checkSpeed = localVel.z + localVel.x;
-
-            if (playerTricks.CanDoTricks)
-            {
-                checkSpeed = localVel.z + localVel.x + Mathf.Abs(localVel.y);
-            }
-
-            if (checkSpeed >= 66 && localVel.z > localVel.x && !CantMove)
-            {
-                if (!ps.isPlaying)
-                {
-                    ps.Play();
-                }
-            }
-            else
-            {
-                if (!ps.isStopped)
-                {
-                    ps.Stop();
-                }
-            }
+            ShowSpeedLines();
         }
 
         if (grounded)
