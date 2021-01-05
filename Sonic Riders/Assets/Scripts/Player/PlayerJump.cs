@@ -76,6 +76,11 @@ public class PlayerJump : MonoBehaviour
 
     public void HoldingJump()
     {
+        if (charStats.SuperForm)
+        {
+            charStats.ResetSuperRotation();
+        }
+
         JumpHold = true;
 
         if (charStats.Air > 0)

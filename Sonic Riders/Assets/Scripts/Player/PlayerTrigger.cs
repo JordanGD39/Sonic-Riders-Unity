@@ -181,7 +181,7 @@ public class PlayerTrigger : MonoBehaviour
 
     public void AttackedByPlayer(Collider collision)
     {
-        if (charStats.Invincible)
+        if (charStats.Invincible || (charStats.SuperForm && charStats.Air > 0 && GameManager.instance.GameMode != GameManager.gamemode.SURVIVAL))
         {
             return;
         }

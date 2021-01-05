@@ -172,6 +172,7 @@ public class CharacterStats : MonoBehaviour
             if (alreadyRunning && value > 0)
             {
                 alreadyRunning = false;
+                    
                 playerAnimation.RunningState(false);
             }
 
@@ -197,12 +198,13 @@ public class CharacterStats : MonoBehaviour
     [SerializeField] private type charType;
     public type CharType { get { return charType; } set { charType = value; } }
     [SerializeField] private BoardStats stats;
-    public BoardStats BoardStats { get { return stats; } set { stats = value; } }
-
-    private float[] boostTime = { 2, 3.5f, 4f };
+    public BoardStats BoardStats { get { return stats; } set { stats = value; } }    
 
     [SerializeField] private float runSpeed = 30;
     public float RunSpeed { get { return runSpeed; } set { runSpeed = value; } }
+
+    [SerializeField] private bool superForm = false;
+    public bool SuperForm { get { return superForm; } set { superForm = value; } }
 
     private bool alreadyRunning = false;
 
@@ -224,9 +226,14 @@ public class CharacterStats : MonoBehaviour
     public SkinnedMeshRenderer PlayerMeshRenderer { get { return meshRenderer; } }
 
     [SerializeField] private ParticleSystem invincibilityParticleSystem;
+    [SerializeField] private GameObject model;
+    [SerializeField] private GameObject superModel;
+    public GameObject SuperModel { get { return superModel; } }
+    public GameObject Model { get { return model; } }
+    private Quaternion superModelRotation;
 
     private void Start()
-    {        
+    {
         playerBoost = GetComponent<PlayerBoost>();
         playerMovement = GetComponent<PlayerMovement>();
 
@@ -246,6 +253,15 @@ public class CharacterStats : MonoBehaviour
 
     public void GiveCanvasHud()
     {
+        superForm = stats.Super;
+
+        superModelRotation = superModel.transform.rotation;
+
+        if (superModel != null)
+        {
+            ChangeModel(false);
+        }
+
         if (IsPlayer)
         {
             hud = Canvas.GetComponent<HUD>();
@@ -293,6 +309,13 @@ public class CharacterStats : MonoBehaviour
         }
 
         alreadyRunning = true;
+
+        if (superForm)
+        {
+            ChangeModel(false);
+            playerAnimation.ChangeAnimForSuperForm(true);
+        }
+
         playerAnimation.RunningState(true);
         Debug.Log("Run on foot");
 
@@ -302,9 +325,25 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
+    public void ChangeModel(bool super)
+    {
+        model.SetActive(!super);
+        superModel.SetActive(super);
+
+        if (super)
+        {
+            ResetSuperRotation();
+        }
+    }
+
+    public void ResetSuperRotation()
+    {
+        superModel.transform.rotation = superModelRotation;
+    }
+
     public bool TypeCheck(type aType)
     {
-        return aType == charType || (aType == stats.BoardType && stats.ChangeType) || charType == type.ALL;
+        return aType == charType || (aType == stats.BoardType && stats.ChangeType) || (stats.BoardType == type.ALL && stats.ChangeType) || charType == type.ALL;
     }
 
     public float GetCurrentLimit()
@@ -358,16 +397,22 @@ public class CharacterStats : MonoBehaviour
     public float GetCurrentBoost()
     {
         float multiplier = 1;
+        float boostSpeed = stats.Boost[level];
 
         if (survivalManager)
         {
+            if (boostSpeed == 0)
+            {
+                boostSpeed = stats.Limit;
+            }
+
             if (SurvivalLeader)
             {
                 multiplier = 0.8f;
             }
         }
 
-        return stats.Boost[level] * multiplier;
+        return boostSpeed * multiplier;
     }
 
     public float GetCurrentBoostDepletion()
@@ -402,7 +447,7 @@ public class CharacterStats : MonoBehaviour
 
     public float GetCurrentBoostTime()
     {
-        return boostTime[level];
+        return stats.BoostTime[level];
     }
 
     public float GetCurrentPower()

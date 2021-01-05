@@ -5,9 +5,12 @@ using UnityEngine;
 public class PlayerAnimationHandler : MonoBehaviour
 {
     [SerializeField] private Animator anim;
+    [SerializeField] private Animator startAnim;
+    [SerializeField] private Animator superAnim;
     [SerializeField] private bool notReady = false;
     public Animator Anim { get { return anim; } }
     private PlayerMovement playerMovement;
+    private CharacterStats charStats;
     private PlayerBoost playerBoost;
     private PlayerGrind playerGrind;
     private PlayerJump playerJump;
@@ -30,6 +33,7 @@ public class PlayerAnimationHandler : MonoBehaviour
     void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
+        charStats = GetComponent<CharacterStats>();
         playerBoost = GetComponent<PlayerBoost>();
         playerGrind = GetComponent<PlayerGrind>();
         playerJump = GetComponent<PlayerJump>();
@@ -100,6 +104,16 @@ public class PlayerAnimationHandler : MonoBehaviour
         if (diffFlyAnim)
         {
             anim.SetBool("Flying", playerFlight.Flying);
+        }
+    }
+
+    public void ChangeAnimForSuperForm(bool normalState)
+    {
+        anim = normalState ? startAnim : superAnim;
+
+        if (normalState)
+        {
+            anim.Play("OffBoard");
         }
     }
 

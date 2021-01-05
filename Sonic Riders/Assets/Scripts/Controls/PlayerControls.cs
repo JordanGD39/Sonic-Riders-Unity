@@ -135,10 +135,16 @@ public class PlayerControls : MonoBehaviour
         player.GetComponent<PlayerCheckpoints>().GiveHud(charStats.Canvas.GetComponent<HUD>());
 
         //Change trail glow color
-        TrailRenderer trail = player.GetComponentInChildren<TrailRenderer>();
+        TrailRenderer trail = charStats.Model == null ? player.GetComponentInChildren<TrailRenderer>() : charStats.Model.GetComponentInChildren<TrailRenderer>();       
         Material trailMat = new Material(trail.material);
         trailMat.SetColor("_EmissionColor", trail.startColor * 1.5f);
         trail.material = trailMat;
+
+        if (charStats.SuperForm)
+        {            
+            TrailRenderer superTrail = charStats.SuperModel.GetComponentInChildren<TrailRenderer>();
+            superTrail.material = trailMat;
+        }        
 
         if (playerInputManager.playerCount > 1)
         {

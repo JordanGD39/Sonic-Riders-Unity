@@ -30,6 +30,7 @@ public class CharacterSelectInput : MonoBehaviour
     private PlayerSelectReferences playerSelect;
 
     [SerializeField] private BoardStats[] boards;
+    private List<BoardStats> selectableBoards = new List<BoardStats>();
     private int boardIndex = 0;
     private int prevBoardIndex = 0;
     private CharacterButton characterButton;
@@ -53,6 +54,8 @@ public class CharacterSelectInput : MonoBehaviour
             enabled = false;
             return;
         }
+
+        selectableBoards.Clear();
 
         prevButton = null;
         playerReady = false;
@@ -220,7 +223,8 @@ public class CharacterSelectInput : MonoBehaviour
             }
 
             eventSystem.SetSelectedGameObject(null);
-            canSelect = false;
+            canSelect = false;            
+
             Invoke("CanSelectInput", 0.25f);
         }
         else if (selectingBoard)
@@ -267,9 +271,9 @@ public class CharacterSelectInput : MonoBehaviour
     {
         if (boardIndex < 0)
         {
-            boardIndex = boards.Length - 1;
+            boardIndex = selectableBoards.Count - 1;
         }
-        else if (boardIndex > boards.Length - 1)
+        else if (boardIndex > selectableBoards.Count - 1)
         {
             boardIndex = 0;
         }
@@ -277,18 +281,6 @@ public class CharacterSelectInput : MonoBehaviour
 
     private void CheckBoard(int index)
     {
-        if (boards[index].CharacterRestriction.Count > 0 && !boards[index].CharacterRestriction.Contains(currPrefab))
-        {
-            if (index > prevBoardIndex)
-            {
-                index++;
-            }
-            else
-            {
-                index--;
-            }
-        }
-
         boardIndex = index;
 
         CheckOutOfRange();
@@ -300,11 +292,11 @@ public class CharacterSelectInput : MonoBehaviour
         }
         else
         {
-            playerSelect.BoardImage.sprite = boards[index].BoardIcon;
-            playerSelect.BoardText.text = boards[index].BoardName;
+            playerSelect.BoardImage.sprite = selectableBoards[index].BoardIcon;
+            playerSelect.BoardText.text = selectableBoards[index].BoardName;
         }
 
-        charStats.BoardStats = boards[index];
+        charStats.BoardStats = selectableBoards[index];
         characterButton.ShowSelectedCharacter(playerIndex, true, charStats);
 
         prevBoardIndex = boardIndex;
@@ -336,6 +328,19 @@ public class CharacterSelectInput : MonoBehaviour
     public void ConfirmCharacter(GameObject prefab)
     {
         currPrefab = prefab;
+
+        selectableBoards.Clear();
+        selectableBoards.AddRange(boards);
+
+        for (int i = 0; i < selectableBoards.Count; i++)
+        {
+            if (selectableBoards[i].CharacterRestriction.Count > 0 && !selectableBoards[i].CharacterRestriction.Contains(prefab))
+            {
+                selectableBoards.RemoveAt(i);
+                i = 0;
+            }
+        }
+
         charStats = gameObject.AddComponent<CharacterStats>();
         charStats.StopCounting = true;
         CharacterStats prefStats = prefab.GetComponent<CharacterStats>();
@@ -378,8 +383,7 @@ public class CharacterSelectInput : MonoBehaviour
         {
             if (!playerReady && selectingBoard)
             {
-                Destroy(charStats);
-                prevButton.GetComponent<CharacterButton>().DisabledImage.SetActive(false);
+                Destroy(charStats);                
                 playerText.gameObject.SetActive(true);
                 playerSelect.BoardImage.gameObject.SetActive(false);
                 playerSelect.CharacterImage.gameObject.SetActive(true);

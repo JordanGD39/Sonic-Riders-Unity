@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Fastest
   m_EditorClassIdentifier: 
   boardName: Fastest
-  boardDescription: 'The fastest board ever! Has terrible Acceleration, Power and
-    uses a lot of air! '
+  boardDescription: 'The fastest board ever! Has terrible Acceleration, Power, uses
+    a lot of air and can''t boost (Except in Survival mode)! '
   boardIcon: {fileID: 21300000, guid: 97b68a4990149b041a565d795308f041, type: 3}
   dash: 7
   limit: 68
@@ -45,4 +45,6 @@ MonoBehaviour:
   standard: 0
   changeType: 0
   ringsAsAir: 0
+  autoTrick: 0
+  autoDrift: 0
   characterRestriction: []

@@ -16,6 +16,7 @@ public class ActionOnAnimation : MonoBehaviour
 
     private bool gainAir = false;
     private float airGainSpeed = 32;
+    private float ringGainSpeed = 2;
 
     private void Start()
     {
@@ -38,7 +39,7 @@ public class ActionOnAnimation : MonoBehaviour
                 gainAir = false;
             }
 
-            characterStats.Air += airGainSpeed * Time.deltaTime;
+            characterStats.Air += characterStats.BoardStats.RingsAsAir ? ringGainSpeed * Time.deltaTime : airGainSpeed * Time.deltaTime;
 
             yield return null;
         }
@@ -77,6 +78,15 @@ public class ActionOnAnimation : MonoBehaviour
     public void PunchDone()
     {
         playerAnimation.Anim.SetBool("Punching", false);
+    }
+
+    public void SuperCheck()
+    {
+        if (characterStats.SuperForm && !characterStats.SuperModel.activeSelf && characterStats.Air > 0)
+        {
+            characterStats.ChangeModel(true);
+            playerAnimation.ChangeAnimForSuperForm(false);
+        }
     }
 
     public void CountTrick()

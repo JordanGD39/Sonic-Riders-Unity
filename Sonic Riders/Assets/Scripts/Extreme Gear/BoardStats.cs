@@ -30,7 +30,9 @@ public class BoardStats : ScriptableObject
     [SerializeField] private float[] driftDepletion = {166, 250, 333 };
     public float[] DriftDepletion { get { return driftDepletion; } }
     [SerializeField] private float[] tornadoCost = {25, 30, 40 };
-    public float[] TornadoCost { get { return tornadoCost; } }    
+    public float[] TornadoCost { get { return tornadoCost; } }
+    [SerializeField] private float[] boostTime = { 2, 3.5f, 4f };
+    public float[] BoostTime { get { return boostTime; } }    
     [SerializeField] private type boardType;
     public type BoardType { get { return boardType; } }
     [SerializeField] private bool standard = false;
@@ -43,6 +45,8 @@ public class BoardStats : ScriptableObject
     public bool AutoTrick { get { return autoTrick; } }
     [SerializeField] private bool autoDrift = false;
     public bool AutoDrift { get { return autoDrift; } }
+    [SerializeField] private bool super = false;
+    public bool Super { get { return super; } }
     [SerializeField] private List<GameObject> characterRestriction = new List<GameObject>();
     public List<GameObject> CharacterRestriction { get { return characterRestriction; } }
 }

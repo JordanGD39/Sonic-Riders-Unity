@@ -142,8 +142,11 @@ public class PlayerBounce : MonoBehaviour
         {
             if (charStats.Rings > 0)
             {
-                charStats.Rings -= 20;
-                audioHolder.SfxManager.Play(Constants.SoundEffects.ringLoss);
+                if (!charStats.SuperForm || charStats.Air == 0)
+                {
+                    charStats.Rings -= 20;
+                    audioHolder.SfxManager.Play(Constants.SoundEffects.ringLoss);
+                }                
             }
 
             audioHolder.VoiceManager.Play(Constants.VoiceSounds.hit);

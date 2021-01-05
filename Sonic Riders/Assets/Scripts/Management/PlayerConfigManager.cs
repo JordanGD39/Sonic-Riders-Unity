@@ -106,6 +106,7 @@ public class PlayerConfigManager : MonoBehaviour
         MultiplayerEventSystem multiplayerEventSystem = eventSystem.GetComponent<MultiplayerEventSystem>();
         eventSystemHolder.MultiplayerEventSystems.Add(multiplayerEventSystem);
         pi.uiInputModule = eventSystem.GetComponent<InputSystemUIInputModule>();
+        multiplayerEventSystem.SetSelectedGameObject(null);
         multiplayerEventSystem.SetSelectedGameObject(canvas.GetComponentInChildren<Button>().gameObject);
     }
 

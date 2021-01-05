@@ -65,6 +65,8 @@ public class PlayerBoost : MonoBehaviour
             {
                 boosting = false;
                 Attacking = false;
+                playerAnimation.Anim.ResetTrigger("Punch");
+                playerAnimation.Anim.ResetTrigger("LeftPunch");
                 prevAttackingPlayer = null;
                 playerAnimation.Anim.SetBool("Boosting", false);
 
@@ -168,6 +170,11 @@ public class PlayerBoost : MonoBehaviour
             return;
         }
 
+        if (charStats.SuperForm)
+        {
+            charStats.ResetSuperRotation();
+        }
+
         boosting = true;
 
         if (!playerGrind.Grinding && playerAnimation.Anim != null)
@@ -242,6 +249,8 @@ public class PlayerBoost : MonoBehaviour
 
         Attacking = false;
         boosting = false;
+        playerAnimation.Anim.ResetTrigger("Punch");
+        playerAnimation.Anim.ResetTrigger("LeftPunch");
         prevAttackingPlayer = null;
 
         if (attackCol != null)
