@@ -129,22 +129,8 @@ public class PlayerGrind : MonoBehaviour
         transform.GetChild(0).localRotation = new Quaternion(0, transform.GetChild(0).localRotation.y, 0, transform.GetChild(0).localRotation.w);
         ChangeRbMode(false);
 
-        if (!jumpPressed)
-        {
-            Vector3.ClampMagnitude(playerFollowPath.Velocity, charStats.GetCurrentBoost());
-            rb.velocity = playerFollowPath.Velocity;
-        }
-        else
-        {
-            int dir = 1;
-
-            if (movement.Speed < 0)
-            {
-                dir = -1;
-            }
-
-            rb.velocity = transform.GetChild(0).forward * (jumpSpeed * dir);
-        }
+        Vector3.ClampMagnitude(playerFollowPath.Velocity, charStats.GetCurrentBoost());
+        rb.velocity = playerFollowPath.Velocity;
 
         audioHolder.SfxManager.StopPlaying(Constants.SoundEffects.grind);
 

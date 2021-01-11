@@ -246,7 +246,7 @@ public class PlayerTrigger : MonoBehaviour
         {
             if (GameManager.instance.GameMode != GameManager.gamemode.SURVIVAL)
             {
-                charStats.Rings = 50;
+                charStats.Rings = charStats.BoardStats.StartingAir;
             }
             else
             {
@@ -255,7 +255,7 @@ public class PlayerTrigger : MonoBehaviour
         }
         else
         {
-            charStats.Air = charStats.MaxAir;
+            charStats.Air = charStats.BoardStats.StartingAir;
         }
 
         if (startingLevel.Timer > 0)

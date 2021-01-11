@@ -13,6 +13,8 @@ public class BoardStats : ScriptableObject
     public Sprite BoardIcon { get { return boardIcon; } }
     [SerializeField] private float dash = 10f;
     public float Dash { get { return dash; } }
+    [SerializeField] private int startingAir = 100;
+    public int StartingAir { get { return startingAir; } }
     [SerializeField] private float limit = 54;
     public float Limit { get { return limit; } }
     [SerializeField] private float[] power = { 21.5f, 23.75f, 23.75f };

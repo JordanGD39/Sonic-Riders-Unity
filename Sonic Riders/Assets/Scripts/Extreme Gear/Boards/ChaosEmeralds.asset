@@ -13,15 +13,17 @@ MonoBehaviour:
   m_Name: ChaosEmeralds
   m_EditorClassIdentifier: 
   boardName: Chaos Emeralds
-  boardDescription: 
+  boardDescription: Transforms Sonic into Super Sonic and lets him go faster than
+    any board (Except the Fastest at Level 2)! Uses rings as fuel.
   boardIcon: {fileID: 21300000, guid: 5e65213fdd58b0c4894d1530fa5eea83, type: 3}
-  dash: 15
-  limit: 71.67
+  dash: 11
+  startingAir: 30
+  limit: 70
   power:
   - 33.33
   - 41.67
   - 41.67
-  cornering: 80
+  cornering: 60
   boost:
   - 95
   - 76.75
@@ -29,7 +31,7 @@ MonoBehaviour:
   maxAir: 6400000096000000c8000000
   airDepletion: 1
   boostDepletion:
-  - 25
+  - 30
   - 30
   - 40
   driftDepletion:

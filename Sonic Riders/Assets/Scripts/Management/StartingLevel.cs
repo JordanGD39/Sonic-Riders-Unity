@@ -111,13 +111,16 @@ public class StartingLevel : MonoBehaviour
             chopper.SearchPlayers();
         }
 
-        if (noStart)
+        if (noStart || GameManager.instance.GetComponent<TestHandleJoin>() != null)
         {
             for (int i = 0; i < countdownTexts.Count; i++)
             {
                 countdownTexts[i].gameObject.SetActive(false);
             }
+        }
 
+        if (noStart)
+        {
             for (int i = 0; i < psParent.childCount; i++)
             {
                 psParent.GetChild(i).GetComponent<ParticleSystem>().Stop();

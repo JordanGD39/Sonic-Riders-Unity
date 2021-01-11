@@ -21,6 +21,8 @@ public class PlayerTricks : MonoBehaviour
     private Rigidbody rb;
     [SerializeField] private Vector3 lowerCamPos;
     [SerializeField] private Vector3 higherCamPos;
+    [SerializeField] private float trickForceUp = 20;
+    [SerializeField] private float trickForceForward = 20;
 
     // Start is called before the first frame update
     void Start()
@@ -52,7 +54,16 @@ public class PlayerTricks : MonoBehaviour
             characterStats.Cam.localPosition = Vector3.MoveTowards(characterStats.Cam.localPosition, pos, step);
             characterStats.Cam.LookAt(transform.position);
             //Debug.Log(characterStats.Cam.transform.localRotation);
-        }        
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (CanDoTricks && !playerMovement.Grounded)
+        {
+            rb.AddForce(transform.up * -TrickDirection.y * trickForceUp);
+            rb.AddForce(transform.GetChild(0).forward * TrickDirection.y * trickForceForward);
+        }
     }
 
     public void TrickCountUp()
@@ -62,7 +73,7 @@ public class PlayerTricks : MonoBehaviour
 
     public void ChangeTrickSpeed(float jumpHeight, float startingJumpHeight, float maxJumpHeight)
     {
-        CanDoTricks = true;
+        CanDoTricks = true;  
         
         float jumpDiff = maxJumpHeight - startingJumpHeight;
         
@@ -102,32 +113,64 @@ public class PlayerTricks : MonoBehaviour
 
         audioHolder.SfxManager.Play(Constants.SoundEffects.land);
 
+        int gainedAir = 0;
+
         if (!playerAnimation.Anim.GetCurrentAnimatorStateInfo(0).IsName("Falling") && !CanLand && landedOnGround)
         {
             audioHolder.VoiceManager.Play(Constants.VoiceSounds.landFail);
-            playerMovement.Speed *= 0.1f;
 
             if (!characterStats.BoardStats.RingsAsAir)
             {
+                gainedAir = 25;
                 characterStats.Air += 25;
             }
+
+            tricks = 0;
         }
         else
         {
+            if (tricks > 5)
+            {
+                tricks = 5;
+            }
+            else if (tricks == 2)
+            {
+                //2 tricks still give a B rank
+                tricks = 1;
+            }
+
             if (!characterStats.BoardStats.RingsAsAir)
             {
-                characterStats.Air += tricks * 25 + 25;
+                gainedAir = tricks * 25 + 25;
+                characterStats.Air += gainedAir;
             }
 
             if (tricks >= 1)
             {
-                audioHolder.VoiceManager.Play(Constants.VoiceSounds.landSucces);
-                playerMovement.Speed = characterStats.GetCurrentLimit();
+                audioHolder.VoiceManager.Play(Constants.VoiceSounds.landSucces);                
+
+                float speedMultiplier = ((float)tricks + 7) * 0.1f;
+
+                Debug.Log("Speed multiplier: " + speedMultiplier);
+
+                float speed = characterStats.GetCurrentLimit() * speedMultiplier;
+
+                playerMovement.Speed = speed;
             }  
             else
             {
                 audioHolder.VoiceManager.Play(Constants.VoiceSounds.landFail);
             }
+        }
+
+        if (tricks > 2)
+        {
+            tricks--;
+        }
+
+        if (characterStats.IsPlayer)
+        {
+            characterStats.Hud.ShowRank(tricks, gainedAir);
         }
 
         if (playerMovement.OnWater && playerMovement.Speed < 20)
@@ -144,5 +187,6 @@ public class PlayerTricks : MonoBehaviour
 
         characterStats.Cam.localPosition = characterStats.CamStartPos;
         characterStats.Cam.localRotation = new Quaternion(0, 0, 0, characterStats.Cam.localRotation.w);
+
     }
 }

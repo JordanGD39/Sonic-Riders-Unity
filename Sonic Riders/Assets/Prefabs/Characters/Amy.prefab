@@ -20144,6 +20144,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4373c347c2e533f4b92059c27e81f2ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  normalRenderer: {fileID: 0}
+  superRenderer: {fileID: 0}
 --- !u!1 &1580813682967951813
 GameObject:
   m_ObjectHideFlags: 0
@@ -39432,8 +39434,11 @@ MonoBehaviour:
   charType: 2
   stats: {fileID: 11400000, guid: cccfd161fcb39714a9103fe27e95fd36, type: 2}
   runSpeed: 47
+  superForm: 0
   meshRenderer: {fileID: 7716208906498034686}
   invincibilityParticleSystem: {fileID: 9163283607242652737}
+  model: {fileID: 0}
+  superModel: {fileID: 0}
 --- !u!114 &8027152530899255614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39530,6 +39535,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 1101062210}
+  startAnim: {fileID: 0}
+  superAnim: {fileID: 0}
   notReady: 0
   runSpeedMultiplier: 2
   speedMultiplier: 1
@@ -39669,7 +39676,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8027152530899255587}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c5ff9c8727fcc7d4f8523546300a384e, type: 3}
   m_Name: 

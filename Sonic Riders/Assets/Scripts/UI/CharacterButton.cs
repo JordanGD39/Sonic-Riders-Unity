@@ -82,19 +82,19 @@ public class CharacterButton : MonoBehaviour
         {
             case 0:
                 minValue = 7;
-                stat = (someStats.GetCurrentDash() - minValue) / 20;
+                stat = (someStats.GetCurrentDash() - minValue) / (22 - minValue);
                 break;
             case 1:
-                minValue = 25;
-                stat = (someStats.GetCurrentLimit() - minValue) / 60;
+                minValue = 40;
+                stat = (someStats.GetCurrentLimit() - minValue) / (80 - minValue);
                 break;
             case 2:
                 minValue = 15;
-                stat = (someStats.GetCurrentPower() - minValue) / 46.75f;
+                stat = (someStats.GetCurrentPower() - minValue) / (46.75f - minValue);
                 break;
             case 3:
                 minValue = 40;
-                stat = (someStats.GetCurrentCornering() - minValue) / 160;
+                stat = (someStats.GetCurrentCornering() - minValue) / (100 - minValue);
                 break;
             case 4:
                 if (someStats.BoardStats.RingsAsAir)
@@ -109,7 +109,7 @@ public class CharacterButton : MonoBehaviour
                 break;
             case 5:
                 minValue = 30;
-                stat = (someStats.RunSpeed - minValue) / 20;
+                stat = (someStats.RunSpeed - minValue) / (50 - minValue);
                 break;
         }
 

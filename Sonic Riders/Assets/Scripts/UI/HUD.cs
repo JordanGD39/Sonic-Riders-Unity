@@ -26,6 +26,10 @@ public class HUD : SurvivalFunctionsUI
     public GameObject DistanceRadar { get { return distanceRadar; } }
     [SerializeField] private GameObject placingUI;
     public GameObject PlacingUI { get { return placingUI; } }
+    [SerializeField] private GameObject rankUI;
+    [SerializeField] private Image rankImage;
+    [SerializeField] private Text gainedAirRank;
+    [SerializeField] private Sprite[] rankSprites;
     
     [SerializeField] private Animator placingAnim;
     private float displayDelay = 0.05f;
@@ -47,6 +51,7 @@ public class HUD : SurvivalFunctionsUI
         base.Start();
 
         distanceRadar.SetActive(false);
+        rankUI.SetActive(false);
 
         ReadyToChange = true;
 
@@ -61,9 +66,17 @@ public class HUD : SurvivalFunctionsUI
         timer += Time.deltaTime;
     }
 
+    public void ShowRank(int index, int airGained)
+    {
+        rankImage.sprite = rankSprites[index];
+        gainedAirRank.text = "+" + airGained + " Air";
+
+        rankUI.SetActive(false);
+        rankUI.SetActive(true);
+    }
+
     public void TwoPlayersHud(int playerNum)
     {
-
         airBarTransform.anchoredPosition = new Vector2(0, airBarTransform.anchoredPosition.y);
         if (playerNum == 0)
         {

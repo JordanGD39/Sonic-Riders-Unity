@@ -18,8 +18,17 @@ public class ActionOnAnimation : MonoBehaviour
     private float airGainSpeed = 32;
     private float ringGainSpeed = 2;
 
+    [SerializeField] private SkinnedMeshRenderer normalRenderer;
+    [SerializeField] private SkinnedMeshRenderer superRenderer;
+
     private void Start()
     {
+        if (normalRenderer != null)
+        {
+            normalRenderer.material = new Material(normalRenderer.material);
+            superRenderer.material = new Material(superRenderer.material);
+        }
+       
         playerMovement = GetComponentInParent<PlayerMovement>();
         playerBoost = playerMovement.GetComponent<PlayerBoost>();
         playerTricks = playerMovement.GetComponent<PlayerTricks>();
@@ -43,6 +52,54 @@ public class ActionOnAnimation : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    public void StopShining()
+    {
+        if (characterStats.Rings == 0)
+        {
+            if (playerAnimation.Anim.GetCurrentAnimatorStateInfo(0).IsName("TransformIntoSuper"))
+            {
+                playerAnimation.Anim.Play("TransformBack");
+            }
+
+            return;
+        }
+
+        superRenderer.enabled = false;
+        characterStats.SuperModel.SetActive(true);
+        playerAnimation.ChangeAnimForSuperForm(false);
+        Invoke("TurnOnSuperRenderer", 0.3f);
+    }
+
+    public void TransformBack()
+    {
+        if (characterStats.Rings > 0)
+        {
+            if (playerAnimation.Anim.GetCurrentAnimatorStateInfo(0).IsName("TransformBack"))
+            {
+                playerAnimation.Anim.Play("TransformationComplete");
+            }
+
+            return;
+        }
+
+        normalRenderer.enabled = false;
+        characterStats.Model.SetActive(true);
+        playerAnimation.ChangeAnimForSuperForm(true);
+        Invoke("TurnOnNormalRenderer", 0.3f);
+    }
+
+    private void TurnOnNormalRenderer()
+    {
+        characterStats.SuperModel.SetActive(false);
+        normalRenderer.enabled = true;
+    }
+
+    private void TurnOnSuperRenderer()
+    {
+        characterStats.Model.SetActive(false);
+        superRenderer.enabled = true;
     }
 
     public void Swimming()

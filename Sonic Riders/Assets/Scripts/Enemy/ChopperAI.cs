@@ -44,13 +44,13 @@ public class ChopperAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (transform.position.y > attackHeight)
+        {
+            transform.position = new Vector3(transform.position.x, attackHeight, transform.position.z);
+        }
+
         if (currTarget < 0)
         {
-            if (transform.position.y > attackHeight)
-            {
-                transform.position = new Vector3(transform.position.x, attackHeight, transform.position.z);
-            }
-
             if (backUnderWater)
             {
                 rb.isKinematic = false;
@@ -73,12 +73,14 @@ public class ChopperAI : MonoBehaviour
             if (!delaySearch)
             {
                 SearchForPlayerOffRoadWater();
-            }            
+            }     
         }
         else
         {
             if (delaySearch)
             {
+                TargetValid();
+
                 AttackCheck(true);
 
                 if (transform.localPosition.z < -distanceToPlayer)

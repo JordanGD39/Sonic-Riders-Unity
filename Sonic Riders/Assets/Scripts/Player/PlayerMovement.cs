@@ -38,6 +38,7 @@ public class PlayerMovement : MonoBehaviour
     //[SerializeField] private Transform raycastPosParent;
     [SerializeField] private float extraForceGrounded = 500;
     [SerializeField] private float offRoadDeccMultiplier = 10;
+    [SerializeField] private float extraStep = 0.01f;
 
     private Vector3 localLandingVelocity = Vector3.zero;
     private Vector3 lastGroundedPos;
@@ -68,6 +69,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private ParticleSystem ps;
 
     private Transform model;
+
+    private bool stepping = false;
 
     private void Start()
     {
@@ -226,6 +229,37 @@ public class PlayerMovement : MonoBehaviour
                 Physics.Raycast(transform.position + transform.GetChild(0).forward * 0.4f, -transform.GetChild(0).up, out hitFront, raycastLength, currentLayerMask);
                 Physics.Raycast(transform.position - transform.GetChild(0).forward * 0.4f, -transform.GetChild(0).up, out hitBack, raycastLength, currentLayerMask);
 
+                if (speed != 0)
+                {
+                    bool valid = true;
+
+                    if ((speed >= 0 && hitFront.collider != null && hitFront.collider.gameObject.layer != 18) || (speed < 0 && hitBack.collider != null && hitBack.collider.gameObject.layer != 18))
+                    {
+                        stepping = false;
+                        valid = false;
+                    }
+
+                    if (valid)
+                    {
+                        if (hitFront.point.y == hit.point.y || hitBack.point.y == hit.point.y)
+                        {
+                            stepping = false;
+                        }
+
+                        if (hitFront.collider != null && hitFront.collider.gameObject.layer == 18 && hitFront.point.y > hit.point.y)
+                        {
+                            ClimbUpStep(hit.point, hitFront.point);
+                            stepping = true;
+                        }
+                        else if (hitBack.collider != null && hitBack.collider.gameObject.layer == 18 && hitBack.point.y > hit.point.y)
+                        {
+                            ClimbUpStep(hit.point, hitBack.point);
+                            hitFront.normal = Vector3.up;
+                            stepping = true;
+                        }
+                    }                    
+                }                        
+
                 Vector3 averagedNormals = hit.normal + hitFront.normal + hitBack.normal;
                 averagedNormals.Normalize();                
 
@@ -258,13 +292,18 @@ public class PlayerMovement : MonoBehaviour
 
                 if (grounded)
                 {
-                    transform.up = Vector3.Lerp(transform.up, averagedNormals, Time.deltaTime * 8);                    
+                    transform.up -= (transform.up - hit.normal) * 6.5f * Time.deltaTime;                   
                 }                
                 else
                 {
                     if (playerTricks != null && playerTricks.CanDoTricks)
                     {
                         playerTricks.Landed(true);
+
+                        if (!Attacked)
+                        {
+                            return true;
+                        }
                     }
 
                     if (Attacked)
@@ -334,6 +373,16 @@ public class PlayerMovement : MonoBehaviour
         return onGround;
     }
 
+    private void ClimbUpStep(Vector3 underPlayerPoint, Vector3 pointToStep)
+    {
+        float yDiff = transform.position.y - pointToStep.y;
+
+        Vector3 pos = transform.position;
+        pos.y = pointToStep.y + yDiff;
+
+        transform.position = pos;
+    }
+
     private void FixedUpdate()
     {
         //Debug.LogError("Movement is called!");
@@ -345,7 +394,7 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 localVel = transform.GetChild(0).forward * speed;
 
-        if (grounded && !playerJump.DontDragDown && !playerTricks.CanDoTricks && raycastLength == startingRaycastLength && !fallToTheGround)
+        if (grounded && !playerJump.DontDragDown && !playerTricks.CanDoTricks && raycastLength == startingRaycastLength && !fallToTheGround && !stepping)
         {
             rb.AddForce(-transform.up * extraForceGrounded);
         }
@@ -432,6 +481,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (grounded)
         {
+            //Debug.Log("Current speed: " + speed);
+
             if (charStats.IsPlayer)
             {
                 hud.UpdateSpeedText(speed);

@@ -174,6 +174,11 @@ public class CharacterStats : MonoBehaviour
                 alreadyRunning = false;
                     
                 playerAnimation.RunningState(false);
+
+                if (superForm)
+                {
+                    playerAnimation.Anim.SetBool("Transforming", true);
+                }
             }
 
             air = value;
@@ -255,10 +260,10 @@ public class CharacterStats : MonoBehaviour
     {
         superForm = stats.Super;
 
-        superModelRotation = superModel.transform.rotation;
 
         if (superModel != null)
         {
+            superModelRotation = superModel.transform.rotation;
             ChangeModel(false);
         }
 
@@ -310,13 +315,8 @@ public class CharacterStats : MonoBehaviour
 
         alreadyRunning = true;
 
-        if (superForm)
-        {
-            ChangeModel(false);
-            playerAnimation.ChangeAnimForSuperForm(true);
-        }
-
         playerAnimation.RunningState(true);
+
         Debug.Log("Run on foot");
 
         if (survivalManager != null)
@@ -452,6 +452,11 @@ public class CharacterStats : MonoBehaviour
 
     public float GetCurrentPower()
     {
+        if (air <= 0)
+        {
+            return 28.33f;
+        }
+
         return stats.Power[level] + extraPower;
     }
 

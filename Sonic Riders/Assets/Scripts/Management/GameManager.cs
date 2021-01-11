@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour
             float progress = Mathf.Clamp01(ao.progress / 0.9f);
 
             float diff = progress - prevProgress;
-            Debug.Log(diff);
+            //Debug.Log(diff);
 
             loadingScreenAnim.SetFloat("Speed", diff);
             trail.fillAmount = progress;

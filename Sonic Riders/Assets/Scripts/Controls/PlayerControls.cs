@@ -24,6 +24,7 @@ public class PlayerControls : MonoBehaviour
     private CharacterStats charStats;
     private PlayerGrind playerGrind;
     private ActionOnAnimation actionOnAnim;
+    private ActionOnAnimation superActionOnAnim;
 
     private InputAction moveAction;
     private InputAction jumpAction;
@@ -79,7 +80,16 @@ public class PlayerControls : MonoBehaviour
         playerFlight = player.GetComponent<PlayerFlight>();
         turbulenceRider = player.GetComponent<TurbulenceRider>();
         charStats = player.GetComponent<CharacterStats>();
-        actionOnAnim = player.GetComponentInChildren<ActionOnAnimation>();
+
+        if (charStats.SuperModel != null)
+        {
+            actionOnAnim = charStats.Model.GetComponent<ActionOnAnimation>();
+            superActionOnAnim = charStats.SuperModel.GetComponent<ActionOnAnimation>();
+        }
+        else
+        {
+            actionOnAnim = player.GetComponentInChildren<ActionOnAnimation>();
+        }
 
         int playerIndex = transform.GetSiblingIndex();
 
@@ -327,8 +337,15 @@ public class PlayerControls : MonoBehaviour
         playerMovement.Movement = new Vector3(mov.x, 0, mov.y);
 
         if (playerMovement.JustDied && playerAnim.Anim.GetCurrentAnimatorStateInfo(0).IsName("Swimming") && moveAction.ReadValue<Vector2>().magnitude > 0.3f)
-        {            
-            actionOnAnim.StopSwimming();
+        {
+            if (charStats.SuperModel != null && charStats.SuperModel.activeSelf)
+            {
+                superActionOnAnim.StopSwimming();
+            }
+            else
+            {
+                actionOnAnim.StopSwimming();
+            }
             playerAnim.Anim.SetTrigger("Moved");
         }
 

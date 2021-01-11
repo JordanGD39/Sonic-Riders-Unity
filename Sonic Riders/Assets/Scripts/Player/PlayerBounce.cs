@@ -103,6 +103,8 @@ public class PlayerBounce : MonoBehaviour
 
         bool hitDirectly = false;
 
+        bounceDir.y = transform.forward.y;
+
         float diffAngle = Vector3.Angle(transform.forward, bounceDir);
 
         Debug.Log("Forward: " + transform.forward + " Bounce dir: " + bounceDir + " diff: " + diffAngle);

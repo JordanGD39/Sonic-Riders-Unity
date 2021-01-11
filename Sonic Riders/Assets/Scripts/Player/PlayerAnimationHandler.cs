@@ -113,7 +113,13 @@ public class PlayerAnimationHandler : MonoBehaviour
 
         if (normalState)
         {
-            anim.Play("OffBoard");
+            anim.Play("TransformBack");
+            RunningState(true);
+        }
+        else
+        {
+            anim.Play("TransformationComplete");
+            RunningState(false);
         }
     }
 
