@@ -15,6 +15,7 @@ public class Capsule : MonoBehaviour
     [SerializeField] private Sprite[] numbers;
     [SerializeField] private Sprite[] itemSprites;
     private MeshRenderer meshRenderer;
+    private int chosenIndex;
 
     private void Start()
     {
@@ -60,7 +61,7 @@ public class Capsule : MonoBehaviour
             }
         }*/
 
-        if(characterStats.IsPlayer)
+        if (characterStats.IsPlayer && chosenIndex != 6)
             source.Play();
     }
 
@@ -98,7 +99,6 @@ public class Capsule : MonoBehaviour
 
         int prevPercent = 0;
         float rand = Random.Range(0, 100);
-        int chosenIndex = 0;
 
         for (int i = 0; i < percentages.Length; i++)
         {            
@@ -114,7 +114,7 @@ public class Capsule : MonoBehaviour
         }
 
         //Used to test certain items
-        //chosenIndex = 7;
+        chosenIndex = 6;
 
         int amount = 0;
         int itemIndex = 0;

@@ -11,11 +11,11 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField] private AudioMixerGroup mixer;
     
-    private Sound currSound;
+    private Sound currLoopingSound;
 
     private Sound currS;
 
-    public Sound CurrSound { get { return currSound; } }
+    public Sound CurrSound { get { return currLoopingSound; } }
     public Sound CurrAudio { get { return currS; } }
 
     private bool fadeIn = false;
@@ -49,24 +49,24 @@ public class AudioManager : MonoBehaviour
 
     private IEnumerator StartFade()
     {
-        if (currSound != null)
+        if (currLoopingSound != null)
         {
             if (!fadeIn)
             {
-                while (currSound.source.volume > 0)
+                while (currLoopingSound.source.volume > 0)
                 {
-                    currSound.source.volume -= FadeOutRate;
+                    currLoopingSound.source.volume -= FadeOutRate;
                     yield return null;
                 }
 
-                currSound.source.Stop();
+                currLoopingSound.source.Stop();
             }
             else
             {
-                currSound.source.Play();
-                while (currSound.source.volume < currSound.volume)
+                currLoopingSound.source.Play();
+                while (currLoopingSound.source.volume < currLoopingSound.volume)
                 {
-                    currSound.source.volume += FadeOutRate;
+                    currLoopingSound.source.volume += FadeOutRate;
                     yield return null;
                 }
             }                   
@@ -74,6 +74,36 @@ public class AudioManager : MonoBehaviour
     }
 
     public void Play(string name)
+    {
+        CheckSound(name);
+
+        if (currS == null)
+        {
+            return;
+        }
+
+        currS.source.timeSamples = 0;
+        currS.source.pitch = currS.pitch;
+
+        PlayCurrentSound();
+    }
+
+    public void PlayReverse(string name)
+    {
+        CheckSound(name);
+
+        if (currS == null)
+        {
+            return;
+        }
+
+        currS.source.timeSamples = currS.clip.samples - 1;
+        currS.source.pitch = -currS.pitch;
+
+        PlayCurrentSound();
+    }
+
+    private void CheckSound(string name)
     {
         if (CharStats != null && !CharStats.IsPlayer)
         {
@@ -89,14 +119,14 @@ public class AudioManager : MonoBehaviour
 
         if (currS.loop)
         {
-            currSound = currS;
+            currLoopingSound = currS;
             //Debug.Log("Playing music " + name);
         }
+    }
 
-        if (!currS.source.isPlaying || name != Constants.SoundEffects.grind)
-        {
-            currS.source.Play();
-        }
+    private void PlayCurrentSound()
+    {
+        currS.source.Play();
     }
 
     public void StopPlaying(string sound)

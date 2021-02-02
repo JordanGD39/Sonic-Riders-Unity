@@ -118,6 +118,13 @@ public class CharacterStats : MonoBehaviour
                 {
                     Level++;
 
+                    levelUpParticleSystem.Play();
+
+                    if (audioHolder != null)
+                    {
+                        audioHolder.SfxManager.Play(Constants.SoundEffects.levelUp);
+                    }
+
                     if (value >= maxRings && level < 2)
                     {
                         Level++;
@@ -126,6 +133,13 @@ public class CharacterStats : MonoBehaviour
                 else if (value < startRings)
                 {
                     Level--;
+
+                    levelDownParticleSystem.Play();
+
+                    if (audioHolder != null)
+                    {
+                        audioHolder.SfxManager.PlayReverse(Constants.SoundEffects.levelUp);
+                    }
 
                     if (value < startRings)
                     {
@@ -142,6 +156,8 @@ public class CharacterStats : MonoBehaviour
             }
         }
     }
+
+    private bool alreadyLowOnAir = false;
 
     public float Air
     {
@@ -162,6 +178,19 @@ public class CharacterStats : MonoBehaviour
                 }
 
                 value = 0;
+            }
+
+
+            if ((value > 40 || value == 0) && alreadyLowOnAir)
+            {
+                alreadyLowOnAir = false;
+                hud.ToggleCaution();
+            }
+            else if (value > 0 && value < 40 && audioHolder != null && !alreadyLowOnAir && hud != null)
+            {
+                alreadyLowOnAir = true;
+                hud.ToggleCaution();
+                audioHolder.SfxManager.Play(Constants.SoundEffects.lowAir);
             }
 
             if (stats.RingsAsAir)
@@ -219,6 +248,7 @@ public class CharacterStats : MonoBehaviour
     public bool StopCounting { get; set; } = false;
 
     private SurvivalManager survivalManager;
+    private AudioManagerHolder audioHolder;
 
     public bool SurvivalLeader { get; set; } = false;
     public int SurvivalScore { get; set; } = 0;
@@ -231,12 +261,16 @@ public class CharacterStats : MonoBehaviour
     public SkinnedMeshRenderer PlayerMeshRenderer { get { return meshRenderer; } }
 
     [SerializeField] private ParticleSystem invincibilityParticleSystem;
+    [SerializeField] private ParticleSystem levelUpParticleSystem;
+    [SerializeField] private ParticleSystem levelDownParticleSystem;
     [SerializeField] private GameObject model;
     [SerializeField] private GameObject superModel;
+    [SerializeField] private Sprite superSprite;
+    public Sprite SuperSprite { get { return superSprite; } set { superSprite = value; } }
     public GameObject SuperModel { get { return superModel; } }
     public GameObject Model { get { return model; } }
     private Quaternion superModelRotation;
-
+       
     private void Start()
     {
         playerBoost = GetComponent<PlayerBoost>();
@@ -260,6 +294,11 @@ public class CharacterStats : MonoBehaviour
     {
         superForm = stats.Super;
 
+        if (superForm)
+        {
+            portrait = superSprite;
+            characterName = "Super Sonic";
+        }
 
         if (superModel != null)
         {
@@ -269,6 +308,7 @@ public class CharacterStats : MonoBehaviour
 
         if (IsPlayer)
         {
+            audioHolder = GetComponent<AudioManagerHolder>();
             hud = Canvas.GetComponent<HUD>();
             hud.LevelThreeMaxAir = stats.MaxAir[2];           
 
@@ -513,6 +553,8 @@ public class CharacterStats : MonoBehaviour
         {
             return;
         }
+
+        audioHolder.SfxManager.Play(Constants.SoundEffects.speedShoes);
 
         if (playerMovement.Speed < GetCurrentLimit() + 33)
         {

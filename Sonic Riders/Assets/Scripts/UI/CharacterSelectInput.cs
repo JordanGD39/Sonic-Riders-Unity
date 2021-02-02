@@ -77,6 +77,8 @@ public class CharacterSelectInput : MonoBehaviour
         }
 
         eventSystem = playerInput.uiInputModule.GetComponent<MultiplayerEventSystem>();
+        eventSystem.SetSelectedGameObject(null);
+        eventSystem.SetSelectedGameObject(button);
 
         playerSelect = canvas.GetComponentInChildren<GridLayoutGroup>().transform.GetChild(playerInput.playerIndex).GetComponent<PlayerSelectReferences>();
 
@@ -230,11 +232,21 @@ public class CharacterSelectInput : MonoBehaviour
         else if (selectingBoard)
         {
             playerSelect.CharacterImage.gameObject.SetActive(true);
+
+            if (charStats.BoardStats.Super)
+            {
+                playerSelect.CharacterImage.sprite = charStats.SuperSprite;
+            }
+            else
+            {
+                playerSelect.BoardImageFinal.sprite = playerSelect.BoardImage.sprite;
+                playerSelect.BoardImageFinal.gameObject.SetActive(true);
+            }
+
             playerSelect.PointersParent.SetActive(false);
             playerSelect.BoardText.gameObject.SetActive(false);
             playerSelect.BoardImage.gameObject.SetActive(false);
-            playerSelect.BoardImageFinal.sprite = playerSelect.BoardImage.sprite;
-            playerSelect.BoardImageFinal.gameObject.SetActive(true);
+            
             playerReady = true;
 
             //Disables the panel when opened
@@ -345,6 +357,7 @@ public class CharacterSelectInput : MonoBehaviour
         charStats.StopCounting = true;
         CharacterStats prefStats = prefab.GetComponent<CharacterStats>();
         charStats.BoardImage = prefStats.BoardImage;
+        charStats.SuperSprite = prefStats.SuperSprite;
         charStats.BoardName = prefStats.BoardName;
         charStats.RunSpeed = prefStats.RunSpeed;
         charStats.ExtraSpeed = prefStats.ExtraSpeed;

@@ -60,8 +60,6 @@ public class PlayerGrind : MonoBehaviour
         {
             if (grinding)
             {
-                audioHolder.SfxManager.Play(Constants.SoundEffects.grind);
-
                 if (!charStats.BoardStats.RingsAsAir)
                 {
                     charStats.Air += airGain * Time.deltaTime;
@@ -101,6 +99,8 @@ public class PlayerGrind : MonoBehaviour
             transform.GetChild(0).localRotation = Quaternion.LookRotation(path.path.GetDirectionAtDistance(playerFollowPath.ClosestDistance, EndOfPathInstruction.Stop));
             transform.position = path.path.GetPointAtDistance(playerFollowPath.ClosestDistance, EndOfPathInstruction.Stop);
             grinding = true;
+
+            audioHolder.SfxManager.Play(Constants.SoundEffects.grind);
         }
         else if (grinding && path != null)
         {

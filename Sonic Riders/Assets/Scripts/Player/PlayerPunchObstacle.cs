@@ -17,6 +17,8 @@ public class PlayerPunchObstacle : MonoBehaviour
     public bool CantPunch { get; set; } = true;
     private bool rightPunch = true;
 
+    private Rigidbody lastPunched;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -89,8 +91,12 @@ public class PlayerPunchObstacle : MonoBehaviour
 
             rightPunch = !rightPunch;
 
-            if (!charStats.BoardStats.RingsAsAir)
+            if (!charStats.BoardStats.RingsAsAir && obstacleRb != lastPunched)
+            {
                 charStats.Air += 20;
+            }
+
+            lastPunched = obstacleRb;
         }
         else
         {

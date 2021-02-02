@@ -26,6 +26,7 @@ public class Constants
         public const string eggPawn = "Egg Pawn";
         public const string eggPawnArea = "EggPawnArea";
         public const string eggPawnCheckPoints = "EggPawnCheckPoints";
+        public const string loopWall = "LoopWall";
     }
 
     public class VoiceSounds
@@ -52,5 +53,12 @@ public class Constants
         public const string punch = "Punch";
         public const string flightRing = "FlightRing";
         public const string ringLoss = "RingLoss";
+        public const string trick = "Trick";
+        public const string levelUp = "LevelUp";
+        public const string lowAir = "LowAir";
+        public const string electrocuted = "Electrocuted";
+        public const string spindash = "Spindash";
+        public const string waterSplash = "Water";
+        public const string speedShoes = "SpeedShoes";
     }
 }

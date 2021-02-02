@@ -26,7 +26,7 @@ public class HelicopterRelease : MonoBehaviour
 
             Rigidbody rb = playerMovement.GetComponent<Rigidbody>();
 
-            rb.GetComponent<PlayerTricks>().CanDoTricks = false;
+            rb.GetComponent<PlayerTricks>().StopTrickInput();
             rb.GetComponent<PlayerDrift>().CantRotateCam = true;
 
             //rb.GetComponent<PlayerTricks>().Landed(false);
@@ -90,6 +90,7 @@ public class HelicopterRelease : MonoBehaviour
             rb.transform.GetChild(0).localRotation = rot;
 
             rb.GetComponent<PlayerTricks>().CanDoTricks = true;
+
             rb.GetComponent<PlayerDrift>().CantRotateCam = false;
         }
     }

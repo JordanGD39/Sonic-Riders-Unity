@@ -50,12 +50,18 @@ public class CameraDeath : MonoBehaviour
 
     public void StartFollow()
     {
+        if (followPlayer)
+        {
+            return;
+        }
+
         transform.parent = null;
         followPlayer = true;
         charStats.DisableAllFeatures = true;
         playerAnimation.Anim.SetBool("Dying", true);
         playerAnimation.Anim.SetBool("GotHit", true);
         playerMovement.JustDied = true;
+        playerMovement.GoUnderSea(false);
         canvasAnim.Play("DeathFadeIn");
 
         if (survivalManager != null)
@@ -69,7 +75,7 @@ public class CameraDeath : MonoBehaviour
     private IEnumerator WaitForRespawn()
     {
         yield return new WaitForSeconds(timeToRespawn);
-        playerAnimation.Anim.SetBool("Dying", false);
+        playerAnimation.Anim.SetBool("Dying", false);        
         canvasAnim.Play("DeathFadeOut");
         followPlayer = false;
         int checkPointIndex = playerCheckpoints.CurrCheckpoint;
@@ -98,7 +104,7 @@ public class CameraDeath : MonoBehaviour
         transform.localPosition = startPos;
         transform.localRotation = new Quaternion(0, 0, 0, transform.localRotation.w);
         
-        playerMovement.AboveSea();
+        playerMovement.AboveSea(false);
 
         if (!charStats.BoardStats.RingsAsAir)
         {

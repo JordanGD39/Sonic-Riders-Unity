@@ -89,16 +89,13 @@ public class PlayerAnimationHandler : MonoBehaviour
 
         if (playerTricks.CanDoTricks)
         {
+            anim.SetFloat("TrickHorizontalDir", playerTricks.TrickDirection.x);
             anim.SetFloat("TrickVerticalDir", playerTricks.TrickDirection.y);
 
             if (anim.GetCurrentAnimatorStateInfo(0).IsName("Falling"))
             {
                 anim.SetBool("DoingTricks", playerTricks.CanDoTricks);
             }
-        }        
-        else
-        {
-            anim.SetFloat("TrickVerticalDir", 0);
         }
 
         if (diffFlyAnim)
@@ -109,7 +106,13 @@ public class PlayerAnimationHandler : MonoBehaviour
 
     public void ChangeAnimForSuperForm(bool normalState)
     {
+        Animator prevAnim = anim;
         anim = normalState ? startAnim : superAnim;
+
+        if (playerTricks.CanDoTricks && anim.GetFloat("TrickSpeed") == 0)
+        {
+            anim.SetFloat("TrickSpeed", prevAnim.GetFloat("TrickSpeed"));
+        }
 
         if (normalState)
         {

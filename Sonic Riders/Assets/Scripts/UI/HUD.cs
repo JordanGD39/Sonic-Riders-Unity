@@ -21,6 +21,7 @@ public class HUD : SurvivalFunctionsUI
     [SerializeField] private Text lapText;
     [SerializeField] private Text maxLapText;
     [SerializeField] private GameObject distanceRadar;
+    [SerializeField] private GameObject cautionAir;
     [SerializeField] private RectTransform airBarParent;
     [SerializeField] private RectTransform textSpeed;
     public GameObject DistanceRadar { get { return distanceRadar; } }
@@ -52,6 +53,7 @@ public class HUD : SurvivalFunctionsUI
 
         distanceRadar.SetActive(false);
         rankUI.SetActive(false);
+        cautionAir.SetActive(false);
 
         ReadyToChange = true;
 
@@ -64,6 +66,11 @@ public class HUD : SurvivalFunctionsUI
     private void Update()
     {
         timer += Time.deltaTime;
+    }
+
+    public void ToggleCaution()
+    {
+        cautionAir.SetActive(!cautionAir.activeSelf);
     }
 
     public void ShowRank(int index, int airGained)

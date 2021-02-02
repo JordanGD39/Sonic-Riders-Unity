@@ -123,6 +123,7 @@ public class BigCanvasUI : SurvivalFunctionsUI
 
     public void ShowSurvivalWinner(string charName)
     {
+        stopCounting = true;
         GameManager.instance.GetAudioManager.StopPlaying(GameManager.instance.GetAudioManager.CurrSound.name);
         GameManager.instance.GetAudioManager.Play("Victory");
         survivalWin.gameObject.SetActive(true);
@@ -160,7 +161,7 @@ public class BigCanvasUI : SurvivalFunctionsUI
         EventSystem.current.SetSelectedGameObject(restartButton);
     }
 
-    public void PauseToggle()
+    public void PauseToggle(AudioManagerHolder audioHolder)
     {
         if (winPanel.activeSelf || survivalWin.gameObject.activeSelf)
         {
@@ -175,15 +176,11 @@ public class BigCanvasUI : SurvivalFunctionsUI
         }
         else
         {
-            if (pausePanel.activeSelf)
-            {
-                GameManager.instance.GetAudioManager.Pause("Invincibility");
-            }
-            else
-            {
-                GameManager.instance.GetAudioManager.UnPause("Invincibility");
-            }
+            PauseAudioOnPause(GameManager.instance.GetAudioManager);
         }
+
+        PauseAudioOnPause(audioHolder.SfxManager);
+        PauseAudioOnPause(audioHolder.VoiceManager);
 
         Time.timeScale = pausePanel.activeSelf ? 0 : 1;
 
@@ -191,6 +188,23 @@ public class BigCanvasUI : SurvivalFunctionsUI
         {
             EventSystem.current.SetSelectedGameObject(null);
             EventSystem.current.SetSelectedGameObject(continueButton);
+        }
+    }
+
+    private void PauseAudioOnPause(AudioManager audioManager)
+    {
+        if (audioManager.CurrAudio == null)
+        {
+            return;
+        }
+
+        if (pausePanel.activeSelf)
+        {
+            audioManager.Pause(audioManager.CurrAudio.name);
+        }
+        else
+        {
+            audioManager.UnPause(audioManager.CurrAudio.name);
         }
     }
 

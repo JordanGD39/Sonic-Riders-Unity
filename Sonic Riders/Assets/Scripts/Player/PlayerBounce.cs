@@ -21,7 +21,6 @@ public class PlayerBounce : MonoBehaviour
     [SerializeField] private float time = 0.25f;
     private bool attacked = false;
     private bool obstacle = false;
-    private ContactPoint currContactPoint;
 
     // Start is called before the first frame update
     void Start()
@@ -39,7 +38,7 @@ public class PlayerBounce : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (playerMovement.Bouncing || collision.gameObject.layer == 14 || collision.gameObject.CompareTag(Constants.Tags.eggPawn))
+        if (playerMovement.Bouncing || collision.gameObject.layer == 14 || collision.gameObject.CompareTag(Constants.Tags.eggPawn) || collision.gameObject.CompareTag(Constants.Tags.loopWall))
         {
             return;
         }
@@ -61,8 +60,10 @@ public class PlayerBounce : MonoBehaviour
         //Debug.Log(collision.gameObject);
 
         speed = rb.velocity.magnitude;
-        currContactPoint = collision.contacts[0];
-        bounceDir = Vector3.Reflect(rb.velocity.normalized, currContactPoint.normal).normalized;
+        Vector3 contactNormal = collision.contacts[0].normal;
+        
+        bounceDir = Vector3.Reflect(rb.velocity.normalized, contactNormal).normalized;
+
         attacked = false;
         StartCoroutine("Bounce");
 
@@ -103,9 +104,7 @@ public class PlayerBounce : MonoBehaviour
 
         bool hitDirectly = false;
 
-        bounceDir.y = transform.forward.y;
-
-        float diffAngle = Vector3.Angle(transform.forward, bounceDir);
+        float diffAngle = Vector3.SignedAngle(transform.forward, bounceDir, transform.up);
 
         Debug.Log("Forward: " + transform.forward + " Bounce dir: " + bounceDir + " diff: " + diffAngle);
 

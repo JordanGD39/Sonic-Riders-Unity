@@ -50,6 +50,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool fishPhobia = false;
     public bool FishPhobia { get { return fishPhobia; } }
     
+    [SerializeField] private bool activeUnactivePlayers = false;
     private bool fadeTheMusic = false;
 
     void Awake()
@@ -80,10 +81,13 @@ public class GameManager : MonoBehaviour
 
         if (playersLeft.Count > 0)
         {
-            for (int i = 0; i < playersLeft.Count; i++)
+            if (activeUnactivePlayers)
             {
-                playersLeft[i].SetActive(true);
-            }
+                for (int i = 0; i < playersLeft.Count; i++)
+                {
+                    playersLeft[i].SetActive(true);
+                }
+            }            
 
             GetCams();
         }

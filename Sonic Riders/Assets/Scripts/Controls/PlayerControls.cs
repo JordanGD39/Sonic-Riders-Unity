@@ -25,6 +25,7 @@ public class PlayerControls : MonoBehaviour
     private PlayerGrind playerGrind;
     private ActionOnAnimation actionOnAnim;
     private ActionOnAnimation superActionOnAnim;
+    private AudioManagerHolder audioHolder;
 
     private InputAction moveAction;
     private InputAction jumpAction;
@@ -80,6 +81,7 @@ public class PlayerControls : MonoBehaviour
         playerFlight = player.GetComponent<PlayerFlight>();
         turbulenceRider = player.GetComponent<TurbulenceRider>();
         charStats = player.GetComponent<CharacterStats>();
+        audioHolder = player.GetComponent<AudioManagerHolder>();
 
         if (charStats.SuperModel != null)
         {
@@ -98,32 +100,45 @@ public class PlayerControls : MonoBehaviour
             playerIndex = playerInput.playerIndex;
         }
 
+        bool changeColor = false;
+
+        Color otherColor = Color.yellow;
+
+        if (charStats.BoardStats.Super)
+        {
+            otherColor.a = charStats.CharColor.a;
+            charStats.CharColor = otherColor;
+            changeColor = true;
+        }
+
         if (GameManager.instance.PlayersNames.Contains(charStats.CharacterName))
         {
             Material mat = new Material(charStats.PlayerMeshRenderer.material);
             mat.color = Color.gray;
             charStats.PlayerMeshRenderer.material = mat;
 
-            Color darkerColor = new Color(charStats.CharColor.r * 0.001f, charStats.CharColor.g * 0.001f, charStats.CharColor.b * 0.001f, charStats.CharColor.a);
+            otherColor = new Color(charStats.CharColor.r * 0.001f, charStats.CharColor.g * 0.001f, charStats.CharColor.b * 0.001f, charStats.CharColor.a);
 
-            charStats.CharColor = darkerColor;
+            charStats.CharColor = otherColor;
 
-            if (GameManager.instance.GameMode == GameManager.gamemode.SURVIVAL)
+            changeColor = true;
+        }
+
+        if (changeColor && GameManager.instance.GameMode == GameManager.gamemode.SURVIVAL)
+        {
+            if (playerInputManager.playerCount >= 3)
             {
-                if (playerInputManager.playerCount >= 3)
-                {
-                    FindObjectOfType<BigCanvasUI>().ChangeSurvivalColor(playerIndex, darkerColor);
-                }
-                else
-                {
-                    HUD[] huds = FindObjectsOfType<HUD>();
+                FindObjectOfType<BigCanvasUI>().ChangeSurvivalColor(playerIndex, otherColor);
+            }
+            else
+            {
+                HUD[] huds = FindObjectsOfType<HUD>();
 
-                    for (int i = 0; i < huds.Length; i++)
-                    {
-                        huds[i].ChangeSurvivalColor(playerIndex, darkerColor);
-                    }
+                for (int i = 0; i < huds.Length; i++)
+                {
+                    huds[i].ChangeSurvivalColor(playerIndex, otherColor);
                 }
-            }            
+            }
         }
 
         GameManager.instance.PlayersNames.Add(charStats.CharacterName);
@@ -133,6 +148,7 @@ public class PlayerControls : MonoBehaviour
         Transform canvasHolder = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).transform;
         
         charStats.Canvas = canvasHolder.transform.GetChild(playerIndex);
+
         charStats.Canvas.GetComponent<HUD>().AlreadyOn = true;
         charStats.Canvas.gameObject.SetActive(true);
 
@@ -257,8 +273,8 @@ public class PlayerControls : MonoBehaviour
     {
         //Debug.Log(GameManager.instance.LoadingScreen.activeInHierarchy);
         if (bigCanvasUI != null && !GameManager.instance.LoadingScreen.gameObject.activeInHierarchy)
-        {
-            bigCanvasUI.PauseToggle();
+        {               
+            bigCanvasUI.PauseToggle(audioHolder);
         }
     }
 

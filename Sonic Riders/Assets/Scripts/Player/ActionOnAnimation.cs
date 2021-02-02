@@ -8,6 +8,7 @@ public class ActionOnAnimation : MonoBehaviour
     private PlayerBoost playerBoost;
     private PlayerMovement playerMovement;
     private PlayerTricks playerTricks;
+    private AudioManagerHolder audioManagerHolder;
     private PlayerAnimationHandler playerAnimation;
     private PlayerPunchObstacle playerPunchObstacle;
     private PlayerCheckpoints playerCheckpoints;
@@ -31,6 +32,7 @@ public class ActionOnAnimation : MonoBehaviour
        
         playerMovement = GetComponentInParent<PlayerMovement>();
         playerBoost = playerMovement.GetComponent<PlayerBoost>();
+        audioManagerHolder = playerMovement.GetComponent<AudioManagerHolder>();
         playerTricks = playerMovement.GetComponent<PlayerTricks>();
         playerAnimation = playerMovement.GetComponent<PlayerAnimationHandler>();
         playerPunchObstacle = playerMovement.GetComponent<PlayerPunchObstacle>();
@@ -146,6 +148,12 @@ public class ActionOnAnimation : MonoBehaviour
         }
     }
 
+    public void PlayTrickSound()
+    {
+        audioManagerHolder.SfxManager.StopPlaying(Constants.SoundEffects.trick);
+        audioManagerHolder.SfxManager.Play(Constants.SoundEffects.trick);
+    }
+
     public void CountTrick()
     {
         //Debug.Log("YESSS");
@@ -156,6 +164,7 @@ public class ActionOnAnimation : MonoBehaviour
     public void CantLand()
     {
         playerTricks.CanLand = false;
+        PlayTrickSound();
     }
 
     public void GotHitFalse()

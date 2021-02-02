@@ -51,11 +51,12 @@ public class CharacterButton : MonoBehaviour
             }
 
             playerSelect.CharacterImage.sprite = sprite.sprite;
-            playerSelect.FullName.text = someStats.FullName.ToUpper();
+
+            playerSelect.FullName.text = disabled.activeSelf ? "" : someStats.FullName.ToUpper();
 
             for (int i = 0; i < playerSelect.TypeParent.childCount; i++)
             {
-                playerSelect.TypeParent.GetChild(i).gameObject.SetActive((int)someStats.CharType == i);
+                playerSelect.TypeParent.GetChild(i).gameObject.SetActive((int)someStats.CharType == i && !disabled.activeSelf);
             }
         }
 

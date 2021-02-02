@@ -34,11 +34,17 @@ public class PlayerBoost : MonoBehaviour
     [SerializeField] private float attackDelay = 0.25f;
     [SerializeField] private float attackRadius = 2.5f;
     [SerializeField] private float attackDistance = 1.5f;
+    [SerializeField] private string boostSound = string.Empty;
     private Transform prevAttackingPlayer;
     private Transform triggerCol;
 
     public void GiveAnim()
     {
+        if (boostSound == string.Empty)
+        {
+            boostSound = Constants.SoundEffects.boost;
+        }
+
         playerMovement = GetComponent<PlayerMovement>();
         playerGrind = GetComponent<PlayerGrind>();
         playerAnimation = GetComponent<PlayerAnimationHandler>();
@@ -227,7 +233,9 @@ public class PlayerBoost : MonoBehaviour
             playerMovement.Speed += 5;
         }
 
-        audioHolder.SfxManager.Play(Constants.SoundEffects.boost);
+        string soundToPlay = playerGrind.Grinding ? Constants.SoundEffects.boost : boostSound;
+
+        audioHolder.SfxManager.Play(soundToPlay);
 
         //turbulenceGenerator.StartPathGeneration();
 

@@ -14,15 +14,15 @@ public class PlayerTricks : MonoBehaviour
 
     private float speedReward;
     [SerializeField] private int tricks = 0;
-    [SerializeField] private float speedMultiplier = 1.5f;
+    [SerializeField] private float extraSpeed = 0.25f;
     public bool CanLand { get; set; } = false;
     
     [SerializeField] private float camSpeed = 1;
     private Rigidbody rb;
     [SerializeField] private Vector3 lowerCamPos;
     [SerializeField] private Vector3 higherCamPos;
-    [SerializeField] private float trickForceUp = 20;
-    [SerializeField] private float trickForceForward = 20;
+    [SerializeField] private float trickForceUp = 3;
+    [SerializeField] private float trickForceForward = 3;
 
     // Start is called before the first frame update
     void Start()
@@ -87,7 +87,7 @@ public class PlayerTricks : MonoBehaviour
         }
         else
         {
-            speedReward *= speedMultiplier;
+            speedReward += extraSpeed;
         }
 
         if (characterStats.IsPlayer)
@@ -183,10 +183,21 @@ public class PlayerTricks : MonoBehaviour
         transform.GetChild(0).localRotation = new Quaternion(0, transform.GetChild(0).localRotation.y, 0, transform.GetChild(0).localRotation.w);
         playerAnimation.Anim.SetBool("DoingTricks", false);
 
-        CanDoTricks = false;
+        StopTrickInput();
+
+        playerAnimation.Anim.SetFloat("TrickSpeed", 0);
+        playerAnimation.Anim.Play("Idle");
 
         characterStats.Cam.localPosition = characterStats.CamStartPos;
         characterStats.Cam.localRotation = new Quaternion(0, 0, 0, characterStats.Cam.localRotation.w);
 
+    }
+
+    public void StopTrickInput()
+    {
+        CanDoTricks = false;
+        TrickDirection = Vector2.zero;
+        playerAnimation.Anim.SetFloat("TrickVerticalDir", 0);
+        playerAnimation.Anim.SetFloat("TrickHorizontalDir", 0);
     }
 }

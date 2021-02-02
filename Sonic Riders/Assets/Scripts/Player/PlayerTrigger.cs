@@ -102,6 +102,13 @@ public class PlayerTrigger : MonoBehaviour
 
         switch (collision.gameObject.layer)
         {
+            case 4:
+                if (playerMovement.Grounded && !playerMovement.OnWater && !playerMovement.UnderWater)
+                {
+                    playerMovement.GoUnderSea(true);
+                }
+
+                break;
             case 8:
                 if (collision.isTrigger && !attackColls.Contains(collision) && !alreadyAttacked)
                 {
@@ -158,7 +165,7 @@ public class PlayerTrigger : MonoBehaviour
     {
         if (collider.gameObject.layer == 4 && playerMovement.Sea != null && transform.position.y > playerMovement.Sea.position.y)
         {
-            playerMovement.AboveSea();
+            playerMovement.AboveSea(true);
         }
     }
 
@@ -221,6 +228,7 @@ public class PlayerTrigger : MonoBehaviour
 
     public void Electrocute(float timer, bool countDown)
     {
+        audioHolder.SfxManager.Play(Constants.SoundEffects.electrocuted);
         losingEmerald = !countDown;
         playerMovement.CantMove = true;
         playerAnimation.Anim.SetBool("Electrocuted", true);
@@ -289,6 +297,7 @@ public class PlayerTrigger : MonoBehaviour
 
     private void CanRun()
     {
+        audioHolder.SfxManager.StopPlaying(Constants.SoundEffects.electrocuted);
         playerAnimation.Anim.SetBool("Electrocuted", false);
         playerMovement.CantMove = false;
         charStats.DisableAllFeatures = false;

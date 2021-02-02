@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     private PlayerTricks playerTricks;
     private PlayerFlight playerFlight;
     private ThirdPersonCamera thirdPersonCamera;
+    private AudioManagerHolder audioHolder;
 
     private Rigidbody rb;
 
@@ -25,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float rotationAmount = 0;
     public float RotationAmount { get { return rotationAmount; } }
     [SerializeField] private bool ridingOnWall = false;
+    public bool RidingOnWall { get { return ridingOnWall; } }
     [SerializeField] private bool fallToTheGround = false;
     public bool FallToTheGround { set { fallToTheGround = value; } }
 
@@ -63,6 +65,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask noWaterLayerMask;
     private LayerMask currentLayerMask;
 
+    public bool UnderWater { get; set; } = false;
+
     public Transform Sea { get; set; }
     public bool JustDied { get; set; } = false;
 
@@ -83,6 +87,7 @@ public class PlayerMovement : MonoBehaviour
         playerDrift = GetComponent<PlayerDrift>();
         playerTricks = GetComponent<PlayerTricks>();
         playerFlight = GetComponent<PlayerFlight>();
+        audioHolder = GetComponent<AudioManagerHolder>();
         rb = GetComponent<Rigidbody>();
 
         if (sea != null)
@@ -284,9 +289,7 @@ public class PlayerMovement : MonoBehaviour
 
                     if (Mathf.Abs(speed) < 20 && currentLayerMask != noWaterLayerMask)
                     {
-                        currentLayerMask = noWaterLayerMask;
-                        model.gameObject.layer = 11;
-                        raycastLength = 0;
+                        GoUnderSea(true);
                     }                    
                 }               
 
@@ -381,6 +384,21 @@ public class PlayerMovement : MonoBehaviour
         pos.y = pointToStep.y + yDiff;
 
         transform.position = pos;
+    }
+
+    public void GoUnderSea(bool playSound)
+    {
+        if (playSound)
+        {
+            audioHolder.SfxManager.Play(Constants.SoundEffects.waterSplash);
+        }
+
+        UnderWater = true;
+
+        currentLayerMask = noWaterLayerMask;
+        model.gameObject.layer = 11;
+        raycastLength = 0;
+        rb.drag = 1;        
     }
 
     private void FixedUpdate()
@@ -638,10 +656,18 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void AboveSea()
+    public void AboveSea(bool playSound)
     {
+        if (playSound)
+        {
+            audioHolder.SfxManager.Play(Constants.SoundEffects.waterSplash);
+        }
+
+        UnderWater = false;
+
         currentLayerMask = layerMask;
         model.gameObject.layer = 8;
+        rb.drag = 0;
     }
 
     private void OnCollisionStay(Collision collision)

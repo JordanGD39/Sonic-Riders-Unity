@@ -11,7 +11,7 @@ public class TrackSelectInput : MonoBehaviour
     private void Start()
     {
         buttonSounds = GetComponentInChildren<ButtonSounds>();
-        Invoke("SetTrackButtonSelected", 1);
+        Invoke("SetTrackButtonSelected", 2);
     }
 
     private void SetTrackButtonSelected()

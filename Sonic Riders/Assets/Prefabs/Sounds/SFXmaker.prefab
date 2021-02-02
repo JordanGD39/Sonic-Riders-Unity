@@ -75,8 +75,8 @@ MonoBehaviour:
     priority: 20
     source: {fileID: 0}
   - name: Grind
-    clip: {fileID: 8300000, guid: 632324952e3ca234c9f57407a78f0adc, type: 3}
-    volume: 0.4
+    clip: {fileID: 8300000, guid: 4ed656ba8ef30ce4eabe163564d1b1b2, type: 3}
+    volume: 1
     pitch: 1
     loop: 1
     spatialBlend: 0
@@ -126,6 +126,76 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: RingLoss
     clip: {fileID: 8300000, guid: 36ef56555bb59a74483f472174b4c21e, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    minRange: 5
+    maxRange: 100
+    priority: 20
+    source: {fileID: 0}
+  - name: Trick
+    clip: {fileID: 8300000, guid: c3f639da6c225af4b905102cc7d2e2c9, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    minRange: 5
+    maxRange: 100
+    priority: 20
+    source: {fileID: 0}
+  - name: LevelUp
+    clip: {fileID: 8300000, guid: 4a51ea2e33bae414cb2b374757d7671c, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    minRange: 5
+    maxRange: 100
+    priority: 20
+    source: {fileID: 0}
+  - name: LowAir
+    clip: {fileID: 8300000, guid: bfaffa915e5d0a84bb7a0649230e63d2, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    minRange: 5
+    maxRange: 100
+    priority: 20
+    source: {fileID: 0}
+  - name: Electrocuted
+    clip: {fileID: 8300000, guid: 8f2108b01caf8a74d9729b0ce0ef278e, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    spatialBlend: 0
+    minRange: 5
+    maxRange: 100
+    priority: 20
+    source: {fileID: 0}
+  - name: Spindash
+    clip: {fileID: 8300000, guid: b16733bd99be243468f3f7078367d7b9, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    minRange: 5
+    maxRange: 100
+    priority: 20
+    source: {fileID: 0}
+  - name: Water
+    clip: {fileID: 8300000, guid: 7d961d27a28f6cd40a2301c25dece029, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    minRange: 5
+    maxRange: 100
+    priority: 20
+    source: {fileID: 0}
+  - name: SpeedShoes
+    clip: {fileID: 8300000, guid: 484cb0948451bee4692bf4093577499c, type: 3}
     volume: 1
     pitch: 1
     loop: 0

@@ -7,6 +7,10 @@ public class StartingLevel : MonoBehaviour
 {
     private Transform psParent;
     private List<Text> countdownTexts = new List<Text>();
+    private AudioSource audioSource;
+
+    [SerializeField] private AudioClip countSound;
+    [SerializeField] private AudioClip finalCountSound;
 
     [SerializeField] private bool noStart = false;
 
@@ -19,12 +23,18 @@ public class StartingLevel : MonoBehaviour
     [SerializeField] private TutorialManager tutorialManager;
     private SurvivalManager survivalManager;
 
+    private bool alreadyCanceledSound = false;
+
     // Start is called before the first frame update
     void Start()
     {
-        survivalManager = FindObjectOfType<SurvivalManager>();
+        audioSource = GetComponent<AudioSource>();
 
-        if (GameManager.instance.GetComponent<TestHandleJoin>() == null)
+        survivalManager = FindObjectOfType<SurvivalManager>();        
+
+        bool testing = GameManager.instance.GetComponent<TestHandleJoin>() != null;
+
+        if (!testing)
         {
             List<GameObject> playersInScene = new List<GameObject>();
             playersInScene.AddRange(GameObject.FindGameObjectsWithTag(Constants.Tags.player));
@@ -35,10 +45,20 @@ public class StartingLevel : MonoBehaviour
                 playersInScene[i].tag = "Untagged";
             }
 
-            GameManager.instance.GetComponent<PlayerConfigManager>().SpawnPlayers(this);
-        }       
+            GameManager.instance.GetComponent<PlayerConfigManager>().SpawnPlayers(this);            
+        }
 
         psParent = GetComponentInChildren<ParticleSystem>().transform.parent;
+
+        Transform canvasHolder = GameObject.FindGameObjectWithTag(Constants.Tags.canvas).transform;
+
+        if (testing)
+        {
+            for (int i = 0; i < canvasHolder.childCount; i++)
+            {
+                canvasHolder.GetChild(i).gameObject.SetActive(true);
+            }
+        }
 
         List<GameObject> texts = new List<GameObject>();
         texts.AddRange(GameObject.FindGameObjectsWithTag(Constants.Tags.countdown));
@@ -58,6 +78,14 @@ public class StartingLevel : MonoBehaviour
         for (int i = 0; i < countdownTexts.Count; i++)
         {
             countdownTexts[i].gameObject.SetActive(false);
+        }
+
+        if (testing)
+        {
+            for (int i = 0; i < canvasHolder.childCount; i++)
+            {
+                canvasHolder.GetChild(i).gameObject.SetActive(false);
+            }
         }
     }
 
@@ -86,9 +114,17 @@ public class StartingLevel : MonoBehaviour
             countdownTexts[i].text = timer.ToString("F2");
         }
 
+        if (timer < 0.25f && !alreadyCanceledSound)
+        {
+            alreadyCanceledSound = true;
+            CancelInvoke("PlayBleepSound");
+        }
+
         if (timer <= 0)
         {
             doneCounting = true;
+
+            audioSource.PlayOneShot(finalCountSound);
 
             for (int i = 0; i < psParent.childCount; i++)
             {
@@ -188,5 +224,11 @@ public class StartingLevel : MonoBehaviour
         }
 
         startCountDown = true;
+        InvokeRepeating("PlayBleepSound", 0, 1);
+    }
+
+    private void PlayBleepSound()
+    {
+        audioSource.PlayOneShot(countSound);
     }
 }

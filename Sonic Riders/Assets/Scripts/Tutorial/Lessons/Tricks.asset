@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd0dde44a7cb4164e9027fd1146e1344, type: 3}
   m_Name: Tricks
   m_EditorClassIdentifier: 
-  inputField: 'Move forward or backwards to spin in that direction this is called
-    an trick! When you spin completly you did a trick! The more tricks you do the
-    more Air you gain!
+  inputField: 'You can press forward, backwards or sideways to spin in that direction
+    this is called an trick! When you spin completly you did a trick! The more tricks
+    you do the more Air you gain!
 
 
     (Press Space or A to continue)'
@@ -24,5 +24,7 @@ MonoBehaviour:
   falling: 0
   freezeTime: 1
   jumpingOfRamp: 0
+  flying: 0
+  grinding: 0
   indexSkip: 0
   startCountdown: 0
