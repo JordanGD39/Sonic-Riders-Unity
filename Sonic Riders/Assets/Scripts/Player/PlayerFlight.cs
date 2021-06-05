@@ -7,6 +7,7 @@ public class PlayerFlight : MonoBehaviour
     private CharacterStats charStats;
     private PlayerMovement playerMovement;
     private PlayerTricks playerTricks;
+    private TurbulenceGenerator turbulenceGenerator;
     private Rigidbody rb;
     private HUD hud;
     private Animator canvasAnim;
@@ -34,6 +35,7 @@ public class PlayerFlight : MonoBehaviour
         }
 
         playerMovement = GetComponent<PlayerMovement>();
+        turbulenceGenerator = GetComponent<TurbulenceGenerator>();
         playerTricks = GetComponent<PlayerTricks>();
         rb = GetComponent<Rigidbody>();
         cornering = charStats.BoardStats.Cornering * turnMultiplier;
@@ -81,6 +83,8 @@ public class PlayerFlight : MonoBehaviour
                 otherRot.z = 0;
                 transform.GetChild(0).localRotation = otherRot;
 
+                turbulenceGenerator.ResumeGeneration(transform.position);
+
                 if (playerMovement.Grounded)
                 {
                     playerMovement.Speed = flightSpeed;
@@ -106,6 +110,8 @@ public class PlayerFlight : MonoBehaviour
             CanCheckGrounded();
             flying = true;
             transform.parent = null;
+
+            turbulenceGenerator.PauseGeneration();
         }
     }
 

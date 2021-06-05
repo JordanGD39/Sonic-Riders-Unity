@@ -19,6 +19,8 @@ public class RaceManager : MonoBehaviour
 
     private bool playingVictory = false;
 
+    public bool TurbulenceIsMade { get; set; } = false;
+
     private void Start()
     {
         playingVictory = false;

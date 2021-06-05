@@ -71,11 +71,12 @@ public class PlayerTrigger : MonoBehaviour
         switch (collision.gameObject.tag)
         {
             case Constants.Tags.obstacle:
-                if ((!playerPunch.CantPunch && charStats.Air > 0) || charStats.Invincible)
-                {
                     tagFound = true;
-                    playerPunch.Punch(collision.attachedRigidbody, 0);
-                }
+                    Punch(collision.attachedRigidbody);
+                break;
+            case Constants.Tags.debris:
+                tagFound = true;
+                Punch(collision.attachedRigidbody);
                 break;
             case Constants.Tags.eggPawn:
                 tagFound = true;
@@ -86,12 +87,12 @@ public class PlayerTrigger : MonoBehaviour
                 }
                 else
                 {
-                    playerBounce.Attacked(collision.transform.position, rb.velocity.magnitude);
+                    playerBounce.Attacked();
                 }
                 break;
             case Constants.Tags.enemy:
                 tagFound = true;
-                playerBounce.Attacked(collision.transform.position, rb.velocity.magnitude);
+                playerBounce.Attacked();
                 break;
         }
 
@@ -169,6 +170,14 @@ public class PlayerTrigger : MonoBehaviour
         }
     }
 
+    private void Punch(Rigidbody rb)
+    {
+        if ((!playerPunch.CantPunch && charStats.Air > 0) || charStats.Invincible)
+        {
+            playerPunch.Punch(rb, 0);
+        }
+    }
+
     private void GotChaosEmerald(Transform chaosEmerald)
     {
         if (!chaosEmerald.GetComponent<ChaosEmerald>().CanCatch)
@@ -176,14 +185,13 @@ public class PlayerTrigger : MonoBehaviour
             return;
         }
 
-        survivalManager.MakePlayerLeader(playerMovement.gameObject);
-
         chaosEmerald.SetParent(emeraldHolder, false);
         chaosEmerald.localPosition = Vector3.zero;
         chaosEmerald.forward = transform.forward;
         chaosEmerald.GetChild(0).localScale = new Vector3(0.5f, 0.5f, 0.5f);
         playerBoost.Attacking = false;
         playerAnimation.Anim.SetBool("Boosting", false);
+        survivalManager.MakePlayerLeader(playerMovement.gameObject);
     }
 
     public void AttackedByPlayer(Collider collision)
@@ -203,15 +211,12 @@ public class PlayerTrigger : MonoBehaviour
 
         //Debug.Log("Me: " + rb.gameObject.name + " attacker: " + attackerBoost.gameObject.name + " col: " + collision + " true?: " + (!attackerBoost.AttackCol.activeInHierarchy));
 
-        alreadyAttacked = true;
-        
-        PlayerTrigger attackerTrigger = attackerBoost.GetComponentInChildren<PlayerTrigger>();
+        alreadyAttacked = true;        
 
         if (emeraldHolder.childCount > 0)
         {
+            PlayerTrigger attackerTrigger = attackerBoost.GetComponentInChildren<PlayerTrigger>();
             charStats.Air = charStats.MaxAir;
-
-            survivalManager.MakePlayerLeader(attackerBoost.gameObject);
 
             Transform emerald = emeraldHolder.GetChild(0);
 
@@ -221,9 +226,11 @@ public class PlayerTrigger : MonoBehaviour
             emerald.GetChild(0).localScale = new Vector3(0.5f, 0.5f, 0.5f);
             attackerBoost.Attacking = false;
             attackerTrigger.PlayerAnimation.Anim.SetBool("Boosting", false);
+
+            survivalManager.MakePlayerLeader(attackerBoost.gameObject);
         }
 
-        playerBounce.Attacked(attackColls[0].transform.position, attackerBoost.GetComponent<PlayerMovement>().Speed);
+        playerBounce.Attacked();
     }
 
     public void Electrocute(float timer, bool countDown)
@@ -266,9 +273,19 @@ public class PlayerTrigger : MonoBehaviour
             charStats.Air = charStats.BoardStats.StartingAir;
         }
 
+        if (charStats.Hud != null)
+        {
+            charStats.Hud.ToggleCaution(false, false);
+        }
+
         if (startingLevel.Timer > 0)
         {
             Electrocute(startingLevel.Timer, true);
+
+            if (charStats.Hud != null)
+            {
+                charStats.Hud.ShowStartingTime(startingLevel.Timer, 0);
+            }
         }
         else
         {
@@ -287,11 +304,16 @@ public class PlayerTrigger : MonoBehaviour
 
             float percent = 1 - timePercent;
 
-            float extraSpeed = 33 * percent;
+            float extraSpeed = 33.33f * percent;
 
             Debug.Log("Extra speed: " + extraSpeed + " time:" + timeRounded);
 
-            playerMovement.Speed += extraSpeed;           
+            playerMovement.Speed += extraSpeed;
+
+            if (charStats.Hud != null)
+            {
+                charStats.Hud.ShowStartingTime(startingLevel.Timer, extraSpeed);
+            }
         }
     }
 

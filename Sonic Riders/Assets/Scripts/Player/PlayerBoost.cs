@@ -6,9 +6,9 @@ public class PlayerBoost : MonoBehaviour
 {
     private PlayerMovement playerMovement;
     private TurbulenceGenerator turbulenceGenerator;
+    private TurbulenceRider turbulenceRider;
     private AudioManagerHolder audioHolder;
     private PlayerAnimationHandler playerAnimation;
-    private PlayerGrind playerGrind;
     private CharacterStats charStats;
     private BoardStats stats;
 
@@ -40,19 +40,21 @@ public class PlayerBoost : MonoBehaviour
 
     public void GiveAnim()
     {
-        if (boostSound == string.Empty)
+        playerMovement = GetComponent<PlayerMovement>();
+        playerAnimation = GetComponent<PlayerAnimationHandler>();
+        charStats = GetComponent<CharacterStats>();
+
+        if (boostSound == string.Empty || charStats.SuperForm)
         {
             boostSound = Constants.SoundEffects.boost;
         }
 
-        playerMovement = GetComponent<PlayerMovement>();
-        playerGrind = GetComponent<PlayerGrind>();
-        playerAnimation = GetComponent<PlayerAnimationHandler>();
-        charStats = GetComponent<CharacterStats>();
         stats = charStats.BoardStats;
         audioHolder = GetComponent<AudioManagerHolder>();
         turbulenceGenerator = GetComponent<TurbulenceGenerator>();
+        turbulenceRider = GetComponent<TurbulenceRider>();
         triggerCol = GetComponentInChildren<PlayerTrigger>().transform;
+
         if (charStats.IsPlayer)
             canvasAnim = charStats.Canvas.GetComponent<Animator>();
     }
@@ -171,7 +173,7 @@ public class PlayerBoost : MonoBehaviour
 
     public void CheckBoost()
     {
-        if (charStats.DisableAllFeatures || charStats.GetCurrentBoost() == 0 ||(!playerMovement.Grounded && !playerGrind.Grinding) || boosting || charStats.Air < charStats.GetCurrentBoostDepletion())
+        if (charStats.DisableAllFeatures || charStats.GetCurrentBoost() == 0 ||(!playerMovement.Grounded && !playerMovement.CanBoostInAir) || boosting || charStats.Air < charStats.GetCurrentBoostDepletion() || turbulenceRider.InTurbulence)
         {
             return;
         }
@@ -183,7 +185,7 @@ public class PlayerBoost : MonoBehaviour
 
         boosting = true;
 
-        if (!playerGrind.Grinding && playerAnimation.Anim != null)
+        if (!playerMovement.CanBoostInAir && playerAnimation.Anim != null)
         {
             playerAnimation.StartBoostAnimation(!charStats.SurvivalLeader);
         }
@@ -224,7 +226,7 @@ public class PlayerBoost : MonoBehaviour
         StopCoroutine("BoostCooldown");
         StartCoroutine("BoostCooldown");
 
-        if (playerMovement.Speed < charStats.GetCurrentBoost() || playerGrind.Grinding)
+        if (playerMovement.Speed < charStats.GetCurrentBoost() || playerMovement.CanBoostInAir)
         {
             playerMovement.Speed = charStats.GetCurrentBoost();
         }
@@ -233,7 +235,7 @@ public class PlayerBoost : MonoBehaviour
             playerMovement.Speed += 5;
         }
 
-        string soundToPlay = playerGrind.Grinding ? Constants.SoundEffects.boost : boostSound;
+        string soundToPlay = playerMovement.CanBoostInAir ? Constants.SoundEffects.boost : boostSound;
 
         audioHolder.SfxManager.Play(soundToPlay);
 

@@ -114,7 +114,7 @@ public class Capsule : MonoBehaviour
         }
 
         //Used to test certain items
-        chosenIndex = 6;
+        //chosenIndex = 7;
 
         int amount = 0;
         int itemIndex = 0;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using UnityEngine.EventSystems;
 
 public class BigCanvasUI : SurvivalFunctionsUI
@@ -12,7 +13,7 @@ public class BigCanvasUI : SurvivalFunctionsUI
     [SerializeField] private GameObject winPanel;
     [SerializeField] private GameObject continueButton;
     [SerializeField] private GameObject restartButton;
-    [SerializeField] private Text timeText;
+    [SerializeField] private TextMeshProUGUI timeText;
     [SerializeField] private GameObject tutorialPanel;
     [SerializeField] private GameObject distanceRadar;
     public GameObject DistanceRadar { get { return distanceRadar; } }
@@ -163,7 +164,7 @@ public class BigCanvasUI : SurvivalFunctionsUI
 
     public void PauseToggle(AudioManagerHolder audioHolder)
     {
-        if (winPanel.activeSelf || survivalWin.gameObject.activeSelf)
+        if (winPanel.activeSelf || survivalWin.gameObject.activeSelf || stopCounting)
         {
             return;
         }      

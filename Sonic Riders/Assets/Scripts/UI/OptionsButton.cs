@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 
 public class OptionsButton : MonoBehaviour
 {
@@ -16,7 +16,7 @@ public class OptionsButton : MonoBehaviour
     private enum optionType { QUALITY }
     private optionType typeOption;
 
-    [SerializeField] private Text optionText;
+    [SerializeField] private TextMeshProUGUI optionText;
     [SerializeField] private Transform pointers;
 
     private void Start()

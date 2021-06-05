@@ -6,6 +6,7 @@ public class BoostPad : MonoBehaviour
 {
     //private Animator canvasAnim;
     private AudioSource source;
+    [SerializeField] private float boostSpeed = 0;
 
     private void Start()
     {
@@ -15,12 +16,24 @@ public class BoostPad : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == 8)
+        if (other.transform.root.CompareTag("Player"))
         {
-            PlayerMovement player = other.GetComponentInParent<PlayerMovement>();
+            PlayerMovement player = other.transform.root.GetComponent<PlayerMovement>();
             CharacterStats characterStats = player.GetComponent<CharacterStats>();
 
-            player.Speed = characterStats.GetCurrentBoost() + 10;
+            float speed = boostSpeed;
+
+            if (boostSpeed == 0)
+            {
+                speed = characterStats.GetCurrentBoost() + 10;
+            }
+
+            player.Speed = speed;
+
+            if (!player.Grounded)
+            {
+                other.attachedRigidbody.velocity = transform.forward * speed;
+            }
 
             player.transform.position = transform.position;
             other.transform.parent.forward = transform.forward;

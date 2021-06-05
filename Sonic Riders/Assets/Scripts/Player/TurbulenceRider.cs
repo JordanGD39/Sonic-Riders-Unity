@@ -12,6 +12,7 @@ public class TurbulenceRider : MonoBehaviour
     private CharacterStats charStats;
     private Rigidbody rb;
     private PlayerMovement playerMovement;
+    private PlayerJump playerJump;
 
     [SerializeField] private bool inTurbulence = false;
     public bool InTurbulence { get { return inTurbulence; } }
@@ -21,9 +22,17 @@ public class TurbulenceRider : MonoBehaviour
     private Vector3 targetIndexPosition;
     private Vector3 prevPos;
     private Vector3 velocity;
-    private float speed = 66;
+    private float pointOffset;
+    private float speed = 70;
+    [SerializeField] private float rotateSpeed = 310;
+    [SerializeField] private float rotateSpeedOnHalfPipe = 180;
+    [SerializeField] private float airGain = 21;
+
+    private bool firstRot = false;
+    private int distanceZeroCount = 0;
 
     public bool InTurbulenceRange { get; set; } = false;
+    private float timer = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +40,7 @@ public class TurbulenceRider : MonoBehaviour
         charStats = GetComponent<CharacterStats>();
         rb = GetComponent<Rigidbody>();
         playerMovement = GetComponent<PlayerMovement>();
+        playerJump = GetComponent<PlayerJump>();
         playerGrind = GetComponent<PlayerGrind>();
     }
 
@@ -39,7 +49,12 @@ public class TurbulenceRider : MonoBehaviour
     {
         if (!inTurbulence)
         {
-            InTurbulenceRange = false;
+            timer += Time.deltaTime;
+
+            if (timer > 0.2f)
+            {
+                InTurbulenceRange = false;
+            }            
         }
         else
         {
@@ -50,7 +65,7 @@ public class TurbulenceRider : MonoBehaviour
 
             CheckValidIndex();
 
-            if (!CheckInTurbulence(targetIndex, false))
+            if (!CheckInTurbulence(targetIndex, false, -1))
             {
                 return;
             }
@@ -68,11 +83,49 @@ public class TurbulenceRider : MonoBehaviour
         //transform.GetChild(0).LookAt(lookPos);
 
         Vector3 distance = prevPos - transform.position;
+
+        if (distance.magnitude < 1)
+        {
+            distanceZeroCount++;
+
+            if (distanceZeroCount > 3)
+            {
+                OutTurbulence();
+            }
+        }
+        else
+        {
+            distanceZeroCount = 0;
+        }
+
         velocity = distance / Time.deltaTime;
 
-        transform.GetChild(0).forward = -distance.normalized;
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(-distance.normalized), rotateSpeed * Time.deltaTime);
 
-        charStats.Hud.UpdateSpeedText(velocity.magnitude);
+        if (!firstRot)
+        {
+            transform.GetChild(0).forward = transform.forward;
+            firstRot = true;
+        }
+
+        transform.GetChild(0).RotateAround(transform.position + transform.up * pointOffset, transform.forward, playerMovement.Movement.x * rotateSpeedOnHalfPipe * Time.deltaTime);
+
+        Quaternion localRot = transform.GetChild(0).localRotation;
+        localRot.z = Mathf.Clamp(localRot.z, -0.6f, 0.6f);
+        transform.GetChild(0).localRotation = localRot;
+
+        Vector3 localPos = transform.GetChild(0).localPosition;
+        localPos.y = Mathf.Clamp(localPos.y, 0, pointOffset);
+        transform.GetChild(0).localPosition = localPos;
+
+        charStats.Air += charStats.BoardStats.RingsAsAir ? 2 * Time.deltaTime : airGain * Time.deltaTime;
+
+        if (charStats.Cam != null)
+        {
+            charStats.Cam.transform.forward = transform.forward;
+        }
+
+        charStats.Hud.UpdateSpeedText(speed);
 
         prevPos = transform.position;
 
@@ -80,7 +133,7 @@ public class TurbulenceRider : MonoBehaviour
         {
             targetIndex++;
 
-            if (!CheckInTurbulence(targetIndex, true))
+            if (!CheckInTurbulence(targetIndex, true, targetIndex - 1))
             {
                 return;
             }
@@ -89,9 +142,11 @@ public class TurbulenceRider : MonoBehaviour
         }
     }
 
-    private bool CheckInTurbulence(int i, bool changes)
+    private bool CheckInTurbulence(int i, bool changes, int prevI)
     {
-        if (i < 0 || i >= turbulencePoints.Count)
+        bool indexTooFar = i < 0 || i > turbulencePoints.Count - 1;
+
+        if (indexTooFar || (prevI > 0 && !indexTooFar && (turbulencePoints[prevI] - turbulencePoints[i]).sqrMagnitude > 500))
         {
             if (changes)
             {
@@ -108,57 +163,72 @@ public class TurbulenceRider : MonoBehaviour
     {
         if (turbulencePoints[targetIndex] != targetIndexPosition)
         {
-            targetIndex--;
-
-            if (!CheckInTurbulence(targetIndex, true))
+            if (!CheckInTurbulence(targetIndex - 1, true, targetIndex))
             {
                 return;
             }
+
+            targetIndex--;
 
             targetIndexPosition = turbulencePoints[targetIndex];
         }
     }
 
-    private void OutTurbulence()
+    public void OutTurbulence()
     {
         Debug.Log("Fell out");
+        
+        transform.position = transform.GetChild(0).position;
+        transform.GetChild(0).localPosition = Vector3.zero;
+        Vector3 oldForward = transform.forward;
+        Quaternion localRot = transform.localRotation;
+        localRot.y = 0;
+        transform.localRotation = localRot;
+        transform.GetChild(0).forward = oldForward;
         inTurbulence = false;
         playerGrind.Grinding = false;
         playerGrind.ChangeRbMode(false);
-        playerMovement.Speed = velocity.magnitude;
-        rb.velocity = velocity;
+        playerMovement.AboveSea(false);
+        playerMovement.Speed = speed;
+        rb.velocity = transform.GetChild(0).forward * speed;
+
+        playerJump.OffTurbulence();
     }
 
-    public void SetTurbulencePoints(List<Vector3> points, int indexTouching)
+    public void SetTurbulencePoints(List<Vector3> points, float offset, int indexTouching)
     {
+        timer = 0;
         InTurbulenceRange = true;
 
-        if (inTurbulence)
+        if (inTurbulence || playerMovement.Attacked || playerMovement.UnderWater)
         {
             return;
         }
 
         turbulencePoints = points;
+        pointOffset = offset;
 
-        if (!CheckInTurbulence(indexTouching + 1, false))
+        if (!CheckInTurbulence(indexTouching + 1, false, -1))
         {
             return;
         }
 
         targetIndex = indexTouching + 1;
-        targetIndexPosition = turbulencePoints[targetIndex + 1];
+        targetIndexPosition = turbulencePoints[targetIndex];
     }
 
     public void CheckTurbulence()
     {
         if (!inTurbulence && !playerMovement.Grounded && InTurbulenceRange)
         {
+            firstRot = false;
+
             inTurbulence = true;
 
             playerGrind.Grinding = true;
             playerGrind.ChangeRbMode(true);
 
-            if (!CheckInTurbulence(targetIndex - 1, false))
+            if (!CheckInTurbulence(targetIndex - 1, false, -1))
             {
                 return;
             }

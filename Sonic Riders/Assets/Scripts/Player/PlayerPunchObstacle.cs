@@ -35,12 +35,15 @@ public class PlayerPunchObstacle : MonoBehaviour
 
     public void Punch(Rigidbody obstacleRb, float upperPower)
     {
-        EggPawnAI ai = obstacleRb.GetComponent<EggPawnAI>();
-
-        if (ai != null)
+        if (obstacleRb != null)
         {
-            ai.Die();
-        }
+            EggPawnAI ai = obstacleRb.GetComponent<EggPawnAI>();
+
+            if (ai != null)
+            {
+                ai.Die();
+            }
+        }        
 
         float powerCalc = charStats.ExtraPower * extraPowerMultiplier;
 
@@ -76,6 +79,10 @@ public class PlayerPunchObstacle : MonoBehaviour
             {
                 punch = leftPunchAngle;
             }
+            audioHolder.SfxManager.Play(Constants.SoundEffects.punch);
+            rightPunch = !rightPunch;
+
+            if (obstacleRb == null) { return; }
 
             float power = punchPower * speedPowerCalc;
 
@@ -86,12 +93,8 @@ public class PlayerPunchObstacle : MonoBehaviour
                 Debug.Log(upperPower);
                 obstacleRb.AddForce(obstacleRb.transform.up * upperPower, ForceMode.Impulse);
             }
-            
-            audioHolder.SfxManager.Play(Constants.SoundEffects.punch);
 
-            rightPunch = !rightPunch;
-
-            if (!charStats.BoardStats.RingsAsAir && obstacleRb != lastPunched)
+            if (!charStats.BoardStats.RingsAsAir && !obstacleRb.gameObject.CompareTag(Constants.Tags.debris) && obstacleRb != lastPunched)
             {
                 charStats.Air += 20;
             }
@@ -101,6 +104,8 @@ public class PlayerPunchObstacle : MonoBehaviour
         else
         {
             audioHolder.SfxManager.Play(Constants.SoundEffects.bounceWall);
+
+            if (obstacleRb == null) { return; }
 
             obstacleRb.AddForce((obstacleRb.transform.position - transform.position).normalized * (punchPower * cantPunchMultiplier * speedPowerCalc));
         }

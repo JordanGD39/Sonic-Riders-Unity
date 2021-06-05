@@ -23,6 +23,7 @@ public class CharacterStats : MonoBehaviour
     public string BoardName { get { return boardName; } set { boardName = value; } }
     [SerializeField] private Sprite boardImage;
     public Sprite BoardImage { get { return boardImage; } set { boardImage = value; } }
+    public bool DontAlign { get; set; } = false;
 
     public int PlayerIndex { get; set; } = 4;
     public Transform Cam { get; set; }
@@ -158,6 +159,7 @@ public class CharacterStats : MonoBehaviour
     }
 
     private bool alreadyLowOnAir = false;
+    private bool alreadyLowerOnAir = false;
 
     public float Air
     {
@@ -180,17 +182,26 @@ public class CharacterStats : MonoBehaviour
                 value = 0;
             }
 
-
-            if ((value > 40 || value == 0) && alreadyLowOnAir)
+            if ((value > 45 || value == 0) && alreadyLowOnAir)
             {
                 alreadyLowOnAir = false;
-                hud.ToggleCaution();
+                alreadyLowerOnAir = false;
+                hud.ToggleCaution(value == 0, false);
             }
-            else if (value > 0 && value < 40 && audioHolder != null && !alreadyLowOnAir && hud != null)
+            else if (value > 0 && value < air && audioHolder != null && hud != null)
             {
-                alreadyLowOnAir = true;
-                hud.ToggleCaution();
-                audioHolder.SfxManager.Play(Constants.SoundEffects.lowAir);
+                if (!alreadyLowOnAir && value < 45)
+                {
+                    alreadyLowOnAir = true;
+                    audioHolder.SfxManager.Play(Constants.SoundEffects.lowAir);
+                    hud.ToggleCaution(true, false);
+                }
+                else if (!alreadyLowerOnAir && value < 25)
+                {
+                    alreadyLowerOnAir = true;
+                    audioHolder.SfxManager.Play(Constants.SoundEffects.lowerAir);
+                    hud.ToggleCaution(true, true);
+                }                                        
             }
 
             if (stats.RingsAsAir)
@@ -304,7 +315,7 @@ public class CharacterStats : MonoBehaviour
         {
             superModelRotation = superModel.transform.rotation;
             ChangeModel(false);
-        }
+        }        
 
         if (IsPlayer)
         {
@@ -343,6 +354,18 @@ public class CharacterStats : MonoBehaviour
                     hud.UpdateAirBar(0, 0);
                 }
             }
+        }
+
+        if (!GameManager.instance.TestAir)
+        {
+            Air = 0;
+
+            if (hud != null)
+            {
+                hud.ToggleCaution(true, false);
+            }
+            
+            playerAnimation.Anim.Play("Standing");
         }
     }
 

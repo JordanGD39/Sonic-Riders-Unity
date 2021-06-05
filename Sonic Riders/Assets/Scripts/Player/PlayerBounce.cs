@@ -12,6 +12,7 @@ public class PlayerBounce : MonoBehaviour
     private PlayerBoost playerBoost;
     private PlayerTrigger playerTrigger;
     private CharacterStats charStats;
+    private TurbulenceRider turbulenceRider;
 
     private AudioManagerHolder audioHolder;
 
@@ -34,11 +35,12 @@ public class PlayerBounce : MonoBehaviour
         playerPunch = rb.GetComponent<PlayerPunchObstacle>();
         charStats = rb.GetComponent<CharacterStats>();
         audioHolder = rb.GetComponent<AudioManagerHolder>();
+        turbulenceRider = rb.GetComponent<TurbulenceRider>();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (playerMovement.Bouncing || collision.gameObject.layer == 14 || collision.gameObject.CompareTag(Constants.Tags.eggPawn) || collision.gameObject.CompareTag(Constants.Tags.loopWall))
+        if (playerMovement.Bouncing || charStats.DontAlign || collision.gameObject.layer == 14 || collision.gameObject.CompareTag(Constants.Tags.eggPawn) || collision.gameObject.CompareTag(Constants.Tags.debris) || collision.gameObject.CompareTag(Constants.Tags.loopWall))
         {
             return;
         }
@@ -47,12 +49,15 @@ public class PlayerBounce : MonoBehaviour
 
         if (collision.gameObject.CompareTag(Constants.Tags.obstacle))
         {
+
             if ((!playerPunch.CantPunch && charStats.Air > 0) || charStats.Invincible)
             {
+                //Debug.Log("NO BOUNCE OFF OF" + collision.gameObject);
                 return;
             }
             else
             {
+                //Debug.Log("BOUNCE OFF OF" + collision.gameObject);
                 obstacle = true;
             }
         }
@@ -71,12 +76,12 @@ public class PlayerBounce : MonoBehaviour
     }
     
 
-    public void Attacked(Vector3 attackerPos, float attackedSpeed)
+    public void Attacked()
     {
-        if (charStats.Invincible)
+        if (charStats.Invincible || attacked || playerMovement.Bouncing)
         {
             return;
-        }
+        }        
 
         attacked = true;
 
@@ -89,6 +94,11 @@ public class PlayerBounce : MonoBehaviour
 
     private IEnumerator Bounce()
     {
+        if (turbulenceRider.InTurbulence)
+        {
+            turbulenceRider.OutTurbulence();
+        }
+
         if (!attacked)
         {
             playerMovement.CantMove = true;
@@ -165,7 +175,7 @@ public class PlayerBounce : MonoBehaviour
         }
 
         yield return new WaitForSeconds(time / 2);
-        playerMovement.Bouncing = false;
+        playerMovement.Bouncing = false;        
         yield return new WaitForSeconds(time / 2);
 
         if (hitDirectly && playerMovement.Grounded)
@@ -179,6 +189,7 @@ public class PlayerBounce : MonoBehaviour
             playerMovement.CantMove = false;
         }
 
-        playerTrigger.AlreadyAttacked = false;        
+        playerTrigger.AlreadyAttacked = false;
+        attacked = false;
     }
 }

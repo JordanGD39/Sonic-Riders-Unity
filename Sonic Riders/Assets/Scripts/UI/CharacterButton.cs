@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class CharacterButton : MonoBehaviour
 {
@@ -42,7 +43,7 @@ public class CharacterButton : MonoBehaviour
 
         if (!selectingBoard)
         {
-            image.color = playerSelect.NotJoinedPanel.transform.GetChild(0).GetComponent<Outline>().effectColor;
+            image.color = playerSelect.NotJoinedPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>().outlineColor;
 
             if (playerSelect.NotJoinedPanel.activeSelf)
             {
@@ -100,11 +101,11 @@ public class CharacterButton : MonoBehaviour
             case 4:
                 if (someStats.BoardStats.RingsAsAir)
                 {
-                    statTransform.GetComponent<Text>().text = "Ring loss";
+                    statTransform.GetComponent<TextMeshProUGUI>().text = "Ring loss";
                 }
                 else
                 {
-                    statTransform.GetComponent<Text>().text = "Air loss";
+                    statTransform.GetComponent<TextMeshProUGUI>().text = "Air loss";
                 }
                 stat = someStats.GetCurrentAirLoss() / 5;
                 break;

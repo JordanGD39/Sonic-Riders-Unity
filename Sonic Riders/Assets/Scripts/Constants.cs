@@ -27,6 +27,7 @@ public class Constants
         public const string eggPawnArea = "EggPawnArea";
         public const string eggPawnCheckPoints = "EggPawnCheckPoints";
         public const string loopWall = "LoopWall";
+        public const string debris = "Debris";
     }
 
     public class VoiceSounds
@@ -56,6 +57,7 @@ public class Constants
         public const string trick = "Trick";
         public const string levelUp = "LevelUp";
         public const string lowAir = "LowAir";
+        public const string lowerAir = "LowerAir";
         public const string electrocuted = "Electrocuted";
         public const string spindash = "Spindash";
         public const string waterSplash = "Water";

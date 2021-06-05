@@ -64,6 +64,7 @@ MonoBehaviour:
   testAir: 0
   GameMode: 0
   fishPhobia: 0
+  activeUnactivePlayers: 0
 --- !u!114 &6533027374955564108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,6 +130,16 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: JungleJoyride
     clip: {fileID: 8300000, guid: 24c7c0bc36754c846a6e174d23cb6b84, type: 3}
+    volume: 0.7
+    pitch: 1
+    loop: 1
+    spatialBlend: 0
+    minRange: 1
+    maxRange: 1
+    priority: 10
+    source: {fileID: 0}
+  - name: EggFleet
+    clip: {fileID: 8300000, guid: da1cc11a3e489b44eb84e18f2483448a, type: 3}
     volume: 0.7
     pitch: 1
     loop: 1

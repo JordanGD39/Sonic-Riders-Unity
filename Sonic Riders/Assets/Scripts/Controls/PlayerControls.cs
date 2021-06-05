@@ -206,13 +206,7 @@ public class PlayerControls : MonoBehaviour
         
         charStats.Cam = cams[playerIndex].transform.parent;
         charStats.CamStartPos = charStats.Cam.localPosition;
-        charStats.Cam.GetComponentInChildren<CameraDeath>().GiveCanvasAnim();
-
-        if (!GameManager.instance.TestAir)
-        {
-            charStats.Air = 0;
-            charStats.GetComponent<PlayerAnimationHandler>().Anim.Play("Standing");
-        }
+        charStats.Cam.GetComponentInChildren<CameraDeath>().GiveCanvasAnim();        
 
         if (!charStats.BoardStats.RingsAsAir)
         {
@@ -398,7 +392,7 @@ public class PlayerControls : MonoBehaviour
 
     private void CheckGrindJump()
     {
-        //turbulenceRider.CheckTurbulence();
+        turbulenceRider.CheckTurbulence();
 
         if (playerGrind.enabled)
         {

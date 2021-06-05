@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
+using TMPro;
 using UnityEngine.SceneManagement;
 
 public class CharacterSelectInput : MonoBehaviour
@@ -20,7 +21,7 @@ public class CharacterSelectInput : MonoBehaviour
     public MultiplayerEventSystem EventSystem { get { return eventSystem; } }
     private GameObject prevButton;
     [SerializeField] private GameObject playerTextPref;
-    private Text playerText;
+    private TextMeshProUGUI playerText;
     private ButtonSounds buttonSounds;
 
     private bool selectingBoard = false;
@@ -30,6 +31,7 @@ public class CharacterSelectInput : MonoBehaviour
     private PlayerSelectReferences playerSelect;
 
     [SerializeField] private BoardStats[] boards;
+    [SerializeField] private Material[] playerColorMaterials;
     private List<BoardStats> selectableBoards = new List<BoardStats>();
     private int boardIndex = 0;
     private int prevBoardIndex = 0;
@@ -84,30 +86,42 @@ public class CharacterSelectInput : MonoBehaviour
 
         GameObject textPlayer = Instantiate(playerTextPref, button.transform, false);
 
-        playerText = textPlayer.GetComponent<Text>();
+        playerText = textPlayer.GetComponent<TextMeshProUGUI>();
 
         playerIndex = playerInput.playerIndex;
 
         switch (playerIndex)
         {
-            case 0:
-                playerText.color = new Color32(245, 47, 46, 255);
-                playerText.GetComponent<Outline>().effectColor = new Color32(134, 0, 0, 255);
-                playerText.text = "P1";
-                break;
             case 1:
-                playerText.color = new Color32(84, 98, 255, 255);
-                playerText.GetComponent<Outline>().effectColor = Color.blue;
+                playerText.fontMaterial = playerColorMaterials[0];
+                playerText.color = Color.white;
+
+                Color32 colorTop = new Color32(148, 157, 255, 255);
+                Color32 colorBottom = new Color32(105, 112, 188, 255);
+
+                playerText.colorGradient = new VertexGradient(colorTop, colorTop, colorBottom, colorBottom);
                 playerText.text = "P2";
                 break;
             case 2:
-                playerText.color = new Color32(255, 199, 24, 255);
-                playerText.GetComponent<Outline>().effectColor = new Color32(95, 96, 3, 255);
+                playerText.fontMaterial = playerColorMaterials[1];
+                playerText.color = Color.white;
+
+                Color32 colorTopY = new Color32(255, 249, 66, 255);
+                Color32 colorBottomY = new Color32(195, 190, 49, 255);
+
+                playerText.colorGradient = new VertexGradient(colorTopY, colorTopY, colorBottomY, colorBottomY);
+
                 playerText.text = "P3";
                 break;
             case 3:
-                playerText.color = new Color32(30, 158, 63, 255);
-                playerText.GetComponent<Outline>().effectColor = new Color32(0, 83, 0, 255);
+                playerText.fontMaterial = playerColorMaterials[2];
+                playerText.color = Color.white;
+
+                Color32 colorTopG = new Color32(31, 147, 64, 255);
+                Color32 colorBottomG = new Color32(25, 96, 45, 255);
+
+                playerText.colorGradient = new VertexGradient(colorTopG, colorTopG, colorBottomG, colorBottomG);
+
                 playerText.text = "P4";
                 break;
         }
@@ -191,7 +205,7 @@ public class CharacterSelectInput : MonoBehaviour
             }
             else
             {
-                playerSelect.InfoText.text = boards[boardIndex].BoardDescription;
+                playerSelect.InfoText.text = selectableBoards[boardIndex].BoardDescription;
             }
         }
         else

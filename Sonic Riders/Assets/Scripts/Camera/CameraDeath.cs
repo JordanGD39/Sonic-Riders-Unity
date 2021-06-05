@@ -9,6 +9,7 @@ public class CameraDeath : MonoBehaviour
     private Rigidbody playerRb;
     private Transform prevParent;
     private PlayerMovement playerMovement;
+    private TurbulenceGenerator turbulenceGenerator;
     private PlayerCheckpoints playerCheckpoints;
     private CharacterStats charStats;
     private Vector3 startPos;
@@ -26,9 +27,10 @@ public class CameraDeath : MonoBehaviour
         }
 
         playerMovement = GetComponentInParent<PlayerMovement>();
-        charStats = GetComponentInParent<CharacterStats>();
+        charStats = playerMovement.GetComponent<CharacterStats>();
         player = playerMovement.transform;
         playerCheckpoints = player.GetComponent<PlayerCheckpoints>();
+        turbulenceGenerator = player.GetComponent<TurbulenceGenerator>();
         startPos = transform.localPosition;
         prevParent = transform.parent;
         playerRb = player.GetComponent<Rigidbody>();
@@ -55,6 +57,7 @@ public class CameraDeath : MonoBehaviour
             return;
         }
 
+        turbulenceGenerator.PauseGeneration();
         transform.parent = null;
         followPlayer = true;
         charStats.DisableAllFeatures = true;
@@ -80,15 +83,13 @@ public class CameraDeath : MonoBehaviour
         followPlayer = false;
         int checkPointIndex = playerCheckpoints.CurrCheckpoint;
 
-        bool checkpointOutOfBounds = checkPointIndex > playerCheckpoints.RaceManagerScript.transform.childCount - 1;
-
-        if (checkpointOutOfBounds)
+        if (checkPointIndex > playerCheckpoints.RaceManagerScript.transform.childCount - 1)
         {
             checkPointIndex = 0;
         }
 
         Transform checkPoint = playerCheckpoints.RaceManagerScript.transform.GetChild(checkPointIndex).GetChild(0);
-        player.GetChild(0).up = Vector3.up;
+        player.up = Vector3.up;
         player.GetChild(0).forward = checkPoint.parent.forward;
         player.position = checkPoint.position;
 
@@ -110,5 +111,7 @@ public class CameraDeath : MonoBehaviour
         {
             charStats.Rings -= 50;
         }
+
+        turbulenceGenerator.ResumeGeneration(transform.position);
     }
 }

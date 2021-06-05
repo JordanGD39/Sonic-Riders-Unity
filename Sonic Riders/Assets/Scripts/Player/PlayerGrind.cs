@@ -8,6 +8,8 @@ public class PlayerGrind : MonoBehaviour
     private AudioManagerHolder audioHolder;
     private PlayerMovement movement;
     private PlayerTricks playerTricks;
+    private TurbulenceGenerator turbulenceGenerator;
+    private TurbulenceRider turbulenceRider;
     private PlayerJump playerJump;
     private PlayerFollowPath playerFollowPath;
     private Rigidbody rb;
@@ -18,6 +20,7 @@ public class PlayerGrind : MonoBehaviour
 
     [SerializeField] private PathCreator path;
     public PathCreator Path { get { return path; } set { path = value; } }
+    public float speedMultiplier = 1;
     public Quaternion StartingRotation { get; set; }
 
     [SerializeField] private bool grinding = false;
@@ -43,6 +46,8 @@ public class PlayerGrind : MonoBehaviour
 
         movement = GetComponent<PlayerMovement>();
         playerFollowPath = GetComponent<PlayerFollowPath>();
+        turbulenceGenerator = GetComponent<TurbulenceGenerator>();
+        turbulenceRider = GetComponent<TurbulenceRider>();
         playerTricks = GetComponent<PlayerTricks>();
         playerJump = GetComponent<PlayerJump>();
         rb = GetComponent<Rigidbody>();
@@ -58,14 +63,14 @@ public class PlayerGrind : MonoBehaviour
     {
         if (path != null)
         {
-            if (grinding)
+            if (grinding && !turbulenceRider.InTurbulence)
             {
                 if (!charStats.BoardStats.RingsAsAir)
                 {
                     charStats.Air += airGain * Time.deltaTime;
                 }
 
-                playerFollowPath.FollowPath(path.path, true, extraCharHeight);
+                playerFollowPath.FollowPath(path.path, true, extraCharHeight, speedMultiplier);
 
                 hud.UpdateSpeedText(movement.Speed);
 
@@ -74,7 +79,9 @@ public class PlayerGrind : MonoBehaviour
                     movement.Speed = 20;
                 }
 
-                if (path.path.GetClosestTimeOnPath(transform.position) > 0.99f)
+                float percent = path.path.GetClosestTimeOnPath(transform.position);
+
+                if ((percent > 0.99f && speedMultiplier > 0) || percent < 0.01 && speedMultiplier < 0)
                 {
                     OffRail(false);                    
                 }
@@ -85,7 +92,15 @@ public class PlayerGrind : MonoBehaviour
     public void CheckGrind()
     {
         //Jumping on Rail
-        if (!movement.Grounded && !grinding && path != null && path.path.GetClosestTimeOnPath(transform.position) < 0.99f)
+
+        float percent = -1;
+
+        if (!movement.Grounded && !grinding && path != null)
+        {
+            percent = path.path.GetClosestTimeOnPath(transform.position);
+        }
+
+        if (percent > -1 && ((percent < 0.99f && speedMultiplier > 0) || percent > 0.01f && speedMultiplier < 0))
         {
             if (playerTricks.CanDoTricks)
             {
@@ -99,6 +114,9 @@ public class PlayerGrind : MonoBehaviour
             transform.GetChild(0).localRotation = Quaternion.LookRotation(path.path.GetDirectionAtDistance(playerFollowPath.ClosestDistance, EndOfPathInstruction.Stop));
             transform.position = path.path.GetPointAtDistance(playerFollowPath.ClosestDistance, EndOfPathInstruction.Stop);
             grinding = true;
+            movement.CanBoostInAir = true;
+
+            turbulenceGenerator.PauseGeneration();
 
             audioHolder.SfxManager.Play(Constants.SoundEffects.grind);
         }
@@ -126,13 +144,17 @@ public class PlayerGrind : MonoBehaviour
     {
         Debug.Log("OffRail " + jumpPressed);
         grinding = false;
+        movement.CanBoostInAir = false;
         transform.GetChild(0).localRotation = new Quaternion(0, transform.GetChild(0).localRotation.y, 0, transform.GetChild(0).localRotation.w);
         ChangeRbMode(false);
 
-        Vector3.ClampMagnitude(playerFollowPath.Velocity, charStats.GetCurrentBoost());
-        rb.velocity = playerFollowPath.Velocity;
+        //Vector3.ClampMagnitude(playerFollowPath.Velocity, charStats.GetCurrentBoost());
+        rb.velocity = playerFollowPath.Velocity.normalized * movement.Speed;
+        Debug.Log(rb.velocity.magnitude * 3);
 
         audioHolder.SfxManager.StopPlaying(Constants.SoundEffects.grind);
+
+        turbulenceGenerator.ResumeGeneration(transform.position);
 
         if (jumpPressed)
         {

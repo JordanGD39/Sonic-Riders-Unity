@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class StartingLevel : MonoBehaviour
 {
     private Transform psParent;
-    private List<Text> countdownTexts = new List<Text>();
+    private List<TextMeshProUGUI> countdownTexts = new List<TextMeshProUGUI>();
     private AudioSource audioSource;
 
     [SerializeField] private AudioClip countSound;
@@ -72,7 +73,7 @@ public class StartingLevel : MonoBehaviour
 
         for (int i = 0; i < texts.Count; i++)
         {
-            countdownTexts.Add(texts[i].GetComponent<Text>());
+            countdownTexts.Add(texts[i].GetComponent<TextMeshProUGUI>());
         }
 
         for (int i = 0; i < countdownTexts.Count; i++)
@@ -111,7 +112,11 @@ public class StartingLevel : MonoBehaviour
 
         for (int i = 0; i < countdownTexts.Count; i++)
         {
-            countdownTexts[i].text = timer.ToString("F2");
+            string seconds = Mathf.Floor(timer % 60).ToString("00");
+            float centiseconds = timer * 100;
+            centiseconds = centiseconds % 100;
+
+            countdownTexts[i].text = seconds + "''" + centiseconds.ToString("00");
         }
 
         if (timer < 0.25f && !alreadyCanceledSound)
@@ -134,6 +139,7 @@ public class StartingLevel : MonoBehaviour
             for (int i = 0; i < countdownTexts.Count; i++)
             {
                 countdownTexts[i].gameObject.SetActive(false);
+                countdownTexts[i].GetComponentInParent<HUD>().ShowStart();
             }
         }
     }
@@ -179,9 +185,10 @@ public class StartingLevel : MonoBehaviour
                 i = 4 - i;
             }
 
-            float x = i * 3;
+            float x = i * 2;
 
             playersInScene[i].transform.position = new Vector3(x, transform.position.y + 0.4f, 0);
+            playersInScene[i].transform.GetChild(0).forward = transform.forward;
         }        
 
         if (survivalManager != null)

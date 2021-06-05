@@ -155,7 +155,7 @@ MonoBehaviour:
     priority: 20
     source: {fileID: 0}
   - name: LowAir
-    clip: {fileID: 8300000, guid: bfaffa915e5d0a84bb7a0649230e63d2, type: 3}
+    clip: {fileID: 8300000, guid: 4953da9f378a1384ab606fb6bc333e2a, type: 3}
     volume: 1
     pitch: 1
     loop: 0
@@ -196,6 +196,26 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: SpeedShoes
     clip: {fileID: 8300000, guid: 484cb0948451bee4692bf4093577499c, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    minRange: 5
+    maxRange: 100
+    priority: 20
+    source: {fileID: 0}
+  - name: SpeedShoes
+    clip: {fileID: 8300000, guid: 484cb0948451bee4692bf4093577499c, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    minRange: 5
+    maxRange: 100
+    priority: 20
+    source: {fileID: 0}
+  - name: LowerAir
+    clip: {fileID: 8300000, guid: bfaffa915e5d0a84bb7a0649230e63d2, type: 3}
     volume: 1
     pitch: 1
     loop: 0

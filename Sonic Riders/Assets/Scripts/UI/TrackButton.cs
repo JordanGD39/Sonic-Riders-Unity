@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
+using TMPro;
 
 public class TrackButton : MonoBehaviour
 {
     [SerializeField] private string trackName;
     [SerializeField] private string shownTrackName;
-    [SerializeField] private Text trackNameText;
+    [SerializeField] private TextMeshProUGUI trackNameText;
 
     public void GoToCharacterSelect()
     {

@@ -31,13 +31,14 @@ public class PlayerJump : MonoBehaviour
     public float RampPower { get { return rampPower; } set { rampPower = value; } }
     //private float maxRampPower;
     //private float worstRampPower;
-
-    [SerializeField] private float highestYvel = 0;
+    
 
     public Ramp CurrRamp { get; set; }
 
     private bool alreadyFell = false;
     private bool canClamp = false;
+
+    private bool justOffOfTurbulence = false;
 
     // Start is called before the first frame update
     void Start()
@@ -186,16 +187,17 @@ public class PlayerJump : MonoBehaviour
 
                 float jumpPower = jumpHeight;
 
-                if (charStats.BoardStats.AutoTrick)
+                if (charStats.BoardStats.AutoTrick || justOffOfTurbulence)
                 {
                     jumpPower = maxJumpHeight;
                 }
                 
                 transform.SetParent(null);
-                rb.velocity = forward * (jumpPower * jumpMultiplier + rampPower);
+                rb.velocity = forward * ((!CurrRamp.StaticPower ? jumpPower : maxJumpHeight) * jumpMultiplier + rampPower);
+                //Debug.Log("RB vel: " + rb.velocity.magnitude);
 
                 alreadyFell = false;
-                playerTricks.ChangeTrickSpeed(jumpPower, startingJumpHeight, maxJumpHeight);
+                playerTricks.ChangeTrickSpeed(jumpPower, startingJumpHeight, maxJumpHeight, CurrRamp.StaticPower);
             }
             else
             {
@@ -206,18 +208,12 @@ public class PlayerJump : MonoBehaviour
                 audioHolder.VoiceManager.Play(Constants.VoiceSounds.jump);
 
                 rb.AddForce(transform.up * jumpHeight, ForceMode.VelocityChange);
-                highestYvel = 0;
                 canClamp = true;
             }
 
             jumpHeight = startingJumpHeight;
             GrindJumpHeight = 0;
             jumpRelease = false;
-        }
-
-        if (rb.velocity.y > highestYvel)
-        {
-            highestYvel = rb.velocity.y;
         }
 
         if (canClamp && !mov.Grounded)
@@ -241,7 +237,7 @@ public class PlayerJump : MonoBehaviour
             alreadyFell = true;
             CurrRamp = ramp;
 
-            if (charStats.BoardStats.AutoTrick)
+            if (charStats.BoardStats.AutoTrick || justOffOfTurbulence)
             {
                 rampPower = ramp.Power;
             }
@@ -267,5 +263,17 @@ public class PlayerJump : MonoBehaviour
                 transform.parent = null;
             }
         }
+    }
+
+    public void OffTurbulence()
+    {
+        justOffOfTurbulence = true;
+
+        Invoke("TimeWindowOffTurbulenceOver", 0.5f);
+    }
+
+    private void TimeWindowOffTurbulenceOver()
+    {
+        justOffOfTurbulence = false;
     }
 }

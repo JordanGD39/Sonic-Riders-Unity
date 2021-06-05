@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PlayerSelectReferences : MonoBehaviour
 {
@@ -16,8 +17,8 @@ public class PlayerSelectReferences : MonoBehaviour
     public Image BoardImage { get { return boardImage; } }
     [SerializeField] private Image boardImageFinal;
     public Image BoardImageFinal { get { return boardImageFinal; } }
-    [SerializeField] private Text boardText;
-    public Text BoardText { get { return boardText; } }
+    [SerializeField] private TextMeshProUGUI boardText;
+    public TextMeshProUGUI BoardText { get { return boardText; } }
 
     [SerializeField] private Transform statsParent;
     public Transform StatsParent { get { return statsParent; } }
@@ -29,14 +30,14 @@ public class PlayerSelectReferences : MonoBehaviour
 
     [SerializeField] private GameObject infoPanel;
     public GameObject InfoPanel { get { return infoPanel; } }
-    [SerializeField] private Text infoText;
-    public Text InfoText { get { return infoText; } }
+    [SerializeField] private TextMeshProUGUI infoText;
+    public TextMeshProUGUI InfoText { get { return infoText; } }
 
     private string oldInfoText = "";
     public string OldInfoText { get { return oldInfoText; } }
 
-    [SerializeField] private Text fullName;
-    public Text FullName { get { return fullName; } }
+    [SerializeField] private TextMeshProUGUI fullName;
+    public TextMeshProUGUI FullName { get { return fullName; } }
 
     private void Start()
     {

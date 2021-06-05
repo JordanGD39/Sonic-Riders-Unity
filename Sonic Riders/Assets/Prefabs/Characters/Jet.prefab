@@ -20238,6 +20238,7 @@ MonoBehaviour:
   attackDelay: 0.25
   attackRadius: 3.5
   attackDistance: 1
+  boostSound: 
 --- !u!114 &7696655778457604635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20318,6 +20319,7 @@ MonoBehaviour:
   higherCamPos: {x: 0, y: 5, z: -4}
   trickForceUp: 3
   trickForceForward: 3
+  trickForceSideways: 5
 --- !u!114 &7696655778457604638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20486,21 +20488,22 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7696655778457604615}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f7589790d000c914383e3aa0dd1c57ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   distanceToGeneratePath: 10
-  maxPoints: 20
-  trailTime: 10
-  checkRadius: 5
+  maxPoints: 80
+  trailTime: 20
+  checkRadius: 10
   layerMask:
     serializedVersion: 2
     m_Bits: 256
   pathPositions: []
-  objectsBetweenPoints: 4
-  poolIndex: 0
+  offsetPositions: []
+  offset: 6
+  removingTolerance: 5
 --- !u!114 &6553380260535965116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20508,13 +20511,16 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7696655778457604615}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 027af58bba5efd841a9b3d5da3df2d4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   inTurbulence: 0
   targetIndex: 0
+  rotateSpeed: 310
+  rotateSpeedOnHalfPipe: 180
+  airGain: 21
 --- !u!114 &2828896726985192996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25932,7 +25938,7 @@ Camera:
   m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 524055
+    m_Bits: 1048343
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

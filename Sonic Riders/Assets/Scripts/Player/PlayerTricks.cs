@@ -10,6 +10,7 @@ public class PlayerTricks : MonoBehaviour
     private PlayerMovement playerMovement;
     private AudioManagerHolder audioHolder;
     private PlayerAnimationHandler playerAnimation;
+    private TurbulenceGenerator turbulenceGenerator;
     private CharacterStats characterStats;
 
     private float speedReward;
@@ -23,6 +24,9 @@ public class PlayerTricks : MonoBehaviour
     [SerializeField] private Vector3 higherCamPos;
     [SerializeField] private float trickForceUp = 3;
     [SerializeField] private float trickForceForward = 3;
+    [SerializeField] private float trickForceSideways = 5;
+    private bool rampStatic = false;
+    private float turnSpeed = 10;
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +34,7 @@ public class PlayerTricks : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         audioHolder = GetComponent<AudioManagerHolder>();
         playerAnimation = GetComponent<PlayerAnimationHandler>();
+        turbulenceGenerator = GetComponent<TurbulenceGenerator>();
         characterStats = GetComponent<CharacterStats>();
         
         rb = GetComponent<Rigidbody>();
@@ -37,8 +42,15 @@ public class PlayerTricks : MonoBehaviour
 
     private void Update()
     {
-        if (CanDoTricks && characterStats.IsPlayer)
+        if (CanDoTricks)
         {
+            transform.GetChild(0).Rotate(0, TrickDirection.x * turnSpeed * Time.deltaTime, 0);
+
+            if (!characterStats.IsPlayer)
+            {
+                return;
+            }
+
             Vector3 pos = Vector3.zero;
 
             if (rb.velocity.y > 0)
@@ -61,8 +73,13 @@ public class PlayerTricks : MonoBehaviour
     {
         if (CanDoTricks && !playerMovement.Grounded)
         {
-            rb.AddForce(transform.up * -TrickDirection.y * trickForceUp);
-            rb.AddForce(transform.GetChild(0).forward * TrickDirection.y * trickForceForward);
+            if (!rampStatic)
+            {
+                rb.AddForce(transform.up * -TrickDirection.y * trickForceUp);
+                rb.AddForce(transform.GetChild(0).forward * TrickDirection.y * trickForceForward);
+            }
+            
+            rb.AddForce(transform.GetChild(0).right * TrickDirection.x * trickForceSideways);
         }
     }
 
@@ -71,9 +88,12 @@ public class PlayerTricks : MonoBehaviour
         tricks++;
     }
 
-    public void ChangeTrickSpeed(float jumpHeight, float startingJumpHeight, float maxJumpHeight)
+    public void ChangeTrickSpeed(float jumpHeight, float startingJumpHeight, float maxJumpHeight, bool isRampStatic)
     {
-        CanDoTricks = true;  
+        rampStatic = isRampStatic;
+        CanDoTricks = true;
+
+        turbulenceGenerator.PauseGeneration();
         
         float jumpDiff = maxJumpHeight - startingJumpHeight;
         
@@ -102,6 +122,11 @@ public class PlayerTricks : MonoBehaviour
     // Update is called once per frame
     public void Landed(bool landedOnGround)
     {
+        if (landedOnGround)
+        {
+            turbulenceGenerator.ResumeGeneration(transform.position);
+        }
+
         if (!characterStats.IsPlayer)
         {
             characterStats.Air += 100;

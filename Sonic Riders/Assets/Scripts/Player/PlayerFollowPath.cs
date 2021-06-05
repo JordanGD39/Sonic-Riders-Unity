@@ -18,7 +18,7 @@ public class PlayerFollowPath : MonoBehaviour
         movement = GetComponent<PlayerMovement>();   
     }
 
-    public void FollowPath(VertexPath vertexPath, bool physics, float extraCharHeight)
+    public void FollowPath(VertexPath vertexPath, bool physics, float extraCharHeight, float multiplier)
     {
         Vector3 distance = transform.position - previousPos;
 
@@ -35,10 +35,17 @@ public class PlayerFollowPath : MonoBehaviour
             }
         }
 
-        closestDistance += movement.Speed * Time.deltaTime;
+        closestDistance += movement.Speed * multiplier * Time.deltaTime;
         Vector3 desiredPos = vertexPath.GetPointAtDistance(closestDistance, EndOfPathInstruction.Stop);
         desiredPos += transform.GetChild(0).up * extraCharHeight;
         transform.position = desiredPos;
-        transform.GetChild(0).localRotation = vertexPath.GetRotationAtDistance(closestDistance, EndOfPathInstruction.Stop);
+        Quaternion rot = vertexPath.GetRotationAtDistance(closestDistance, EndOfPathInstruction.Stop);
+        transform.GetChild(0).localRotation = rot;
+
+        if (multiplier < 0)
+        {
+            Vector3 otherWayForward = -transform.GetChild(0).forward;
+            transform.GetChild(0).forward = otherWayForward;
+        }
     }
 }

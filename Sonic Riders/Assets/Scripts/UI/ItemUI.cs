@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class ItemUI : MonoBehaviour
 {
-    [SerializeField] private Text itemText;
+    [SerializeField] private TextMeshProUGUI itemText;
     [SerializeField] private Image itemImage;
 
     private HUD hud;

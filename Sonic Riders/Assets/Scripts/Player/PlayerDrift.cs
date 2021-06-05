@@ -90,14 +90,11 @@ public class PlayerDrift : MonoBehaviour
             driftTimer = 0;
             autoDriftTimer = 0;
             movement.FallToTheGround = false;
-            if (movement.Speed < charStats.GetCurrentBoost())
+            if (movement.Speed < charStats.GetCurrentLimit())
             {
-                movement.Speed = charStats.GetCurrentBoost();
+                movement.Speed = charStats.GetCurrentLimit() * 1.2f;
             }
-            else
-            {
-                movement.Speed += 5;
-            }            
+            
             movement.DriftBoost = true;
 
             audioHolder.SfxManager.Play(Constants.SoundEffects.boost);

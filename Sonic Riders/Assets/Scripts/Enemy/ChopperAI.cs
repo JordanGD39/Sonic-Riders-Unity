@@ -73,7 +73,7 @@ public class ChopperAI : MonoBehaviour
             if (!delaySearch)
             {
                 SearchForPlayerOffRoadWater();
-            }     
+            }
         }
         else
         {
@@ -155,6 +155,7 @@ public class ChopperAI : MonoBehaviour
         if (delay)
         {
             delaySearch = true;
+            Invoke("RemoveDelay", 2);
         }
         else
         {
@@ -164,6 +165,11 @@ public class ChopperAI : MonoBehaviour
 
         backUnderWater = true;
         aboveWater = false;    
+    }
+
+    private void RemoveDelay()
+    {
+        delaySearch = false;
     }
 
     private void AttackCheck(bool back)

@@ -14,6 +14,7 @@ public class Ramp : MonoBehaviour
     [SerializeField] private Transform differentForward;
     [SerializeField] private float jumpRotationZ = -0.5f;
     [SerializeField] private bool survivalException = false;
+    [SerializeField] private bool staticPower = false;
 
     public float PerfectJump { get { return perfectJumpRange; } }
     public float Power { get { return power; } }
@@ -22,6 +23,7 @@ public class Ramp : MonoBehaviour
     public bool Flight { get { return flightRamp; } }
     public Transform DifferentForward { get { return differentForward; } }
     public float JumpRotationZ { get { return jumpRotationZ; } }
+    public bool StaticPower { get { return staticPower; } }
 
     private void Start()
     {
@@ -31,10 +33,9 @@ public class Ramp : MonoBehaviour
         {
             power *= 0.8f;
             multiplier += 0.2f;
-
         }
 
-        worstPower = power * multiplier;        
+        worstPower = !staticPower ? power * multiplier : power;        
     }
 
     private void OnTriggerEnter(Collider other)
@@ -60,9 +61,10 @@ public class Ramp : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        PlayerTricks player = other.transform.GetComponentInParent<PlayerTricks>();
+        PlayerTricks player = other.attachedRigidbody.GetComponent<PlayerTricks>();
 
         PlayerGrind playerGrind = null;
+
 
         if (player != null)
         {
@@ -90,7 +92,7 @@ public class Ramp : MonoBehaviour
             }
             else
             {
-                other.transform.GetComponentInParent<PlayerJump>().FallingOffRamp(this);
+                player.GetComponent<PlayerJump>().FallingOffRamp(this);
             }
         }
     }    

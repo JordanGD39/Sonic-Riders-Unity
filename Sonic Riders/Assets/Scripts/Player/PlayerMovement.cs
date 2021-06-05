@@ -15,6 +15,8 @@ public class PlayerMovement : MonoBehaviour
     private PlayerFlight playerFlight;
     private ThirdPersonCamera thirdPersonCamera;
     private AudioManagerHolder audioHolder;
+    private TurbulenceRider turbulenceRider;
+    private TurbulenceGenerator turbulenceGenerator;
 
     private Rigidbody rb;
 
@@ -62,6 +64,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float highestFallSpeed;
 
     [SerializeField] private LayerMask layerMask;
+    public LayerMask NormalLayerMask { get { return layerMask; } }
     [SerializeField] private LayerMask noWaterLayerMask;
     private LayerMask currentLayerMask;
 
@@ -69,6 +72,7 @@ public class PlayerMovement : MonoBehaviour
 
     public Transform Sea { get; set; }
     public bool JustDied { get; set; } = false;
+    public bool CanBoostInAir { get; set; } = false;
 
     [SerializeField] private ParticleSystem ps;
 
@@ -88,6 +92,8 @@ public class PlayerMovement : MonoBehaviour
         playerTricks = GetComponent<PlayerTricks>();
         playerFlight = GetComponent<PlayerFlight>();
         audioHolder = GetComponent<AudioManagerHolder>();
+        turbulenceRider = GetComponent<TurbulenceRider>();
+        turbulenceGenerator = GetComponent<TurbulenceGenerator>();
         rb = GetComponent<Rigidbody>();
 
         if (sea != null)
@@ -114,7 +120,7 @@ public class PlayerMovement : MonoBehaviour
     {
         //Movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
-        if (playerJump == null || !playerJump.DontDragDown)
+        if ((playerJump == null || !playerJump.DontDragDown) && !turbulenceRider.InTurbulence && !charStats.DontAlign)
         {
             grounded = GetAlignment();
         }
@@ -393,12 +399,17 @@ public class PlayerMovement : MonoBehaviour
             audioHolder.SfxManager.Play(Constants.SoundEffects.waterSplash);
         }
 
+        if (!UnderWater)
+        {
+            turbulenceGenerator.PauseGeneration();
+        }
+
         UnderWater = true;
 
         currentLayerMask = noWaterLayerMask;
         model.gameObject.layer = 11;
         raycastLength = 0;
-        rb.drag = 1;        
+        rb.drag = 1;       
     }
 
     private void FixedUpdate()
@@ -431,13 +442,20 @@ public class PlayerMovement : MonoBehaviour
             }
         }*/
 
-        if (NotOnSlowdownAngle() || !grounded)
-        {           
-            ridingOnWall = false;
-        }      
-        else
+        bool prevRow = ridingOnWall;
+          
+        ridingOnWall = !(NotOnSlowdownAngle() || !grounded);
+
+        if (prevRow != ridingOnWall)
         {
-            ridingOnWall = true;
+            if (ridingOnWall)
+            {
+                turbulenceGenerator.PauseGeneration();
+            }
+            else if(!playerTricks.CanDoTricks)
+            {
+                turbulenceGenerator.ResumeGeneration(transform.position);
+            }
         }
 
         if (ridingOnWall && speed < 13)
@@ -661,6 +679,11 @@ public class PlayerMovement : MonoBehaviour
         if (playSound)
         {
             audioHolder.SfxManager.Play(Constants.SoundEffects.waterSplash);
+        }
+
+        if (UnderWater)
+        {
+            turbulenceGenerator.ResumeGeneration(transform.position);
         }
 
         UnderWater = false;

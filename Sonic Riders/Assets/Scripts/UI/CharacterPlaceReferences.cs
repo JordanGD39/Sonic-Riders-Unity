@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class CharacterPlaceReferences : MonoBehaviour
 {
@@ -11,9 +12,9 @@ public class CharacterPlaceReferences : MonoBehaviour
     [SerializeField] private Image portrait;
     public Image Portrait { get { return portrait; } }
 
-    [SerializeField] private Text characterName;
-    public Text CharacterName { get { return characterName; } }
+    [SerializeField] private TextMeshProUGUI characterName;
+    public TextMeshProUGUI CharacterName { get { return characterName; } }
 
-    [SerializeField] private Text time;
-    public Text TimeText { get { return time; } }
+    [SerializeField] private TextMeshProUGUI time;
+    public TextMeshProUGUI TimeText { get { return time; } }
 }
