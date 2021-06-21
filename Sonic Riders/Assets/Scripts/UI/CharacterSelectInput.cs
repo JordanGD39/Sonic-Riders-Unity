@@ -242,35 +242,45 @@ public class CharacterSelectInput : MonoBehaviour
             canSelect = false;            
 
             Invoke("CanSelectInput", 0.25f);
+
+            if (GameManager.instance.GameMode == GameManager.gamemode.TUTORIAL)
+            {
+                ShowResult();
+            }
         }
         else if (selectingBoard)
         {
-            playerSelect.CharacterImage.gameObject.SetActive(true);
-
-            if (charStats.BoardStats.Super)
-            {
-                playerSelect.CharacterImage.sprite = charStats.SuperSprite;
-            }
-            else
-            {
-                playerSelect.BoardImageFinal.sprite = playerSelect.BoardImage.sprite;
-                playerSelect.BoardImageFinal.gameObject.SetActive(true);
-            }
-
-            playerSelect.PointersParent.SetActive(false);
-            playerSelect.BoardText.gameObject.SetActive(false);
-            playerSelect.BoardImage.gameObject.SetActive(false);
-            
-            playerReady = true;
-
-            //Disables the panel when opened
-            if (playerSelect.InfoPanel.activeSelf)
-            {
-                ShowInfo();
-            }
-
-            PlayerDone();
+            ShowResult();
         }
+    }
+
+    private void ShowResult()
+    {
+        playerSelect.CharacterImage.gameObject.SetActive(true);
+
+        if (charStats.BoardStats.Super)
+        {
+            playerSelect.CharacterImage.sprite = charStats.SuperSprite;
+        }
+        else
+        {
+            playerSelect.BoardImageFinal.sprite = playerSelect.BoardImage.sprite;
+            playerSelect.BoardImageFinal.gameObject.SetActive(true);
+        }
+
+        playerSelect.PointersParent.SetActive(false);
+        playerSelect.BoardText.gameObject.SetActive(false);
+        playerSelect.BoardImage.gameObject.SetActive(false);
+
+        playerReady = true;
+
+        //Disables the panel when opened
+        if (playerSelect.InfoPanel.activeSelf)
+        {
+            ShowInfo();
+        }
+
+        PlayerDone();
     }
 
     private void ScrollTroughBoard(float dir)

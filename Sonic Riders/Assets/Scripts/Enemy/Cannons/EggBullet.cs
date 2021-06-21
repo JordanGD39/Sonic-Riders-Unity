@@ -4,14 +4,16 @@ using UnityEngine;
 
 public class EggBullet : MonoBehaviour
 {
-    public delegate void BulletCollisionDelegate();
+    public delegate void BulletCollisionDelegate(bool hitPlayer);
     public BulletCollisionDelegate bulletCollision;
     private Rigidbody rb;
     public bool targetReady = false;
     [SerializeField] private float outOfBoundsY = -100;
     [SerializeField] private GameObject explosionPrefab;
+    [SerializeField] private GameObject aerialEplosionPrefab;
     [SerializeField] private LayerMask explosionLayerMask;
     private GameObject explosionParticles;
+    private GameObject aerialExplosionParticles;
     private Vector3 savedPos;
 
     // Start is called before the first frame update
@@ -19,7 +21,9 @@ public class EggBullet : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         explosionParticles = Instantiate(explosionPrefab, Vector3.zero, Quaternion.identity);
+        aerialExplosionParticles = Instantiate(aerialEplosionPrefab, Vector3.zero, Quaternion.identity);
         explosionParticles.SetActive(false);
+        aerialExplosionParticles.SetActive(false);
     }
 
     void Update()
@@ -31,7 +35,7 @@ public class EggBullet : MonoBehaviour
 
         if (transform.position.y < outOfBoundsY)
         {
-            bulletCollision();
+            bulletCollision(false);
         }
 
         if (transform.localPosition != Vector3.zero)
@@ -39,7 +43,7 @@ public class EggBullet : MonoBehaviour
             savedPos = transform.position;
         }
 
-        if (targetReady)
+        if (transform.parent == null)
         {
             // update the rotation of the projectile during trajectory motion
             transform.rotation = Quaternion.LookRotation(rb.velocity);
@@ -53,28 +57,19 @@ public class EggBullet : MonoBehaviour
             return;
         }
 
-        bool foundGroundPlayerHit = false;
-        Debug.Log(other.gameObject);
-
-        if (other.gameObject.layer == 8)
+        if (other.gameObject.layer == 8 && other.CompareTag(Constants.Tags.triggerCol))
         {
-            RaycastHit hit;
-            Debug.Log("Check");
-            if (Physics.Raycast(savedPos, -Vector3.up, out hit, 100, explosionLayerMask))
-            {
-                Debug.Log(hit.collider.gameObject);
-                explosionParticles.transform.position = hit.point + Vector3.up * 0.01f;
-                foundGroundPlayerHit = true;
-            }
+            aerialExplosionParticles.transform.position = savedPos;
+            aerialExplosionParticles.SetActive(false);
+            aerialExplosionParticles.SetActive(true);
+            bulletCollision(true);
         }
-        
-        if(!foundGroundPlayerHit)
+        else if(other.gameObject.layer != 8)
         {
             explosionParticles.transform.position = savedPos;
-        }
-
-        explosionParticles.SetActive(false);
-        explosionParticles.SetActive(true);
-        bulletCollision();
+            explosionParticles.SetActive(false);
+            explosionParticles.SetActive(true);
+            bulletCollision(false);
+        }        
     }
 }

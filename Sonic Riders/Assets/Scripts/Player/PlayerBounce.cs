@@ -81,7 +81,24 @@ public class PlayerBounce : MonoBehaviour
         if (charStats.Invincible || attacked || playerMovement.Bouncing)
         {
             return;
-        }        
+        }
+
+        if (charStats.Rings > 0)
+        {
+            if (!charStats.SuperForm || charStats.Air == 0)
+            {
+                charStats.Rings -= 20;
+                audioHolder.SfxManager.Play(Constants.SoundEffects.ringLoss);
+            }
+        }
+
+        audioHolder.VoiceManager.Play(Constants.VoiceSounds.hit);
+
+        if (rb.isKinematic)
+        {
+            playerMovement.Speed = 0;
+            return;
+        }
 
         attacked = true;
 
@@ -151,17 +168,6 @@ public class PlayerBounce : MonoBehaviour
 
         if (attacked)
         {
-            if (charStats.Rings > 0)
-            {
-                if (!charStats.SuperForm || charStats.Air == 0)
-                {
-                    charStats.Rings -= 20;
-                    audioHolder.SfxManager.Play(Constants.SoundEffects.ringLoss);
-                }                
-            }
-
-            audioHolder.VoiceManager.Play(Constants.VoiceSounds.hit);
-
             playerAnimation.Anim.SetBool("GotHit", true);
             playerMovement.RaycastLength = 0.1f;
             playerJump.StartCanDragDown();

@@ -4,28 +4,29 @@ using UnityEngine;
 
 public class EggCannon : MonoBehaviour
 {
-    private bool readyToFire = false;
+    protected bool readyToFire = false;
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform bulletSpawnPoint;
-    [SerializeField] private Transform target;
-    private Transform prevTarget;
-    [SerializeField] private Transform barrel;
+    [SerializeField] protected Transform target;
+    [SerializeField] protected Transform barrel;
     [SerializeField] private float launchAngle = 70;
     [SerializeField] private float rotationSpeed = 60;
     [SerializeField] private float barrelRotationSpeed = 1;
-    [SerializeField] private PlayersInRange playersInRange;
+    [SerializeField] protected float launchDelay = 1;
+    [SerializeField] private float hitLaunchDelay = 2;
+    [SerializeField] protected PlayersInRange playersInRange;
     private Vector3 targetPos;
     private float targetBarrelRotation;
     [SerializeField] private float targetVelocity = 0;
     private Vector3 targetOldPos;
     private float currentTargetXrotation;
     private GameObject bullet;
-    private Rigidbody bulletRb;
+    protected Rigidbody bulletRb;
     private EggBullet eggBullet;
-    private bool launching = false;
+    protected bool launching = false;
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         bullet = Instantiate(bulletPrefab, bulletSpawnPoint, false);
         bulletRb = bullet.GetComponent<Rigidbody>();
@@ -33,40 +34,51 @@ public class EggCannon : MonoBehaviour
         eggBullet.bulletCollision = BulletCollided;
         targetBarrelRotation = 360 - launchAngle;
         currentTargetXrotation = targetBarrelRotation;
-        transform.LookAt(new Vector3(target.position.x, transform.position.y, target.position.z));
+
+        if (target != null)
+        {
+            transform.LookAt(new Vector3(target.position.x, transform.position.y, target.position.z));
+        }
+
         ResetBullet();
-        StartCoroutine("RotateBarrel");
+
+        if (!readyToFire)
+        {
+            StartCoroutine("RotateBarrel");
+        }
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         if (!readyToFire || playersInRange.PlayersInRangeList.Count == 0 || Time.timeScale == 0)
         {
+            launching = false;
             return;
         }
 
         if (!launching)
         {
             launching = true;
-            Invoke("Launch", 1);
+            Invoke("Launch", launchDelay);
         }
-
-        //Quaternion targetRotation = Quaternion.LookRotation(new Vector3(target.position.x, transform.position.y, target.position.z));
-        //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
     private IEnumerator RotateBarrel()
     {
         while(Mathf.Round(barrel.localRotation.eulerAngles.x) != currentTargetXrotation)
         {
-            //Debug.Log(barrel.localRotation.eulerAngles.x);
             barrel.localRotation = Quaternion.Lerp(barrel.localRotation, Quaternion.Euler(currentTargetXrotation, 0, 0), barrelRotationSpeed * Time.deltaTime);
             yield return null;
         }
         readyToFire = currentTargetXrotation > 0;
+
+        if (readyToFire)
+        {
+            Invoke("Launch", launchDelay);
+        }
     }
 
-    private void Launch()
+    protected virtual void Launch()
     {
         // think of it as top-down view of vectors: 
         //   we don't care about the y-component(height) of the initial and target position.
@@ -89,17 +101,26 @@ public class EggCannon : MonoBehaviour
         Vector3 globalVelocity = transform.TransformDirection(localVelocity);
 
         // launch the object by setting its initial velocity and flipping its state
-        bullet.transform.SetParent(null);
-        bulletRb.isKinematic = false;
-        bulletRb.velocity = globalVelocity;
-        
-        eggBullet.targetReady = true;        
+        LaunchBullet(globalVelocity);
     }
 
-    private void BulletCollided()
+    protected void LaunchBullet(Vector3 vel)
+    {
+        bullet.transform.SetParent(null);
+        bulletRb.isKinematic = false;
+        bulletRb.velocity = vel;
+
+        eggBullet.targetReady = true;
+    }
+
+    private void BulletCollided(bool hitPlayer)
     {
         ResetBullet();
-        launching = false;
+
+        if (playersInRange.PlayersInRangeList.Count > 0)
+        {
+            Invoke("Launch", hitPlayer ? hitLaunchDelay : launchDelay);
+        }
     }
 
     private void ResetBullet()

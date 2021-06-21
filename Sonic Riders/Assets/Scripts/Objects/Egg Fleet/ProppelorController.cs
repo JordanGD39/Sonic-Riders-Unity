@@ -56,9 +56,15 @@ public class ProppelorController : MonoBehaviour
             model.localPosition = new Vector3(model.localPosition.x, y > 0 ? clampedY : clampedNegativeY, 0);
         }
 
-        if (playerMovement.Speed > characterStats.GetCurrentLimit() / 2)
+        float limit = characterStats.GetCurrentLimit() / 2;
+
+        if (playerMovement.Speed > limit + 0.33f)
         {
-            playerMovement.Speed -= 8 * Time.deltaTime;
+            playerMovement.Speed -= 6 * Time.deltaTime;
+        }
+        else if (playerMovement.Speed < limit)
+        {
+            playerMovement.Speed += characterStats.GetCurrentDash() * Time.deltaTime;
         }
 
         characterStats.Hud.UpdateSpeedText(playerMovement.Speed);

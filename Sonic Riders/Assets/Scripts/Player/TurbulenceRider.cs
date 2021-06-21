@@ -219,6 +219,11 @@ public class TurbulenceRider : MonoBehaviour
 
     public void CheckTurbulence()
     {
+        if (!enabled)
+        {
+            return;
+        }
+
         if (!inTurbulence && !playerMovement.Grounded && InTurbulenceRange)
         {
             firstRot = false;
